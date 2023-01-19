@@ -8,7 +8,6 @@ import {
   TableRow,
   Paper,
   Box,
-  Container,
   Typography,
   Pagination,
 } from "@mui/material";
@@ -17,17 +16,14 @@ const Usertable = () => {
   return (
     <>
       <Box p={5}>
-        <Container>
-          <Typography p={3} variant="h4" component="h2" textAlign="center">
-            Now Serving
-          </Typography>
+        <Box>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
-                <TableRow>
+                <TableRow sx={{ bgcolor: "#880000" }}>
                   <TableCell align="center">
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Ticket Number
+                    <Typography sx={{ fontWeight: "bold", color: "wheat" }}>
+                      Now Serving
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -42,19 +38,16 @@ const Usertable = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Container>
+        </Box>
 
-        <Container>
-          <Typography p={3} variant="h4" component="h2" textAlign="center">
-            Queue Line
-          </Typography>
+        <Box>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
-                <TableRow>
+                <TableRow sx={{ bgcolor: "#ffd700" }}>
                   <TableCell align="center">
                     <Typography sx={{ fontWeight: "bold" }}>
-                      Ticket Number
+                      Queue Line
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -72,9 +65,14 @@ const Usertable = () => {
                 <TableRow>
                   <TableCell align="center">4</TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell align="center">5</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
-          </TableContainer>{" "}
+          </TableContainer>
+
+          {/* Pagination */}
           <Box
             mt={4}
             sx={{
@@ -85,7 +83,7 @@ const Usertable = () => {
           >
             <Pagination count={5} shape="rounded" />
           </Box>
-        </Container>
+        </Box>
       </Box>
     </>
   );

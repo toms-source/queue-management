@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 const Header = () => {
   return (
-    <Box sx={{ padding: "5px 30px" }}>
+    <Box pt={5} px={{ lg: 30, md: 5 }}>
       <Typography variant="h5" sx={{ textAlign: "center" }}>
         Welcome to PUPSMB-QMS
       </Typography>

@@ -32,6 +32,7 @@ import Theme from "../../CustomTheme";
 const Form = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [value, setValue] = useState(""); //state accepts number only
+  const navigate = useNavigate();
 
   // Function only numbers can accept
   const numOnly = (e) => {
@@ -40,9 +41,14 @@ const Form = () => {
       setValue(e.target.value);
     }
   };
-  const navigate = useNavigate();
+
   const landing = () => {
     navigate("/");
+  };
+  // style
+  const styles = {
+    whiteSpace: "pre-wrap",
+    paddingRight: "10px",
   };
   return (
     <>
@@ -123,13 +129,13 @@ const Form = () => {
                     >
                       <MenuItem
                         value="ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF Duplicate Copy of Registration card"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF Duplicate Copy of Registration card
                       </MenuItem>
@@ -138,28 +144,28 @@ const Form = () => {
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF PERMIT TO CROSS ENROLL COURSE"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF PERMIT TO CROSS ENROLL COURSE
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF CERTIFICATION, AUTHENTICATION AND
                         VERIFICATION"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF CERTIFICATION, AUTHENTICATION AND
                         VERIFICATION
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF STUDENT VERIFICATION"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF STUDENT VERIFICATION
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and GWA
                         for Graduate Students"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and GWA
                         for Graduate Students
@@ -167,7 +173,7 @@ const Form = () => {
                       <MenuItem
                         value="ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
                         STUDENT"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
                         STUDENT
@@ -176,7 +182,7 @@ const Form = () => {
                         value="ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS
                         Requirements for TOR Employment for graduate/H.D/Further
                         studies/ evaluation"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS
                         Requirements for TOR Employment for graduate/H.D/Further
@@ -185,7 +191,7 @@ const Form = () => {
                       <MenuItem
                         value="ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
                         STUDENT"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
                         STUDENT
@@ -193,26 +199,26 @@ const Form = () => {
                       <MenuItem
                         value="ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
                         STUDENT"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
                         STUDENT
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students
                       </MenuItem>
                       <MenuItem
                         value=" ISSUANCE OF CERTIFICATE OF GRADES"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF CERTIFICATE OF GRADES
                       </MenuItem>
                       <MenuItem
                         value="ISSUANCE OF CERTIFICATE OF REGISTRATION"
-                        sx={{ whiteSpace: "pre-wrap", paddingRight: "10px" }}
+                        sx={styles}
                       >
                         ISSUANCE OF CERTIFICATE OF REGISTRATION
                       </MenuItem>

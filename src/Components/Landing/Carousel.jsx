@@ -70,13 +70,14 @@ function ImgCarousel(props) {
 
 function Item(props) {
   return (
-    <Paper sx={{ height: { lg: "400px", md: "500px", sm: "250px" } }}>
+    // sx={{ height: { lg: "400px", md: "500px", sm: "250px" } }}
+    <Paper>
       <img
         src={props.item.image}
         alt=""
         style={{
           width: "100%",
-
+          maxHeight: "550px",
           objectFit: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

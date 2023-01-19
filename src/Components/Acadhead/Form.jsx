@@ -6,14 +6,9 @@ import {
   Box,
   Card,
   Stack,
-  Select,
   Button,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Link,
   InputAdornment,
-  OutlinedInput,
 } from "@mui/material";
 import {
   School,
@@ -26,47 +21,12 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const transactionList = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
 const Form = () => {
-  const [personName, setPersonName] = React.useState([]);
-
   const navigate = useNavigate();
   const landing = () => {
     navigate("/");
   };
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
   return (
     <>
       <Box
@@ -123,25 +83,7 @@ const Form = () => {
                       ),
                     }}
                   />
-                  <FormControl>
-                    <InputLabel id="demo-multiple-name-label">Name</InputLabel>
-                    <Select
-                      labelId="demo-multiple-name-label"
-                      id="demo-multiple-name"
-                      multiple
-                      maxSelections={3}
-                      value={personName}
-                      onChange={handleChange}
-                      input={<OutlinedInput label="Name" />}
-                      MenuProps={MenuProps}
-                    >
-                      {transactionList.map((trans) => (
-                        <MenuItem key={trans} value={trans}>
-                          {trans}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+
                   {/* <FormControl fullWidth>
                     <InputLabel
                       id="demo-simple-select-label"

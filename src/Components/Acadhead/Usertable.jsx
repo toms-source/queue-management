@@ -17,16 +17,13 @@ const Usertable = () => {
     <>
       <Box p={5}>
         <Box>
-          <Typography p={3} variant="h4" component="h2" textAlign="center">
-            Now Serving
-          </Typography>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow sx={{ bgcolor: "#880000" }}>
                   <TableCell align="center">
                     <Typography sx={{ fontWeight: "bold", color: "wheat" }}>
-                      Ticket Number
+                      Now Serving
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -44,16 +41,13 @@ const Usertable = () => {
         </Box>
 
         <Box>
-          <Typography p={3} variant="h4" component="h2" textAlign="center">
-            Queue Line
-          </Typography>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow sx={{ bgcolor: "#ffd700" }}>
                   <TableCell align="center">
                     <Typography sx={{ fontWeight: "bold" }}>
-                      Ticket Number
+                      Queue Line
                     </Typography>
                   </TableCell>
                 </TableRow>
