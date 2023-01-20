@@ -5,12 +5,12 @@ import { Typography, Paper } from "@mui/material";
 const Info = (props) => {
   return (
     <>
-      <Paper elevation={4} />
       <Box
         m={3}
         mx={{ lg: 27, md: 10, sm: 5, xs: 4 }}
         sx={{ padding: "10px 20px", bgcolor: "white", borderRadius: "10px" }}
         data-aos="fade-right"
+        component={Paper}
       >
         <Typography variant="h5" pt={4} sx={{ textAlign: "center" }}>
           How to use?
