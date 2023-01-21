@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
-
+import img from "../../Img/seal.png";
 // const mainTableLayout = {
 //   pa
 // }
@@ -30,7 +30,9 @@ const Controll = () => {
           <AppBar position="static" color="pupMaroon">
             <Toolbar>
               <Sidebar />
-
+              <Box px={2}>
+                <img src={img} alt="" height={50} width={50} />
+              </Box>
               <Typography
                 variant="h6"
                 component="div"
@@ -48,17 +50,64 @@ const Controll = () => {
           <Grid container spacing={5}>
             {/* Now Serving */}
             <Grid item lg={12}>
+              <Typography textAlign="center" sx={{ fontWeight: "bold" }}>
+                Now Serving
+              </Typography>
               <TableContainer component={Paper}>
                 <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow sx={{ bgcolor: "#ffd700" }}>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold" }}>
-                          Now Serving
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
+                  <TableRow sx={{ bgcolor: "#880000" }}>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Ticket
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Name
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Email
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        User Type
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Transaction
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center" sx={{ minWidth: "200px" }}>
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Student Number
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Year & Section
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography
+                        sx={{
+                          fontWeight: "bold",
+                          minWidth: "200px",
+                          color: "white",
+                        }}
+                      >
+                        Contact Number
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                        Address
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
                   <TableBody>
                     <TableRow>
                       <TableCell align="center">1</TableCell>
@@ -79,60 +128,190 @@ const Controll = () => {
               <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                   <TableHead>
-                    <TableRow sx={{ bgcolor: "#ffd700" }}>
+                    <TableRow sx={{ bgcolor: "#880000" }}>
                       <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold" }}>
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
                           Ticket
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold" }}>
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
                           Name
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold" }}>
-                          Gr & Sec
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                          Email
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                          User Type
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                          Transaction
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center" sx={{ minWidth: "200px" }}>
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                          Student Number
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                          Year & Section
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            minWidth: "200px",
+                            color: "white",
+                          }}
+                        >
+                          Contact Number
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
+                          Address
                         </Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
+
                   <TableBody>
                     <TableRow>
-                      <TableCell align="center">1</TableCell>
-                      <TableCell align="center">Juan Dela Cruz</TableCell>
-                      <TableCell>
-                        <Stack direction="row" spacing={1}>
-                          <Stack>
-                            <Button variant="contained">Window 1</Button>
-                          </Stack>
-                          <Stack>
-                            <Button variant="contained">Window 2</Button>
-                          </Stack>
-                          <Stack>
-                            <Button variant="contained">Skip</Button>
-                          </Stack>
-                        </Stack>
+                      <TableCell sx={{ fontWeight: "bold" }}>R2013</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Juan Dela Cruz
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        juandelacruz@yahoo.com
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        2019-22113-SM-0
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>R2013</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Juan Dela Cruz
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        juandelacruz@yahoo.com
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        2019-22113-SM-0
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                      <TableCell>R4021</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Jose Rizal
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        jrizal123@yahoo.com
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Overload, Change subject
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        2019-22113-SM-0
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        ENTREP 3-2
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>R2013</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Vincent dela Cruz
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        vincentdelacruz55@yahoo.com
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>parent</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Change subject
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        2021-30113-SM-0
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        09874223697
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        P. Buhangin
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell align="center">2</TableCell>
+                      <TableCell>R20113</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Bella Poarch
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        bellapoarch@yahoo.com
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Visitor</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        09212365789
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Bagbaguin, Sta. maria Bulacan
+                      </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell align="center">3</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">4</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">6</TableCell>
+                      <TableCell>R2013</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        Juan Dela Cruz
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        juandelacruz@yahoo.com
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>
+                        2019-22113-SM-0
+                      </TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
+                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
+              <Box p={3}>
+                <Stack spacing={3} direction="row">
+                  <Stack>
+                    <Button variant="contained">Window 1</Button>
+                  </Stack>
+                  <Stack>
+                    <Button variant="contained">Window 2</Button>
+                  </Stack>
+                </Stack>
+              </Box>
             </Grid>
 
             {/* Skip */}
@@ -143,9 +322,9 @@ const Controll = () => {
               <TableContainer component={Paper}>
                 <Table aria-label="simple table">
                   <TableHead>
-                    <TableRow sx={{ bgcolor: "#ffd700" }}>
+                    <TableRow sx={{ bgcolor: "#880000" }}>
                       <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold" }}>
+                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
                           Skip
                         </Typography>
                       </TableCell>
