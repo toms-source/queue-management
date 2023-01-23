@@ -10,6 +10,9 @@ import {
   ListItemButton,
   ListItemText,
   ListItemIcon,
+  Link,
+  Paper,
+  createTheme,
 } from "@mui/material";
 import {
   Dashboard,
@@ -22,25 +25,27 @@ import { useNavigate } from "react-router-dom";
 import Theme from "../../CustomTheme";
 import logo from "../../Img/seal.png";
 
-// const listStyle = createTheme({
-//   components: {
-//     MuiList: {
-//       styleOverrides: {
-//         root: {
-//           color: "#ffffff",
-//           fontSize: "1rem",
-//         },
-//       },
-//     },
-//     // MuiIcon: {
-//     //   styleOverrides: {
-//     //     root: {
-//     //       color: "#ffffff",
-//     //     },
-//     //   },
-//     // },
-//   },
-// });
+const sidelogo = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: "15px",
+          backgroundColor: "#880000",
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          fontSize: "1.1rem",
+          fontWeight: "bold",
+          color: "#ffffff",
+        },
+      },
+    },
+  },
+});
 const Sidebar = () => {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
@@ -52,9 +57,7 @@ const Sidebar = () => {
   const acadHeadAnnouncement = () => {
     navigate("/acad-head-announcement");
   };
-  const acadHeadmonitor = () => {
-    navigate("/acad-head-monitor");
-  };
+
   const acadHeadreport = () => {
     navigate("/acad-head-report");
   };
@@ -78,22 +81,25 @@ const Sidebar = () => {
           }}
         >
           <Box width="350px" textAlign="center" role="presentation">
-            <Box p={7}>
-              <Typography
-                mb={3}
-                sx={{
-                  fontSize: "1.1rem",
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                }}
-              >
-                Academic Head office
-              </Typography>
-              <img src={logo} alt="" height={100} />
-              <Typography p={2} sx={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-                Polytechnic University of the Philippines SMB Queueline
-                Management System
-              </Typography>
+            <Box p={5}>
+              <ThemeProvider theme={sidelogo}>
+                <Box component={Paper} elevation={4}>
+                  <Typography
+                    my={3}
+                    pt={2}
+                    sx={{
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Academic Head office
+                  </Typography>
+                  <img src={logo} alt="" height={100} />
+                  <Typography p={2}>
+                    Polytechnic University of the Philippines SMB Queueline
+                    Management System
+                  </Typography>
+                </Box>
+              </ThemeProvider>
             </Box>
             <List>
               <ListItem disablePadding>
@@ -127,7 +133,7 @@ const Sidebar = () => {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton onClick={acadHeadmonitor}>
+                <ListItemButton>
                   <ListItemIcon>
                     <ScreenShareOutlined />
                   </ListItemIcon>
@@ -135,7 +141,15 @@ const Sidebar = () => {
                     disableTypography
                     primary={
                       <Typography style={{ fontSize: "1.5rem" }}>
-                        Share to Monitor
+                        <Link
+                          href="http://localhost:3000/acad-head-monitor"
+                          target="_blank"
+                          rel="noreferrer"
+                          underline="none"
+                          color="inherit"
+                        >
+                          Share to Monitor
+                        </Link>
                       </Typography>
                     }
                   ></ListItemText>
