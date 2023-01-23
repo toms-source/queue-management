@@ -15,13 +15,68 @@ import {
   Grid,
   Button,
   Stack,
+  createTheme,
 } from "@mui/material";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import img from "../../Img/seal.png";
-// const mainTableLayout = {
-//   pa
-// }
+import { padding } from "@mui/system";
+
+// table header syle
+const styleTableHead = createTheme({
+  components: {
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "#880000",
+          color: "#ffffff",
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: "#ffffff",
+          textAlign: "center",
+          fontWeight: "bold",
+          whiteSpace: "nowrap",
+          textTransform: "uppercase",
+        },
+      },
+    },
+  },
+});
+
+// table body style
+const styleTableBody = createTheme({
+  palette: {
+    red: {
+      main: "#ba000d",
+      contrastText: "#ffffff",
+    },
+    yellow: {
+      main: "#ffab00",
+      contrastText: "#000000",
+    },
+  },
+  components: {
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          whiteSpace: "nowrap",
+          textAlign: "center",
+        },
+      },
+    },
+  },
+});
+
+const tableTitle = {
+  textAlign: "center",
+  fontWeight: "bold",
+  padding: "15px",
+  fontSize: "1.2rem",
+};
 const Controll = () => {
   return (
     <>
@@ -44,318 +99,193 @@ const Controll = () => {
             </Toolbar>
           </AppBar>
         </Box>
-
-        {/* Control Table */}
-        <Box p={5}>
-          <Grid container spacing={5}>
-            {/* Now Serving */}
-            <Grid item lg={12}>
-              <Typography textAlign="center" sx={{ fontWeight: "bold" }}>
-                Now Serving
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableRow sx={{ bgcolor: "#880000" }}>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Ticket
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Name
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Email
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        User Type
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Transaction
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center" sx={{ minWidth: "200px" }}>
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Student Number
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Year & Section
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          fontWeight: "bold",
-                          minWidth: "200px",
-                          color: "white",
-                        }}
-                      >
-                        Contact Number
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                        Address
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center">1</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">2</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-
-            {/* Queue Line */}
-            <Grid item lg={6}>
-              <Typography textAlign="center" sx={{ fontWeight: "bold" }}>
-                Queue Line
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow sx={{ bgcolor: "#880000" }}>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Ticket
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Name
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Email
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          User Type
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Transaction
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center" sx={{ minWidth: "200px" }}>
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Student Number
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Year & Section
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography
-                          sx={{
-                            fontWeight: "bold",
-                            minWidth: "200px",
-                            color: "white",
-                          }}
-                        >
-                          Contact Number
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Address
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-
-                  <TableBody>
-                    <TableRow>
-                      <TableCell sx={{ fontWeight: "bold" }}>R2013</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Juan Dela Cruz
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        juandelacruz@yahoo.com
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        2019-22113-SM-0
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>R2013</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Juan Dela Cruz
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        juandelacruz@yahoo.com
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        2019-22113-SM-0
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell>R4021</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Jose Rizal
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        jrizal123@yahoo.com
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Overload, Change subject
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        2019-22113-SM-0
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        ENTREP 3-2
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>R2013</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Vincent dela Cruz
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        vincentdelacruz55@yahoo.com
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>parent</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Change subject
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        2021-30113-SM-0
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        09874223697
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        P. Buhangin
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>R20113</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Bella Poarch
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        bellapoarch@yahoo.com
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Visitor</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        09212365789
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Bagbaguin, Sta. maria Bulacan
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>R2013</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        Juan Dela Cruz
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        juandelacruz@yahoo.com
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Student</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>Overload</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>
-                        2019-22113-SM-0
-                      </TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}>BSIT 3-2</TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                      <TableCell sx={{ minWidth: "120px" }}></TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <Box p={3}>
-                <Stack spacing={3} direction="row">
-                  <Stack>
-                    <Button variant="contained">Window 1</Button>
-                  </Stack>
-                  <Stack>
-                    <Button variant="contained">Window 2</Button>
-                  </Stack>
-                </Stack>
-              </Box>
-            </Grid>
-
-            {/* Skip */}
-            <Grid item lg={6}>
-              <Typography textAlign="center" sx={{ fontWeight: "bold" }}>
-                Skip
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow sx={{ bgcolor: "#880000" }}>
-                      <TableCell align="center">
-                        <Typography sx={{ fontWeight: "bold", color: "white" }}>
-                          Skip
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center">1</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">2</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">3</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">4</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="center">6</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
-        </Box>
       </ThemeProvider>
+
+      {/* Control Table */}
+      <Box p={5}>
+        <Grid container spacing={5}>
+          {/* Now Serving */}
+          <Grid item lg={12}>
+            <Typography sx={tableTitle}>Now Serving</Typography>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <ThemeProvider theme={styleTableHead}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Actions</TableCell>
+                      <TableCell>Ticket</TableCell>
+                      <TableCell>Transaction</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Student Number</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Type of User</TableCell>
+                      <TableCell>Year&Section</TableCell>
+                      <TableCell>Contact Number</TableCell>
+                      <TableCell>Address</TableCell>
+                    </TableRow>
+                  </TableHead>
+                </ThemeProvider>
+                <ThemeProvider theme={styleTableBody}>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <Stack spacing={1.5} direction="row">
+                          <Stack>
+                            <Button variant="contained" color="success">
+                              Complete
+                            </Button>
+                          </Stack>
+                          <Stack>
+                            <Button variant="contained" color="red">
+                              Incomplete
+                            </Button>
+                          </Stack>
+                          <Stack>
+                            <Button variant="contained" color="yellow">
+                              Skip
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        RO234
+                      </TableCell>
+                      <TableCell>Overload, Change Subject</TableCell>
+                      <TableCell>Juan dela Cruz</TableCell>
+                      <TableCell>2018-45632-SM-0</TableCell>
+                      <TableCell>juandc@gmail.com</TableCell>
+                      <TableCell>Student</TableCell>
+                      <TableCell>BSIT 3-2</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableBody>
+                </ThemeProvider>
+              </Table>
+            </TableContainer>
+          </Grid>
+
+          {/* Queue Line */}
+          <Grid item lg={6}>
+            <Typography sx={tableTitle}>Queue Line</Typography>
+
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <ThemeProvider theme={styleTableHead}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Actions</TableCell>
+                      <TableCell>Ticket</TableCell>
+                      <TableCell>Transactions</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Student Number</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Type of User</TableCell>
+                      <TableCell>Year&Section</TableCell>
+                      <TableCell>Contact Number</TableCell>
+                      <TableCell>Address</TableCell>
+                    </TableRow>
+                  </TableHead>
+                </ThemeProvider>
+                <ThemeProvider theme={styleTableBody}>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <Button variant="contained">Serve Now</Button>
+                      </TableCell>
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        RO234
+                      </TableCell>
+                      <TableCell>
+                        ISSUANCE OF PERMIT TO CROSS ENROLL COURSE
+                      </TableCell>
+                      <TableCell>Juan dela Cruz</TableCell>
+                      <TableCell>2018-45632-SM-0</TableCell>
+                      <TableCell>juandc@gmail.com</TableCell>
+                      <TableCell>Student</TableCell>
+                      <TableCell>BSIT 3-2</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+
+                    <TableRow>
+                      <TableCell>
+                        <Button variant="contained">Serve Now</Button>
+                      </TableCell>
+                      <TableCell align="right">RO744</TableCell>
+                      <TableCell align="right">
+                        ISSUANCE OF CERTIFICATE OF GRADES, ISSUANCE OF STUDENT
+                        VERIFICATION
+                      </TableCell>
+                      <TableCell align="right">Juan dela Cruz</TableCell>
+                      <TableCell align="right">2018-45632-SM-0</TableCell>
+                      <TableCell align="right">juandc@gmail.com</TableCell>
+                      <TableCell align="right">Student</TableCell>
+                      <TableCell align="right">BSIT 3-2</TableCell>
+                      <TableCell align="right"></TableCell>
+                      <TableCell align="right"></TableCell>
+                    </TableRow>
+                  </TableBody>
+                </ThemeProvider>
+              </Table>
+            </TableContainer>
+          </Grid>
+
+          {/* Skip */}
+          <Grid item lg={6}>
+            <Typography sx={tableTitle}>Skip</Typography>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <ThemeProvider theme={styleTableHead}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Actions</TableCell>
+                      <TableCell>Ticket</TableCell>
+                      <TableCell>Transaction</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Student Number</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Type of User</TableCell>
+                      <TableCell>Year&Section</TableCell>
+                      <TableCell>Contact Number</TableCell>
+                      <TableCell>Address</TableCell>
+                    </TableRow>
+                  </TableHead>
+                </ThemeProvider>
+                <ThemeProvider theme={styleTableBody}>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <Stack spacing={1.5} direction="row">
+                          <Stack>
+                            <Button variant="contained">Serve Now</Button>
+                          </Stack>
+                          <Stack>
+                            <Button variant="contained" color="red">
+                              Incomplete
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </TableCell>
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        RO234
+                      </TableCell>
+                      <TableCell>Overload, Change Subject</TableCell>
+                      <TableCell>Juan dela Cruz</TableCell>
+                      <TableCell>2018-45632-SM-0</TableCell>
+                      <TableCell>juandc@gmail.com</TableCell>
+                      <TableCell>Student</TableCell>
+                      <TableCell>BSIT 3-2</TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                    </TableRow>
+                  </TableBody>
+                </ThemeProvider>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+      </Box>
     </>
   );
 };
