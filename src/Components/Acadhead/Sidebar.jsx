@@ -35,6 +35,11 @@ const Sidebar = () => {
           onClose={() => {
             setShow(false);
           }}
+          PaperProps={{
+            sx: {
+              backgroundColor: "#880000",
+            },
+          }}
         >
           <Box
             p={2}
