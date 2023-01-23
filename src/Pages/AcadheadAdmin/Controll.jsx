@@ -20,7 +20,6 @@ import {
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import img from "../../Img/seal.png";
-import { padding } from "@mui/system";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -71,12 +70,14 @@ const styleTableBody = createTheme({
   },
 });
 
+// table title style
 const tableTitle = {
   textAlign: "center",
   fontWeight: "bold",
   padding: "15px",
   fontSize: "1.2rem",
 };
+
 const Controll = () => {
   return (
     <>
@@ -126,6 +127,7 @@ const Controll = () => {
                   </TableHead>
                 </ThemeProvider>
                 <ThemeProvider theme={styleTableBody}>
+                  {/* Table Body */}
                   <TableBody>
                     <TableRow>
                       <TableCell>
@@ -188,6 +190,7 @@ const Controll = () => {
                   </TableHead>
                 </ThemeProvider>
                 <ThemeProvider theme={styleTableBody}>
+                  {/* Table Body */}
                   <TableBody>
                     <TableRow>
                       <TableCell>
@@ -253,6 +256,7 @@ const Controll = () => {
                   </TableHead>
                 </ThemeProvider>
                 <ThemeProvider theme={styleTableBody}>
+                  {/* Table Body */}
                   <TableBody>
                     <TableRow>
                       <TableCell>
