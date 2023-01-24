@@ -13,6 +13,8 @@ import RControll from "./Pages/RegistrarAdmin/Controll";
 import RAnnouncement from "./Pages/RegistrarAdmin/Announcement";
 import RMonitor from "./Pages/RegistrarAdmin/MonitorReg";
 import RReport from "./Pages/RegistrarAdmin/Report";
+import GenerateAcad from "./Pages/GenerateAcad";
+import GenerateReg from "./Pages/GenerateReg";
 
 import Login from "./Pages/Login";
 import Notfound from "./Pages/Notfound";
@@ -25,10 +27,12 @@ function App() {
           {/* Acad head */}
           <Route path="generateform-acad" element={<GenerateFormAcad />} />
           <Route path="transaction-acad" element={<TransactionAcad />} />
+          <Route path="generate-acad" element={<GenerateAcad />} />
 
           {/* Registrar */}
           <Route path="generateform-reg" element={<GenerateFormReg />} />
           <Route path="transaction-reg" element={<TransactionReg />} />
+          <Route path="generate-reg" element={<GenerateReg />} />
 
           {/* Admin */}
           <Route path="admin" element={<Login />} />

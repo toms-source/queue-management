@@ -32,7 +32,6 @@ const Info = (props) => {
                 fontSize: { lg: "1.2rem", sx: "1rem" },
                 textAlign: "justify",
               }}
-              color="text.secondary"
             >
               <li>
                 Choose what office you need to queue for your transaction
@@ -40,62 +39,40 @@ const Info = (props) => {
               </li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>If you are not IN-QUEUE click Get Inline.</li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>Fill Out the form.</li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>Check the data if misspelled or Incorrect.</li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>Read the terms of Use and Privacy statement.</li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>Click Submit.</li>
             </Typography>
 
             <Typography
               sx={{ fontSize: { lg: "1.2rem", sm: "0.5rem", sx: "0.8rem" } }}
-              color="text.secondary"
             >
               <li>Remember or do a Screenshot of your Ticket number.</li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>
                 If you want to cancel or check your transaction click view
                 transaction.
               </li>
             </Typography>
 
-            <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
-              color="text.secondary"
-            >
+            <Typography sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}>
               <li>Check your transaction using your email you use in form.</li>
             </Typography>
           </ol>
