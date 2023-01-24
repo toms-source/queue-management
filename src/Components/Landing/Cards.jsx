@@ -88,7 +88,6 @@ const Cards = () => {
                     size="small"
                     color="pupMaroon"
                     variant="contained"
-                    sx={{ color: "wheat" }}
                     endIcon={<AddToQueue />}
                     onClick={generateAcad}
                     // disabled={isDisabled}
@@ -145,7 +144,6 @@ const Cards = () => {
                     variant="contained"
                     onClick={generateReg}
                     // disabled={isDisabled}
-                    sx={{ color: "wheat" }}
                     endIcon={<AddToQueue />}
                     component={motion.div}
                     whileHover={{

@@ -15,8 +15,13 @@ import {
 const Usertable = () => {
   return (
     <>
-      <Box p={5}>
-        <Box>
+      <Box
+        sx={{
+          px: { lg: 50, md: 25, sx: 10 },
+          pt: { lg: 10, md: 20, sx: 0 },
+        }}
+      >
+        <Box p={3}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>
@@ -40,7 +45,7 @@ const Usertable = () => {
           </TableContainer>
         </Box>
 
-        <Box>
+        <Box p={3}>
           <TableContainer component={Paper}>
             <Table aria-label="simple table">
               <TableHead>

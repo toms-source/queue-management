@@ -137,7 +137,7 @@ const Login = () => {
                   fullWidth
                   variant="contained"
                   color="pupMaroon"
-                  sx={{ mt: 3, mb: 2, color: "wheat" }}
+                  sx={{ mt: 3, mb: 2 }}
                   component={motion.div}
                   whileHover={{
                     scale: 1.05,

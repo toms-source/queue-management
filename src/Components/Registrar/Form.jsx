@@ -69,7 +69,13 @@ const Form = () => {
             >
               <Card>
                 <Box>
-                  <Typography variant="h5" component="div" align="center" p={4}>
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    align="center"
+                    p={4}
+                    mt={3}
+                  >
                     <Article />
                     Registrar QMS Form
                   </Typography>

@@ -31,7 +31,7 @@ const sidelogo = createTheme({
       styleOverrides: {
         root: {
           borderRadius: "15px",
-          backgroundColor: "#880000",
+          backgroundColor: "#f5f5f5",
         },
       },
     },
@@ -40,7 +40,8 @@ const sidelogo = createTheme({
         root: {
           fontSize: "1.1rem",
           fontWeight: "bold",
-          color: "#ffffff",
+          color: "#000000",
+          padding: "15px",
         },
       },
     },
@@ -81,12 +82,11 @@ const Sidebar = () => {
           }}
         >
           <Box width="350px" textAlign="center" role="presentation">
-            <Box p={5}>
+            <Box p={3}>
               <ThemeProvider theme={sidelogo}>
                 <Box component={Paper} elevation={4}>
                   <Typography
                     my={3}
-                    pt={2}
                     sx={{
                       textTransform: "uppercase",
                     }}
@@ -94,10 +94,7 @@ const Sidebar = () => {
                     Academic Head office
                   </Typography>
                   <img src={logo} alt="" height={100} />
-                  <Typography p={2}>
-                    Polytechnic University of the Philippines SMB Queueline
-                    Management System
-                  </Typography>
+                  <Typography>PUPSMB-QMS</Typography>
                 </Box>
               </ThemeProvider>
             </Box>

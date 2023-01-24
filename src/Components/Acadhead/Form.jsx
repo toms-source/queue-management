@@ -46,7 +46,13 @@ const Form = () => {
             >
               <Card>
                 <Box>
-                  <Typography variant="h5" component="div" align="center" p={4}>
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    align="center"
+                    p={4}
+                    mt={3}
+                  >
                     <School />
                     Academic Head QMS Form
                   </Typography>
@@ -141,7 +147,6 @@ const Form = () => {
                         type="submit"
                         variant="contained"
                         color="pupMaroon"
-                        sx={{ color: "wheat" }}
                         endIcon={<ChevronRight />}
                         component={motion.div}
                         whileHover={{
