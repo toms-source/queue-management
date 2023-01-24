@@ -332,7 +332,6 @@ const Form = () => {
                           <TextField
                             type="text"
                             id="outlined-textarea"
-                            required
                             label="Address"
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"
@@ -351,6 +350,7 @@ const Form = () => {
                             color="pupMaroon"
                           />
                           <TextField
+                            required
                             type="text"
                             id="outlined-textarea"
                             label="Student Number of student, if representative"
@@ -359,6 +359,7 @@ const Form = () => {
                             maxlength="15"
                           />
                           <TextField
+                            required
                             type="text"
                             id="outlined-textarea"
                             label="Representative Name"
@@ -381,7 +382,6 @@ const Form = () => {
                           <TextField
                             type="text"
                             id="outlined-textarea"
-                            required
                             label="Address"
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"

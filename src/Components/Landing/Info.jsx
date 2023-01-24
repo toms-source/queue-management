@@ -12,11 +12,14 @@ const Info = (props) => {
         data-aos="fade-right"
         component={Paper}
       >
-        <Typography variant="h5" pt={4} sx={{ textAlign: "center" }}>
+        <Typography
+          pt={2}
+          sx={{ textAlign: "center", fontWeight: "bold", fontSize: "1.5rem" }}
+        >
           How to use?
         </Typography>
         <Box
-          p={4}
+          px={2}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -73,7 +76,7 @@ const Info = (props) => {
             </Typography>
 
             <Typography
-              sx={{ fontSize: { lg: "1.2rem", sx: "1rem" } }}
+              sx={{ fontSize: { lg: "1.2rem", sm: "0.5rem", sx: "0.8rem" } }}
               color="text.secondary"
             >
               <li>Remember or do a Screenshot of your Ticket number.</li>

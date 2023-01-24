@@ -19,8 +19,9 @@ import {
   Campaign,
   ScreenShareOutlined,
   InsertChartOutlinedOutlined,
+  Logout,
+  Menu,
 } from "@mui/icons-material";
-import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate } from "react-router-dom";
 import Theme from "../../CustomTheme";
 import logo from "../../Img/seal.png";
@@ -62,6 +63,9 @@ const Sidebar = () => {
   const registrarReport = () => {
     navigate("/reg-report");
   };
+  const registrarLogout = () => {
+    navigate("/admin");
+  };
   return (
     <>
       <IconButton
@@ -71,7 +75,7 @@ const Sidebar = () => {
         onClick={() => setShow(true)}
         sx={{ color: "white" }}
       >
-        <MenuIcon />
+        <Menu />
       </IconButton>
       <ThemeProvider theme={Theme}>
         <Drawer
@@ -162,6 +166,21 @@ const Sidebar = () => {
                     primary={
                       <Typography style={{ fontSize: "1.5rem" }}>
                         Summary Report
+                      </Typography>
+                    }
+                  ></ListItemText>
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={registrarLogout}>
+                  <ListItemIcon>
+                    <Logout />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography style={{ fontSize: "1.5rem" }}>
+                        Sign Out
                       </Typography>
                     }
                   ></ListItemText>

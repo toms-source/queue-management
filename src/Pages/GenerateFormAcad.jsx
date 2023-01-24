@@ -1,8 +1,10 @@
 import React from "react";
-import Box from "@mui/material/Box";
+import { Box, Divider, Typography } from "@mui/material";
 import Form from "../Components/Acadhead/Form";
 import Appbar from "../Components/Landing/Appbar";
 import Usertable from "../Components/Acadhead/Usertable";
+import Requirements from "../Components/Acadhead/Requirements";
+import Footer from "../Components/Landing/Footer";
 const GenerateFormAcad = () => {
   return (
     <>
@@ -10,7 +12,14 @@ const GenerateFormAcad = () => {
         <Box>
           <Appbar />
           <Form />
+          <Requirements />
           <Usertable />
+          <Divider>
+            <Typography color="#939393" textAlign="center">
+              © Group-7
+            </Typography>
+          </Divider>
+          <Footer />
         </Box>
       </Box>
     </>
