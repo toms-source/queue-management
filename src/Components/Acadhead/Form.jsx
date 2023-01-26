@@ -29,19 +29,50 @@ import {
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
+import { db } from "../../firebase-config";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  timestamp,
+  where,
+  query,
+  getDocs,
+} from "firebase/firestore";
+
+// Function for generate random number
+function randomNumberInRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+window.ticket = "AP" + randomNumberInRange(99, 499); // Global variable for store ticket number
 
 const transactions = [
-  "Accreditation of Subjects",
-  "Adding/Changing Subjects",
-  "Overload",
-  "Online Request for Petition",
-  "Cross-Enrollment",
+  "Processing of Application for Overload of Subjects",
+  "Processing of Application for Change of Enrollment (Adding of Subject)",
+  "Processing of Application for Change of Enrollment (Change of Schedule/Subject)",
+  "Processing of Application for Correction of Grade Entry, Late Reporting of Grades and Removal of Incomplete Mark",
+  "Processing of Application for Cross-Enrollment",
+  "Processing of Application for Shifting",
+  "Processing of Manual Enrollment ",
+  "Processing of Online Petition of Subject",
+  "Processing of Online Request for Tutorial of Subject",
+  "Processing of Request for Certification (Grades, Bonafide Student, General Weighted Average)",
 ];
+
 const Form = () => {
+  const [address, setAddress] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [studentNumber, setStudentNumber] = useState("");
+  const [yearSection, setYearSection] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
-  const [value, setValue] = useState("");
-  const [personName, setPersonName] = useState([]);
+  const [transaction, setTransaction] = useState([]);
   const navigate = useNavigate();
+  const userCollection1 = collection(db, "acadQueuing");
+  const userCollection2 = collection(db, "acadNowserving");
+
   const landing = () => {
     navigate("/");
   };
@@ -51,7 +82,7 @@ const Form = () => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setTransaction(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
@@ -61,9 +92,202 @@ const Form = () => {
   const numOnly = (e) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
-      setValue(e.target.value);
+      setContact(e.target.value);
     }
   };
+
+  // Function for clear selected fields
+  const clearForm = () => {
+    setStudentNumber("");
+    setAddress("");
+    setContact("");
+    setYearSection("");
+  };
+
+  // Function for inserting user between (priorty or regular)
+  const insert = async () => {
+    if (selectedOption !== "priority") {
+      if (window.confirm("Are you sure you wish to add this transaction ?")) {
+        await addDoc(userCollection1, {
+          name: name,
+          transaction: transaction,
+          email: email,
+          studentNumber: studentNumber,
+          address: address,
+          contact: contact,
+          userType: selectedOption,
+          yearSection: yearSection,
+          ticket: window.ticket,
+          timestamp: serverTimestamp(),
+        });
+        //navigate("/generateSuccess")
+      }
+    } else {
+      if (window.confirm("Are you sure you wish to add this transaction ?")) {
+        await addDoc(userCollection2, {
+          name: name,
+          transaction: transaction,
+          email: email,
+          studentNumber: studentNumber,
+          address: address,
+          contact: contact,
+          userType: selectedOption,
+          yearSection: yearSection,
+          ticket: window.ticket,
+          timestamp: serverTimestamp(),
+        });
+        //navigate("/generateSuccess")
+      }
+    }
+  };
+
+  // Validating for creating user
+  const creatingUser = async () => {
+    let x = 0;
+    let y = 0;
+    let z = 0;
+
+    //Check student number if exist
+    if (selectedOption === "student" && selectedOption === "priority") {
+      let checkStudentNumber = query(
+        collection(db, "acadQueuing"),
+        where("studentNumber", "==", studentNumber)
+      );
+      let querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "acadNowserving"),
+        where("studentNumber", "==", studentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+    }
+    // Check contact number if exist
+    else {
+      let checkContact = query(
+        collection(db, "acadQueuing"),
+        where("contact", "==", contact)
+      );
+      let querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "acadNowserving"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+    }
+
+    // Check if Ticket exist on Acad Que Table
+    let checkTicket = query(
+      collection(db, "acadQueuing"),
+      where("ticket", "==", window.ticket)
+    );
+    let querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
+    // Check if Ticket exist on Acad Now Serving Table
+    checkTicket = query(
+      collection(db, "acadNowserving"),
+      where("ticket", "==", window.ticket)
+    );
+    querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
+    if (z > 0) {
+      // IF exist then random again until generate unique ticket id
+      let y = 0;
+      do {
+        y = 0;
+        window.ticket = "AP" + randomNumberInRange(99, 499);
+        let getNum = query(
+          collection(db, "acadQueuing"),
+          where("ticket", "==", window.ticket)
+        );
+        let querySnapshotNum = await getDocs(getNum);
+        querySnapshotNum.forEach(() => {
+          y++;
+        });
+
+        getNum = query(
+          collection(db, "acadNowserving"),
+          where("ticket", "==", window.ticket)
+        );
+        querySnapshotNum = await getDocs(getNum);
+        querySnapshotNum.forEach(() => {
+          y++;
+        });
+      } while (y > 0);
+    }
+    // form requied fields validation
+    if (selectedOption === "student") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        transaction.length > 0 &&
+        yearSection.length > 0 &&
+        studentNumber.length > 0
+      ) {
+        insert();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else if (selectedOption === "priority") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        transaction.length > 0 &&
+        yearSection.length > 0 &&
+        studentNumber.length > 0
+      ) {
+        insert();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else if (selectedOption === "guest") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        transaction.length > 0 &&
+        contact.length > 0 &&
+        address.length > 0
+      ) {
+        insert();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else if (selectedOption === "parent") {
+      if (
+        name.length > 0 &&
+        transaction.length > 0 &&
+        contact.length > 0 &&
+        address.length > 0 &&
+        yearSection.length > 0 &&
+        studentNumber.length > 0
+      ) {
+        insert();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else {
+      alert("Please fill all the reqiured fields!");
+    }
+  };
+
   return (
     <>
       <Box
@@ -102,6 +326,10 @@ const Form = () => {
                     label="Name"
                     autoFocus
                     placeholder="Ex. Juan Dela Cruz"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }} //set name
                     color="pupMaroon"
                     InputProps={{
                       endAdornment: (
@@ -116,7 +344,11 @@ const Form = () => {
                     id="outlined-textarea"
                     required
                     label="Email"
+                    value={email}
                     placeholder="Ex. JuanDelacruz@yahoo.com"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }} //set email
                     color="pupMaroon"
                     InputProps={{
                       endAdornment: (
@@ -141,7 +373,7 @@ const Form = () => {
                       id="demo-multiple-name"
                       color="pupMaroon"
                       multiple
-                      value={personName}
+                      value={transaction}
                       onChange={handleChange}
                       input={<OutlinedInput label="Transactions" />}
                       sx={{
@@ -173,9 +405,10 @@ const Form = () => {
                       name="row-radio-buttons-group"
                       color="pupMaroon"
                       value={selectedOption}
-                      onChange={(event) =>
-                        setSelectedOption(event.target.value)
-                      }
+                      onChange={(event) => {
+                        setSelectedOption(event.target.value);
+                        clearForm();
+                      }}
                     >
                       <FormControlLabel
                         value="student"
@@ -184,7 +417,7 @@ const Form = () => {
                         color="pupMaroon"
                       />
                       <FormControlLabel
-                        value="pwd"
+                        value="priority"
                         control={<Radio color="pupMaroon" />}
                         label="PWD and Pregnant"
                       />
@@ -206,6 +439,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={yearSection}
+                            onChange={(e) => {
+                              setYearSection(e.target.value);
+                            }}
                             label="Year & Section"
                             placeholder="BSIT 1-1"
                             color="pupMaroon"
@@ -214,6 +451,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={studentNumber}
+                            onChange={(e) => {
+                              setStudentNumber(e.target.value);
+                            }}
                             label="Student Number"
                             placeholder="EX. 2018-12022-SM-0"
                             color="pupMaroon"
@@ -222,13 +463,17 @@ const Form = () => {
                         </Stack>
                       </>
                     )}
-                    {selectedOption === "pwd" && (
+                    {selectedOption === "priority" && (
                       <>
                         <Stack spacing={2} direction="column">
                           <TextField
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={yearSection}
+                            onChange={(e) => {
+                              setYearSection(e.target.value);
+                            }}
                             label="Year & Section"
                             placeholder="BSIT 1-1"
                             color="pupMaroon"
@@ -237,6 +482,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={studentNumber}
+                            onChange={(e) => {
+                              setStudentNumber(e.target.value);
+                            }}
                             label="Student Number"
                             placeholder="EX. 2018-12022-SM-0"
                             color="pupMaroon"
@@ -254,7 +503,7 @@ const Form = () => {
                             required
                             label="Contact Number"
                             placeholder="Ex. 09997845244"
-                            value={value}
+                            value={contact}
                             onChange={numOnly}
                             color="pupMaroon"
                             maxlength="10"
@@ -263,6 +512,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             label="Address"
+                            value={address}
+                            onChange={(e) => {
+                              setAddress(e.target.value);
+                            }}
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"
                           />
@@ -275,6 +528,10 @@ const Form = () => {
                           <TextField
                             type="text"
                             id="outlined-textarea"
+                            value={yearSection}
+                            onChange={(e) => {
+                              setYearSection(e.target.value);
+                            }}
                             label="Year & Section of student, if representative"
                             placeholder="BSIT 1-1"
                             color="pupMaroon"
@@ -284,15 +541,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             label="Student Number of student, if representative"
-                            placeholder="EX. 2018-12022-SM-0"
-                            color="pupMaroon"
-                            maxlength="15"
-                          />
-                          <TextField
-                            required
-                            type="text"
-                            id="outlined-textarea"
-                            label="Representative Name"
+                            value={studentNumber}
+                            onChange={(e) => {
+                              setStudentNumber(e.target.value);
+                            }}
                             placeholder="EX. 2018-12022-SM-0"
                             color="pupMaroon"
                             maxlength="15"
@@ -304,7 +556,7 @@ const Form = () => {
                             label="Contact Number"
                             inputmode="numeric"
                             placeholder="Ex. 09997845244"
-                            value={value}
+                            value={contact}
                             onChange={numOnly}
                             color="pupMaroon"
                             maxlength="10"
@@ -315,6 +567,10 @@ const Form = () => {
                             label="Address"
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"
+                            value={address}
+                            onChange={(e) => {
+                              setAddress(e.target.value);
+                            }}
                           />
                         </Stack>
                       </>
@@ -348,6 +604,7 @@ const Form = () => {
                         type="submit"
                         variant="contained"
                         color="pupMaroon"
+                        onClick={creatingUser}
                         endIcon={<ChevronRight />}
                         component={motion.div}
                         whileHover={{

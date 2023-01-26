@@ -1,16 +1,17 @@
 import { initializeApp } from "firebase/app";
-import {getFirestore} from '@firebase/firestore'; 
-import {getAuth} from "firebase/auth"
+import { getFirestore } from "@firebase/firestore";
+import { getAuth } from "firebase/auth";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCJxiY1LwKChl3_kPSerEaA9kWwVkUROCk",
-  authDomain: "que-system-8bc43.firebaseapp.com",
-  projectId: "que-system-8bc43",
-  storageBucket: "que-system-8bc43.appspot.com",
-  messagingSenderId: "374625312424",
-  appId: "1:374625312424:web:ece3ae1ed22533d78bac9d",
-  measurementId: "G-5XREQ7X01R"
+  apiKey: "AIzaSyCxhRaRQvlcvJMWnYNGP21HQYF5BBi6NFU",
+  authDomain: "queuing-system-management.firebaseapp.com",
+  projectId: "queuing-system-management",
+  storageBucket: "queuing-system-management.appspot.com",
+  messagingSenderId: "327014395803",
+  appId: "1:327014395803:web:505575b17f39b92ff8fb3e",
+  measurementId: "G-MZ8RJ2H67V",
 };
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-export const auth = getAuth(app)
+export const auth = getAuth(app);
