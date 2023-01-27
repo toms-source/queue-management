@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -15,8 +15,11 @@ import {
   Grid,
   Button,
   Stack,
+  Pagination,
   createTheme,
 } from "@mui/material";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase-config";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import img from "../../Img/seal.png";
@@ -79,6 +82,38 @@ const tableTitle = {
 };
 
 const Controll = () => {
+  const [qlUserData, setQluserData] = useState([]);
+  const [qlCurrentPage, setQlCurrentPost] = useState(1);
+  const QlPostPerPage = 3;
+  let pages = [];
+
+  const lastPostIndex = qlCurrentPage * QlPostPerPage;
+  const firstPostIndex = lastPostIndex - QlPostPerPage;
+  const currentPost = qlUserData.slice(firstPostIndex, lastPostIndex);
+
+  for (let i = 1; i <= Math.ceil(qlUserData.length / QlPostPerPage); i++) {
+    pages.push(i);
+  }
+
+  useEffect(() => {
+    tableQueryQueue();
+    // tableQueryServing();
+  }, []);
+
+  const handleChangePagination = (event, value) => {
+    setQlCurrentPost(value);
+  };
+
+  // QueueLinetable Query
+  const tableQueryQueue = async () => {
+    const acadQueueCollection = collection(db, "acadQueuing");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    console.log("render");
+    return unsub;
+  };
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -192,46 +227,44 @@ const Controll = () => {
                 <ThemeProvider theme={styleTableBody}>
                   {/* Table Body */}
                   <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        <Button variant="contained">Serve Now</Button>
-                      </TableCell>
-                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                        RO234
-                      </TableCell>
-                      <TableCell>
-                        ISSUANCE OF PERMIT TO CROSS ENROLL COURSE
-                      </TableCell>
-                      <TableCell>Juan dela Cruz</TableCell>
-                      <TableCell>2018-45632-SM-0</TableCell>
-                      <TableCell>juandc@gmail.com</TableCell>
-                      <TableCell>Student</TableCell>
-                      <TableCell>BSIT 3-2</TableCell>
-                      <TableCell></TableCell>
-                      <TableCell></TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell>
-                        <Button variant="contained">Serve Now</Button>
-                      </TableCell>
-                      <TableCell align="right">RO744</TableCell>
-                      <TableCell align="right">
-                        ISSUANCE OF CERTIFICATE OF GRADES, ISSUANCE OF STUDENT
-                        VERIFICATION
-                      </TableCell>
-                      <TableCell align="right">Juan dela Cruz</TableCell>
-                      <TableCell align="right">2018-45632-SM-0</TableCell>
-                      <TableCell align="right">juandc@gmail.com</TableCell>
-                      <TableCell align="right">Student</TableCell>
-                      <TableCell align="right">BSIT 3-2</TableCell>
-                      <TableCell align="right"></TableCell>
-                      <TableCell align="right"></TableCell>
-                    </TableRow>
+                    {currentPost.map((queue, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Button variant="contained">Serve Now</Button>
+                        </TableCell>
+                        <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                          {queue.ticket}
+                        </TableCell>
+                        <TableCell>{queue.transaction}</TableCell>
+                        <TableCell>{queue.name}</TableCell>
+                        <TableCell>{queue.studentNumber}</TableCell>
+                        <TableCell>{queue.email}</TableCell>
+                        <TableCell>{queue.userType}</TableCell>
+                        <TableCell>{queue.yearSection}</TableCell>
+                        <TableCell>{queue.contact}</TableCell>
+                        <TableCell>{queue.address}</TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </ThemeProvider>
               </Table>
             </TableContainer>
+            {/* Pagination */}
+            <Box
+              mt={4}
+              sx={{
+                width: "100%",
+                justifyContent: "center",
+                display: "flex",
+              }}
+            >
+              <Pagination
+                count={25}
+                page={qlCurrentPage}
+                onChange={handleChangePagination}
+                shape="rounded"
+              />
+            </Box>
           </Grid>
 
           {/* Skip */}
