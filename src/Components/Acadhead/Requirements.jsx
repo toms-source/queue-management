@@ -14,14 +14,17 @@ const Requirements = () => {
     <>
       <Box
         sx={{
-          px: { lg: 50, md: 20, sx: 0 },
-          pt: { lg: 10, md: 20, sx: 0 },
+          px: { lg: 48, md: 20, sx: 0 },
+          pt: { lg: 5, md: 20, sx: 0 },
         }}
       >
         <Typography
           textAlign="center"
           py={3}
-          sx={{ fontSize: { lg: "1.2rem", md: "1rem", sm: "1rem" } }}
+          sx={{
+            fontSize: { lg: "1.2rem", md: "1rem", sm: "1rem" },
+            fontWeight: "bold",
+          }}
         >
           Requirements Per Transaction
         </Typography>

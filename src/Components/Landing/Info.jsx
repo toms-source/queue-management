@@ -20,6 +20,7 @@ const Info = (props) => {
         </Typography>
         <Box
           px={2}
+          pb={4}
           sx={{
             display: "flex",
             flexDirection: "column",
