@@ -76,6 +76,9 @@ const Form = () => {
   const landing = () => {
     navigate("/");
   };
+  const generateAcad = () => {
+    navigate("/generate-acad");
+  };
 
   // Dropdown textbox handle
   const handleChange = (event) => {
@@ -121,6 +124,7 @@ const Form = () => {
           timestamp: serverTimestamp(),
         });
         //navigate("/generateSuccess")
+        generateAcad();
       }
     } else {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
@@ -293,7 +297,7 @@ const Form = () => {
       <Box
         sx={{
           px: { lg: 50, md: 20, sx: 0 },
-          pt: { lg: 10, md: 20, sx: 0 },
+          pt: { lg: 5, md: 20, sx: 0 },
         }}
       >
         <form className="acadForm">

@@ -43,16 +43,16 @@ const Cards = () => {
 
   const navigate = useNavigate();
   const generateAcad = () => {
-    navigate("generateform-acad");
+    navigate("/generateform-acad");
   };
   const generateReg = () => {
-    navigate("generateform-reg");
+    navigate("/generateform-reg");
   };
   const transactionReg = () => {
-    navigate("transaction-reg");
+    navigate("/transaction-reg");
   };
   const transactionAcad = () => {
-    navigate("transaction-acad");
+    navigate("/transaction-acad");
   };
 
   return (
