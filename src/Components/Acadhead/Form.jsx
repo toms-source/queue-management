@@ -384,7 +384,12 @@ const Form = () => {
                         whiteSpace: "no-wrap",
                         overFlow: "hidden",
                         textOverflow: "ellipsis",
-                        maxWidth: { lg: 900, md: 700, sm: 650, xs: 380 },
+                        maxWidth: {
+                          lg: "650px",
+                          md: "640px",
+                          sm: "560px",
+                          xs: "355px",
+                        },
                       }}
                     >
                       {transactions.map((transaction) => (

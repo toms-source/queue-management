@@ -17,6 +17,7 @@ import {
   Radio,
   FormControlLabel,
   FormLabel,
+  OutlinedInput,
 } from "@mui/material";
 import {
   Article,
@@ -29,10 +30,38 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
 
+const transactions = [
+  "ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD",
+  "ISSUANCE OF Duplicate Copy of Registration card",
+  "ISSUANCE OF CERTIFICATE OF ENROLLMENT",
+  "ISSUANCE OF PERMIT TO CROSS ENROLL COURSE",
+  "ISSUANCE OF CERTIFICATION, AUTHENTICATION AND VERIFICATION",
+  "ISSUANCE OF STUDENT VERIFICATION",
+  "ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and General Weighted Average for Graduate Students",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT ( for TOR Employment for Undergraduate)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS TOR Employment (for graduate/H.D/Further studies/ evaluation)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT (for TOR Evaluation / Re-Admission)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT (for TOR Honorable Dismissal)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students (1st requeest)",
+  "ISSUANCE OF CERTIFICATE OF GRADES",
+  "ISSUANCE OF CERTIFICATE OF REGISTRATION",
+];
 const Form = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [value, setValue] = useState(""); //state accepts number only
+  const [transaction, setTransaction] = useState([]);
   const navigate = useNavigate();
+
+  // Dropdown textbox handle
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setTransaction(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
 
   // Function only numbers can accept
   const numOnly = (e) => {
@@ -46,10 +75,7 @@ const Form = () => {
     navigate("/");
   };
   // style
-  const styles = {
-    whiteSpace: "pre-wrap",
-    paddingRight: "10px",
-  };
+
   return (
     <>
       <Box
@@ -112,122 +138,40 @@ const Form = () => {
                       ),
                     }}
                   />
-                  <FormControl fullWidth>
+                  <FormControl fullWidth required>
                     <InputLabel
-                      id="demo-simple-select-label"
+                      id="demo-multiple-name-label"
                       color="pupMaroon"
                       required
                     >
                       Transactions
                     </InputLabel>
                     <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      label="Transactions"
-                      color="pupMaroon"
                       required
+                      labelId="demo-multiple-name-label"
+                      id="demo-multiple-name"
+                      color="pupMaroon"
+                      multiple
+                      value={transaction}
+                      onChange={handleChange}
+                      input={<OutlinedInput label="Transactions" />}
                       sx={{
                         whiteSpace: "no-wrap",
                         overFlow: "hidden",
                         textOverflow: "ellipsis",
-                        maxWidth: { lg: 900, md: 700, sm: 650, xs: 380 },
+                        maxWidth: {
+                          lg: "650px",
+                          md: "640px",
+                          sm: "560px",
+                          xs: "355px",
+                        },
                       }}
                     >
-                      <MenuItem
-                        value="ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD"
-                        sx={styles}
-                      >
-                        ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF Duplicate Copy of Registration card"
-                        sx={styles}
-                      >
-                        ISSUANCE OF Duplicate Copy of Registration card
-                      </MenuItem>
-                      <MenuItem value="ISSUANCE OF CERTIFICATE OF ENROLLMENT">
-                        ISSUANCE OF CERTIFICATE OF ENROLLMENT
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF PERMIT TO CROSS ENROLL COURSE"
-                        sx={styles}
-                      >
-                        ISSUANCE OF PERMIT TO CROSS ENROLL COURSE
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF CERTIFICATION, AUTHENTICATION AND
-                        VERIFICATION"
-                        sx={styles}
-                      >
-                        ISSUANCE OF CERTIFICATION, AUTHENTICATION AND
-                        VERIFICATION
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF STUDENT VERIFICATION"
-                        sx={styles}
-                      >
-                        ISSUANCE OF STUDENT VERIFICATION
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and GWA
-                        for Graduate Students"
-                        sx={styles}
-                      >
-                        ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and GWA
-                        for Graduate Students
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
-                        STUDENT"
-                        sx={styles}
-                      >
-                        ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
-                        STUDENT
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS
-                        Requirements for TOR Employment for graduate/H.D/Further
-                        studies/ evaluation"
-                        sx={styles}
-                      >
-                        ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS
-                        Requirements for TOR Employment for graduate/H.D/Further
-                        studies/ evaluation
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
-                        STUDENT"
-                        sx={styles}
-                      >
-                        ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
-                        STUDENT
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
-                        STUDENT"
-                        sx={styles}
-                      >
-                        ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE
-                        STUDENT
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students"
-                        sx={styles}
-                      >
-                        ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students
-                      </MenuItem>
-                      <MenuItem
-                        value=" ISSUANCE OF CERTIFICATE OF GRADES"
-                        sx={styles}
-                      >
-                        ISSUANCE OF CERTIFICATE OF GRADES
-                      </MenuItem>
-                      <MenuItem
-                        value="ISSUANCE OF CERTIFICATE OF REGISTRATION"
-                        sx={styles}
-                      >
-                        ISSUANCE OF CERTIFICATE OF REGISTRATION
-                      </MenuItem>
+                      {transactions.map((transaction) => (
+                        <MenuItem key={transaction} value={transaction}>
+                          {transaction}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                   <FormControl>
