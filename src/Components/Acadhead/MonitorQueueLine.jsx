@@ -26,6 +26,7 @@ const MonitorQueueLine = () => {
   for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
     pages.push(i);
   }
+
   useEffect(() => {
     tableQueryQueue();
   }, []);
@@ -37,12 +38,12 @@ const MonitorQueueLine = () => {
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
-    console.log("render");
+
     return unsub;
   };
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ minHeight: "447px" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>

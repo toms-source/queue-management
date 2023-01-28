@@ -37,13 +37,13 @@ const MonitorSkipped = () => {
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
-    console.log("render");
+
     return unsub;
   };
   return (
     <>
       {" "}
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ minHeight: "447px" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>

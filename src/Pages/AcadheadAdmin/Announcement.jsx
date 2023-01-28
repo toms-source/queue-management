@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -22,6 +22,16 @@ import CampaignIcon from "@mui/icons-material/Campaign";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
+import { db } from "../../firebase-config";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  timestamp,
+  where,
+  query,
+  getDocs,
+} from "firebase/firestore";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -69,6 +79,22 @@ const styleTableBody = createTheme({
 });
 
 const Announcement = () => {
+  const [announce, setAnnounce] = useState("");
+  const announceCollection = collection(db, "acadAnnouncement");
+
+  const insert = async () => {
+    if (announce.length > 0) {
+      await addDoc(announceCollection, {
+        announcement: announce,
+        timestamp: serverTimestamp(),
+      });
+
+      alert("inserted!");
+      setAnnounce("");
+    } else {
+      alert("Please fill all the reqiured fields!");
+    }
+  };
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -101,6 +127,9 @@ const Announcement = () => {
             fullWidth
             height="100px"
             color="pupMaroon"
+            onChange={(e) => {
+              setAnnounce(e.target.value);
+            }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -109,7 +138,7 @@ const Announcement = () => {
                       "&:hover": { backgroundColor: "#ffd700" },
                     }}
                   >
-                    <CampaignIcon onClick />
+                    <CampaignIcon onClick={insert} />
                   </IconButton>
                 </InputAdornment>
               ),
