@@ -1,25 +1,26 @@
 import React from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Table,
   TableHead,
   TableRow,
-  Paper,
+  TableCell,
   Typography,
+  TableBody,
+  Paper,
 } from "@mui/material";
-
-const UserNowServingTable = () => {
+const MonitorSkipped = () => {
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "160px" }}>
+      <TableContainer component={Paper} sx={{ minHeight: "447px" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>
               <TableCell align="center">
-                <Typography sx={{ fontWeight: "bold", color: "wheat" }}>
-                  Now Serving
+                <Typography
+                  sx={{ fontWeight: "bold", color: "wheat", fontSize: "2rem" }}
+                >
+                  Skipped
                 </Typography>
               </TableCell>
             </TableRow>
@@ -28,17 +29,13 @@ const UserNowServingTable = () => {
             <TableRow>
               <TableCell
                 align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
+                sx={{
+                  fontWeight: "bold",
+                  border: "none",
+                  fontSize: "1.8rem",
+                }}
               >
-                1
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                2
+                R0231
               </TableCell>
             </TableRow>
           </TableBody>
@@ -48,4 +45,4 @@ const UserNowServingTable = () => {
   );
 };
 
-export default UserNowServingTable;
+export default MonitorSkipped;

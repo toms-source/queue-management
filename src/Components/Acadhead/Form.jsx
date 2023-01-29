@@ -393,7 +393,15 @@ const Form = () => {
                       }}
                     >
                       {transactions.map((transaction) => (
-                        <MenuItem key={transaction} value={transaction}>
+                        <MenuItem
+                          key={transaction}
+                          value={transaction}
+                          sx={{
+                            maxWidth: { lg: "800px" },
+                            whiteSpace: "pre-wrap",
+                            paddingRight: "10px",
+                          }}
+                        >
                           {transaction}
                         </MenuItem>
                       ))}

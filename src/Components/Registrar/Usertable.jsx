@@ -1,94 +1,42 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Typography,
-  Pagination,
-} from "@mui/material";
+import { Grid, Box } from "@mui/material";
+import UserNowServingTable from "../Registrar/UserNowServingTable";
+import UserQueueLineTable from "../Registrar/UserQueueLineTable";
+import UserSkippedTable from "../Registrar/UserSkippedTable";
 
 const Usertable = () => {
   return (
     <>
-      <Box
-        sx={{
-          px: { lg: 50, md: 25, sx: 10 },
-          pt: { lg: 10, md: 20, sx: 0 },
-        }}
-      >
-        <Box p={3}>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow sx={{ bgcolor: "#880000" }}>
-                  <TableCell align="center">
-                    <Typography sx={{ fontWeight: "bold", color: "wheat" }}>
-                      Now Serving
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell align="center">1</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="center">2</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+      <Box my={4} sx={{ px: { lg: 50, md: 23, sm: 5, xs: 3 } }}>
+        <Grid container spacing={1.2}>
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <UserNowServingTable />
+          </Grid>
 
-        <Box p={3}>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow sx={{ bgcolor: "#ffd700" }}>
-                  <TableCell align="center">
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      Queue Line
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell align="center">1</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="center">2</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="center">3</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="center">4</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell align="center">5</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Grid item lg={6} md={6} sm={6} xs={6}>
+            <UserQueueLineTable />
+          </Grid>
 
-          {/* Pagination */}
-          <Box
-            mt={4}
-            sx={{
-              width: "100%",
-              justifyContent: "center",
-              display: "flex",
-            }}
-          >
-            <Pagination count={5} shape="rounded" />
-          </Box>
-        </Box>
+          <Grid item lg={6} md={6} sm={6} xs={6}>
+            <UserSkippedTable />
+          </Grid>
+        </Grid>
+        {/* Pagination */}
+        {/* <Box
+          mt={4}
+          sx={{
+            width: "100%",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <Pagination
+            count={lastPostIndex}
+            page={currentPage}
+            onChange={handleChangePagination}
+            shape="rounded"
+          />
+        </Box> */}
       </Box>
     </>
   );

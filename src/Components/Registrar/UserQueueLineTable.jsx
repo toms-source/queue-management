@@ -1,45 +1,44 @@
 import React from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Table,
   TableHead,
   TableRow,
-  Paper,
+  TableCell,
   Typography,
+  TableBody,
+  Paper,
 } from "@mui/material";
 
-const UserNowServingTable = () => {
+const UserQueueLineTable = () => {
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "160px" }}>
+      <TableContainer component={Paper} sx={{ minHeight: "320px" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>
               <TableCell align="center">
                 <Typography sx={{ fontWeight: "bold", color: "wheat" }}>
-                  Now Serving
+                  Queue Line
                 </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                1
-              </TableCell>
+              <TableCell align="center">1</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                2
-              </TableCell>
+              <TableCell align="center">2</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">3</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">4</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">5</TableCell>
             </TableRow>
           </TableBody>
         </Table>
@@ -48,4 +47,4 @@ const UserNowServingTable = () => {
   );
 };
 
-export default UserNowServingTable;
+export default UserQueueLineTable;

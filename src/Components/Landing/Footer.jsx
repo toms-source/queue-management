@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Box, Typography, Link } from "@mui/material";
 const Footer = () => {
   return (
-    <>
+    <div style={{ position: "relative", bottom: 0 }}>
       <Box mt={4} p={4} bgcolor="white">
         <Grid container spacing={3}>
           <Grid item lg={3} md={8} xs={12}>
@@ -56,7 +56,7 @@ const Footer = () => {
           </Grid>
         </Grid>
       </Box>
-    </>
+    </div>
   );
 };
 

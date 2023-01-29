@@ -1,13 +1,13 @@
 import React from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
+  Table,
   TableHead,
   TableRow,
-  Paper,
+  TableCell,
   Typography,
+  TableBody,
+  Paper,
 } from "@mui/material";
 
 const UserNowServingTable = () => {

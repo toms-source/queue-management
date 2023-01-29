@@ -42,7 +42,7 @@ const UserQueueLineTable = () => {
   };
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ minHeight: "320px" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>
