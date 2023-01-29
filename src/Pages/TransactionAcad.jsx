@@ -17,13 +17,14 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Appbar from "../Components/Landing/Appbar";
 import Footer from "../Components/Landing/Footer";
 
+import waves from "../Img/wave.svg";
 const labelNameStyle = {
   fontWeight: "bold",
 };
 const TransactionAcad = () => {
   const navigate = useNavigate();
-  const landing = () => {
-    navigate("/");
+  const transaction = () => {
+    navigate("/generateform-acad");
   };
   return (
     <>
@@ -41,8 +42,10 @@ const TransactionAcad = () => {
             <Typography
               mb={3}
               fontSize={{
-                lg: 30,
-                md: 25,
+                lg: "30px",
+                md: "25px",
+                sm: "20px",
+                xs: "18px",
               }}
             >
               Search your transaction using Email
@@ -72,58 +75,104 @@ const TransactionAcad = () => {
                 bgcolor: "white",
               }}
             />
+          </Box>
 
-            <Box component={Paper} width={300} my={10} p={5} elevation={5}>
-              <Stack spacing={3}>
-                <Stack>
-                  <Stack spacing={2} direction="row">
-                    <Stack>
-                      <Typography sx={labelNameStyle}>Ticket</Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography>AOH2521</Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Stack>
-                  <Stack spacing={2} direction="row">
-                    <Stack>
-                      <Typography sx={labelNameStyle}>Name</Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography>Juan Dela Cruz</Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Stack>
-                  <Stack spacing={2} direction="row">
-                    <Stack>
-                      <Typography sx={labelNameStyle}>Transaction</Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography>
-                        Adding/Changing Subjects, Overload
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Stack spacing={2} direction="row">
-                  <Stack>
-                    <Button
-                      variant="outlined"
-                      sx={{ marginTop: "15px" }}
-                      onClick={landing}
-                    >
-                      Cancel
-                    </Button>
-                  </Stack>
-                  <Stack>
-                    <Button variant="contained" sx={{ marginTop: "15px" }}>
-                      Delete
-                    </Button>
-                  </Stack>
-                </Stack>
-              </Stack>
+          <Box
+            sx={{
+              px: { lg: 50, md: 20, xs: 0 },
+              pt: { lg: 5, md: 20, xs: 5 },
+            }}
+          >
+            <Box
+              component={Paper}
+              mx={2}
+              p={5}
+              sx={{
+                maxWidth: "1000px",
+                backgroundImage: `url(${waves})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+              }}
+            >
+              <Typography
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1.1rem",
+                  },
+                  fontWeight: "bold",
+                  marginTop: {
+                    lg: "100px",
+                    md: "80px",
+                    sm: "60px",
+                    xs: "40px",
+                  },
+                }}
+              >
+                Ticket Entry
+              </Typography>
+              <Typography
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1rem",
+                  },
+                  textDecoration: "underline",
+                }}
+              >
+                AP312
+              </Typography>
+              <Typography
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1rem",
+                  },
+                  fontWeight: "bold",
+                }}
+              >
+                Juan dela cruz
+              </Typography>
+              <Typography
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1rem",
+                  },
+                }}
+              >
+                Processing of Application for Shifting, Processing of Request
+                for Certification (Grades, Bonafide Student, General Weighted
+                Average)
+              </Typography>
+            </Box>
+            <Box m={2}>
+              <ThemeProvider theme={Theme}>
+                <Button
+                  variant="contained"
+                  color="pupMaroon"
+                  onClick={transaction}
+                  sx={{ width: "100%" }}
+                >
+                  Create Transaction Or View Queue Line
+                </Button>
+              </ThemeProvider>
             </Box>
           </Box>
         </ThemeProvider>
