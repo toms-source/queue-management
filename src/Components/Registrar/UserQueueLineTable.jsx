@@ -26,19 +26,44 @@ const UserQueueLineTable = () => {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell align="center">1</TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontWeight: "bold", border: "none" }}
+              >
+                1
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="center">2</TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontWeight: "bold", border: "none" }}
+              >
+                2
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="center">3</TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontWeight: "bold", border: "none" }}
+              >
+                3
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="center">4</TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontWeight: "bold", border: "none" }}
+              >
+                4
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="center">5</TableCell>
+              <TableCell
+                align="center"
+                sx={{ fontWeight: "bold", border: "none" }}
+              >
+                5
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
