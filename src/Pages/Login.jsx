@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState } from "react";
 import {
   Button,
   Avatar,
@@ -25,9 +25,14 @@ import { motion } from "framer-motion";
 import Theme from "../CustomTheme";
 
 const Login = () => {
+  const [isShown, setIsSHown] = useState(false);
   const navigate = useNavigate();
   const landing = () => {
     navigate("/");
+  };
+
+  const togglePassword = () => {
+    setIsSHown((isShown) => !isShown);
   };
   // OnsubmitFormFunction
   // const handleSubmit = (event) => {
@@ -113,7 +118,7 @@ const Login = () => {
                   name="password"
                   label="Password"
                   placeholder="Password..."
-                  type="password"
+                  type={isShown ? "text" : "password"}
                   id="password"
                   color="pupMaroon"
                   InputProps={{
@@ -129,6 +134,7 @@ const Login = () => {
                     <FormControlLabel
                       control={<Checkbox />}
                       label="Show Password"
+                      onChange={togglePassword}
                     />
                   </FormGroup>
                 </Box>
