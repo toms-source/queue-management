@@ -29,6 +29,22 @@ import {
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
+import { db } from "../../firebase-config";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  where,
+  query,
+  getDocs,
+} from "firebase/firestore";
+
+// Function for generate random number
+function randomNumberInRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+window.ticket1 = "RO" + randomNumberInRange(99, 499);
 
 const transactions = [
   "ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD",
@@ -47,8 +63,16 @@ const transactions = [
   "ISSUANCE OF CERTIFICATE OF REGISTRATION",
 ];
 const Form = () => {
+  const [address, setAddress] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [studentNumber, setStudentNumber] = useState("");
+  const [yearSection, setYearSection] = useState("");
+  const userCollection1 = collection(db, "regQueuing");
+  const userCollection2 = collection(db, "regNowserving");
+
   const [selectedOption, setSelectedOption] = useState("");
-  const [value, setValue] = useState(""); //state accepts number only
   const [transaction, setTransaction] = useState([]);
   const navigate = useNavigate();
 
@@ -67,14 +91,247 @@ const Form = () => {
   const numOnly = (e) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
-      setValue(e.target.value);
+      setContact(e.target.value);
     }
+  };
+
+  // Function for clear selected fields
+  const clearForm = () => {
+    setStudentNumber("");
+    setAddress("");
+    setContact("");
+    setYearSection("");
   };
 
   const landing = () => {
     navigate("/");
   };
-  // style
+
+  const generateSuccess = () => {
+    navigate("/generate-reg");
+  };
+
+  // Function for inserting user between (priorty or regular)
+  const insert = async () => {
+    let transactions = transaction.join(", ");
+
+    if (selectedOption !== "priority") {
+      if (window.confirm("Are you sure you wish to add this transaction ?")) {
+        await addDoc(userCollection1, {
+          name: name,
+          transaction: transactions,
+          email: email,
+          studentNumber: studentNumber,
+          address: address,
+          contact: contact,
+          userType: selectedOption,
+          yearSection: yearSection,
+          ticket: window.ticket1,
+          timestamp: serverTimestamp(),
+        });
+        generateSuccess();
+      }
+    } else {
+      if (window.confirm("Are you sure you wish to add this transaction ?")) {
+        await addDoc(userCollection2, {
+          name: name,
+          transaction: transactions,
+          email: email,
+          studentNumber: studentNumber,
+          address: address,
+          contact: contact,
+          userType: selectedOption,
+          yearSection: yearSection,
+          ticket: window.ticket1,
+          timestamp: serverTimestamp(),
+        });
+        generateSuccess();
+      }
+    }
+  };
+
+  const checkExisting = async () => {
+    let x = 0;
+    let y = 0;
+
+    //Check student number if exist
+    let checkStudentNumber = query(
+      collection(db, "regQueuing"),
+      where("studentNumber", "==", studentNumber)
+    );
+    let querySnapshotNumber = await getDocs(checkStudentNumber);
+    querySnapshotNumber.forEach(() => {
+      x++;
+    });
+
+    checkStudentNumber = query(
+      collection(db, "regNowserving"),
+      where("studentNumber", "==", studentNumber)
+    );
+    querySnapshotNumber = await getDocs(checkStudentNumber);
+    querySnapshotNumber.forEach(() => {
+      x++;
+    });
+
+    checkStudentNumber = query(
+      collection(db, "regSkip"),
+      where("studentNumber", "==", studentNumber)
+    );
+    querySnapshotNumber = await getDocs(checkStudentNumber);
+    querySnapshotNumber.forEach(() => {
+      x++;
+    });
+    // Check email  if exist
+    let checkEmail = query(
+      collection(db, "regQueuing"),
+      where("email", "==", email)
+    );
+    let querySnapshotEmail = await getDocs(checkEmail);
+    querySnapshotEmail.forEach(() => {
+      y++;
+    });
+
+    checkEmail = query(
+      collection(db, "regNowserving"),
+      where("email", "==", email)
+    );
+    querySnapshotEmail = await getDocs(checkEmail);
+    querySnapshotEmail.forEach(() => {
+      y++;
+    });
+
+    checkEmail = query(collection(db, "regSkip"), where("email", "==", email));
+    querySnapshotEmail = await getDocs(checkEmail);
+    querySnapshotEmail.forEach(() => {
+      y++;
+    });
+
+    if (x > 0 && y === 0) {
+      alert("Student Number is existing on Que Line");
+    } else if (x === 0 && y > 0) {
+      alert("Email is existing on Que Line");
+    } else if (x > 0 && y > 0) {
+      alert("Email and Stundent Number is existing on Que Line");
+    } else {
+      insert();
+    }
+  };
+
+  // Validating for creating user
+  const creatingUser = async () => {
+    let z = 0;
+
+    // Check if Ticket exist on Acad Que Table
+    let checkTicket = query(
+      collection(db, "regQueuing"),
+      where("ticket", "==", window.ticket1)
+    );
+    let querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
+    // Check if Ticket exist on Acad Now Serving Table
+    checkTicket = query(
+      collection(db, "regNowserving"),
+      where("ticket", "==", window.ticket1)
+    );
+    querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
+    // Check if Ticket exist on Acad Skip Table
+    checkTicket = query(
+      collection(db, "regSkip"),
+      where("ticket", "==", window.ticket1)
+    );
+    querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
+    if (z > 0) {
+      // IF exist then random again until generate unique ticket id
+      let ctr = 0;
+      do {
+        ctr = 0;
+        window.ticket1 = "RO" + randomNumberInRange(99, 499);
+        let getNum = query(
+          collection(db, "regQueuing"),
+          where("ticket", "==", window.ticket1)
+        );
+        let querySnapshotNum = await getDocs(getNum);
+        querySnapshotNum.forEach(() => {
+          ctr++;
+        });
+
+        getNum = query(
+          collection(db, "regNowserving"),
+          where("ticket", "==", window.ticket1)
+        );
+        querySnapshotNum = await getDocs(getNum);
+        querySnapshotNum.forEach(() => {
+          ctr++;
+        });
+      } while (ctr > 0);
+    }
+    // Chkeck if student number or email are exist/s in queline
+
+    // form requied fields validation
+    if (selectedOption === "student") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        transaction.length > 0 &&
+        yearSection.length > 0 &&
+        studentNumber.length > 0
+      ) {
+        checkExisting();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else if (selectedOption === "priority") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        transaction.length > 0 &&
+        yearSection.length > 0 &&
+        studentNumber.length > 0
+      ) {
+        checkExisting();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else if (selectedOption === "guest") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        transaction.length > 0 &&
+        contact.length > 0 &&
+        address.length > 0
+      ) {
+        checkExisting();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else if (selectedOption === "parent") {
+      if (
+        name.length > 0 &&
+        email.length > 0 &&
+        contact.length > 0 &&
+        address.length > 0 &&
+        yearSection.length > 0 &&
+        studentNumber.length > 0
+      ) {
+        checkExisting();
+      } else {
+        alert("Please fill all the reqiured fields!");
+      }
+    } else {
+      alert("Please fill all the reqiured fields!");
+    }
+  };
 
   return (
     <>
@@ -112,6 +369,10 @@ const Form = () => {
                     id="outlined-textarea"
                     required
                     label="Name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
                     autoFocus
                     placeholder="Ex. Juan Dela Cruz"
                     color="pupMaroon"
@@ -128,7 +389,11 @@ const Form = () => {
                     id="outlined-textarea"
                     required
                     label="Email"
+                    value={email}
                     placeholder="Ex. JuanDelacruz@yahoo.com"
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
                     color="pupMaroon"
                     InputProps={{
                       endAdornment: (
@@ -195,9 +460,10 @@ const Form = () => {
                       name="row-radio-buttons-group"
                       color="pupMaroon"
                       value={selectedOption}
-                      onChange={(event) =>
-                        setSelectedOption(event.target.value)
-                      }
+                      onChange={(event) => {
+                        setSelectedOption(event.target.value);
+                        clearForm();
+                      }}
                     >
                       <FormControlLabel
                         value="student"
@@ -206,7 +472,7 @@ const Form = () => {
                         color="pupMaroon"
                       />
                       <FormControlLabel
-                        value="pwd"
+                        value="priority"
                         control={<Radio color="pupMaroon" />}
                         label="PWD and Pregnant"
                       />
@@ -228,6 +494,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={yearSection}
+                            onChange={(e) => {
+                              setYearSection(e.target.value);
+                            }}
                             label="Year & Section"
                             placeholder="BSIT 1-1"
                             color="pupMaroon"
@@ -236,6 +506,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={studentNumber}
+                            onChange={(e) => {
+                              setStudentNumber(e.target.value);
+                            }}
                             label="Student Number"
                             placeholder="EX. 2018-12022-SM-0"
                             color="pupMaroon"
@@ -244,13 +518,17 @@ const Form = () => {
                         </Stack>
                       </>
                     )}
-                    {selectedOption === "pwd" && (
+                    {selectedOption === "priority" && (
                       <>
                         <Stack spacing={2} direction="column">
                           <TextField
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={yearSection}
+                            onChange={(e) => {
+                              setYearSection(e.target.value);
+                            }}
                             label="Year & Section"
                             placeholder="BSIT 1-1"
                             color="pupMaroon"
@@ -259,6 +537,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             required
+                            value={studentNumber}
+                            onChange={(e) => {
+                              setStudentNumber(e.target.value);
+                            }}
                             label="Student Number"
                             placeholder="EX. 2018-12022-SM-0"
                             color="pupMaroon"
@@ -276,7 +558,7 @@ const Form = () => {
                             required
                             label="Contact Number"
                             placeholder="Ex. 09997845244"
-                            value={value}
+                            value={contact}
                             onChange={numOnly}
                             color="pupMaroon"
                             maxlength="10"
@@ -285,6 +567,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             label="Address"
+                            value={address}
+                            onChange={(e) => {
+                              setAddress(e.target.value);
+                            }}
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"
                           />
@@ -297,6 +583,10 @@ const Form = () => {
                           <TextField
                             type="text"
                             id="outlined-textarea"
+                            value={yearSection}
+                            onChange={(e) => {
+                              setYearSection(e.target.value);
+                            }}
                             label="Year & Section of student, if representative"
                             placeholder="BSIT 1-1"
                             color="pupMaroon"
@@ -306,15 +596,10 @@ const Form = () => {
                             type="text"
                             id="outlined-textarea"
                             label="Student Number of student, if representative"
-                            placeholder="EX. 2018-12022-SM-0"
-                            color="pupMaroon"
-                            maxlength="15"
-                          />
-                          <TextField
-                            required
-                            type="text"
-                            id="outlined-textarea"
-                            label="Representative Name"
+                            value={studentNumber}
+                            onChange={(e) => {
+                              setStudentNumber(e.target.value);
+                            }}
                             placeholder="EX. 2018-12022-SM-0"
                             color="pupMaroon"
                             maxlength="15"
@@ -326,7 +611,7 @@ const Form = () => {
                             label="Contact Number"
                             inputmode="numeric"
                             placeholder="Ex. 09997845244"
-                            value={value}
+                            value={contact}
                             onChange={numOnly}
                             color="pupMaroon"
                             maxlength="10"
@@ -337,6 +622,10 @@ const Form = () => {
                             label="Address"
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"
+                            value={address}
+                            onChange={(e) => {
+                              setAddress(e.target.value);
+                            }}
                           />
                         </Stack>
                       </>
@@ -368,6 +657,7 @@ const Form = () => {
                       <Button
                         type="submit"
                         variant="contained"
+                        onClick={creatingUser}
                         color="pupMaroon"
                         sx={{ color: "wheat" }}
                         endIcon={<ChevronRight />}

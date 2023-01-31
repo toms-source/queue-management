@@ -16,7 +16,17 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  deleteDoc,
+  onSnapshot,
+  serverTimestamp,
+  addDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase-config";
 
 // table header syle
@@ -80,6 +90,12 @@ const AdminSkip = () => {
   const firstPostIndex = lastPostIndex - QlPostPerPage;
   const currentPost = userData.slice(firstPostIndex, lastPostIndex);
 
+  const userCollectionHistory = collection(db, "acadSummaryreport");
+  const userCollectionNowserving = collection(db, "acadNowserving");
+  const current = new Date();
+  const [date, setDate] = useState(
+    `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
+  );
   for (let i = 1; i <= Math.ceil(userData.length / QlPostPerPage); i++) {
     pages.push(i);
   }
@@ -102,6 +118,52 @@ const AdminSkip = () => {
     );
 
     return unsub;
+  };
+
+  const directDeleteUser = async (email) => {
+    const userDoc = doc(db, "acadSkip", email);
+    await deleteDoc(userDoc);
+  };
+
+  const moveUser = async (id) => {
+    const docRef = doc(db, "acadSkip", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionNowserving, {
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: serverTimestamp(),
+    });
+    directDeleteUser(id);
+  };
+  const moveUserToHistory = async (id) => {
+    const docRef = doc(db, "acadSkip", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionHistory, {
+      status: "Incomplete",
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: serverTimestamp(),
+      date: date,
+    });
+    directDeleteUser(id);
+  };
+
+  const addUser = async (id) => {
+    moveUser(id);
   };
 
   return (
@@ -142,10 +204,23 @@ const AdminSkip = () => {
                   <TableCell sx={{ minWidth: "300px" }}>
                     <Stack spacing={1.5} direction="row">
                       <Stack>
-                        <Button variant="contained">Serve Now</Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            addUser(queue.id);
+                          }}
+                        >
+                          Serve Now
+                        </Button>
                       </Stack>
                       <Stack>
-                        <Button variant="contained" color="red">
+                        <Button
+                          variant="contained"
+                          color="red"
+                          onClick={() => {
+                            moveUserToHistory(queue.id);
+                          }}
+                        >
                           Incomplete
                         </Button>
                       </Stack>

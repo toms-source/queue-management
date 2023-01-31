@@ -14,7 +14,17 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+  addDoc,
+  getDoc,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase-config";
 
 // table header syle
@@ -71,6 +81,12 @@ const styleTableBody = createTheme({
 
 const AdminNowServing = () => {
   const [userData, setUserData] = useState([]);
+  const current = new Date();
+  const [date, setDate] = useState(
+    `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
+  );
+  const userCollectionHistory = collection(db, "regSummaryreport");
+  const userCollectionSkip = collection(db, "regSkip");
   const currentPage = 1;
   const postPerPage = 2;
   let pages = [];
@@ -96,6 +112,69 @@ const AdminNowServing = () => {
     );
 
     return unsub;
+  };
+
+  //button function
+  const directDeleteUser = async (email) => {
+    const userDoc = doc(db, "regNowserving", email);
+    await deleteDoc(userDoc);
+  };
+
+  const moveToHistorycomplete = async (id) => {
+    const docRef = doc(db, "regNowserving", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionHistory, {
+      status: "Complete",
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      date: date,
+    });
+    directDeleteUser(id);
+  };
+
+  const moveToHistoryincomplete = async (id) => {
+    const docRef = doc(db, "regNowserving", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionHistory, {
+      status: "Incomplete",
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: serverTimestamp(),
+      date: date,
+    });
+    directDeleteUser(id);
+  };
+
+  const moveToSkip = async (id) => {
+    const docRef = doc(db, "regNowserving", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionSkip, {
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: serverTimestamp(),
+    });
+    directDeleteUser(id);
   };
   return (
     <div>
@@ -135,17 +214,35 @@ const AdminNowServing = () => {
                   <TableCell sx={{ minWidth: "350px" }}>
                     <Stack spacing={1.5} direction="row">
                       <Stack>
-                        <Button variant="contained" color="success">
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={() => {
+                            moveToHistorycomplete(queue.id);
+                          }}
+                        >
                           Complete
                         </Button>
                       </Stack>
                       <Stack>
-                        <Button variant="contained" color="red">
+                        <Button
+                          variant="contained"
+                          color="red"
+                          onClick={() => {
+                            moveToHistoryincomplete(queue.id);
+                          }}
+                        >
                           Incomplete
                         </Button>
                       </Stack>
                       <Stack>
-                        <Button variant="contained" color="yellow">
+                        <Button
+                          variant="contained"
+                          color="yellow"
+                          onClick={() => {
+                            moveToSkip(queue.id);
+                          }}
+                        >
                           Skip
                         </Button>
                       </Stack>

@@ -40,8 +40,6 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-import moment from "moment-timezone";
-
 // Function for generate random number
 function randomNumberInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -78,7 +76,7 @@ const Form = () => {
   const landing = () => {
     navigate("/");
   };
-  const generateAcad = () => {
+  const generateSuccess = () => {
     navigate("/generate-acad");
   };
 
@@ -111,11 +109,13 @@ const Form = () => {
 
   // Function for inserting user between (priorty or regular)
   const insert = async () => {
+    let transactions = transaction.join(", ");
+
     if (selectedOption !== "priority") {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
         await addDoc(userCollection1, {
           name: name,
-          transaction: transaction,
+          transaction: transactions,
           email: email,
           studentNumber: studentNumber,
           address: address,
@@ -125,14 +125,13 @@ const Form = () => {
           ticket: window.ticket,
           timestamp: serverTimestamp(),
         });
-        //navigate("/generateSuccess")
-        generateAcad();
+        generateSuccess();
       }
     } else {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
         await addDoc(userCollection2, {
           name: name,
-          transaction: transaction,
+          transaction: transactions,
           email: email,
           studentNumber: studentNumber,
           address: address,
@@ -142,57 +141,81 @@ const Form = () => {
           ticket: window.ticket,
           timestamp: serverTimestamp(),
         });
-        //navigate("/generateSuccess")
+        generateSuccess();
       }
+    }
+  };
+
+  const checkExisting = async () => {
+    let x = 0;
+    let y = 0;
+
+    //Check student number if exist
+    let checkStudentNumber = query(
+      collection(db, "acadQueuing"),
+      where("studentNumber", "==", studentNumber)
+    );
+    let querySnapshotNumber = await getDocs(checkStudentNumber);
+    querySnapshotNumber.forEach(() => {
+      x++;
+    });
+
+    checkStudentNumber = query(
+      collection(db, "acadNowserving"),
+      where("studentNumber", "==", studentNumber)
+    );
+    querySnapshotNumber = await getDocs(checkStudentNumber);
+    querySnapshotNumber.forEach(() => {
+      x++;
+    });
+
+    checkStudentNumber = query(
+      collection(db, "acadSkip"),
+      where("studentNumber", "==", studentNumber)
+    );
+    querySnapshotNumber = await getDocs(checkStudentNumber);
+    querySnapshotNumber.forEach(() => {
+      x++;
+    });
+    // Check email  if exist
+    let checkEmail = query(
+      collection(db, "acadQueuing"),
+      where("email", "==", email)
+    );
+    let querySnapshotEmail = await getDocs(checkEmail);
+    querySnapshotEmail.forEach(() => {
+      y++;
+    });
+
+    checkEmail = query(
+      collection(db, "acadNowserving"),
+      where("email", "==", email)
+    );
+    querySnapshotEmail = await getDocs(checkEmail);
+    querySnapshotEmail.forEach(() => {
+      y++;
+    });
+
+    checkEmail = query(collection(db, "acadSkip"), where("email", "==", email));
+    querySnapshotEmail = await getDocs(checkEmail);
+    querySnapshotEmail.forEach(() => {
+      y++;
+    });
+
+    if (x > 0 && y === 0) {
+      alert("Student Number is existing on Que Line");
+    } else if (x === 0 && y > 0) {
+      alert("Email is existing on Que Line");
+    } else if (x > 0 && y > 0) {
+      alert("Email and Stundent Number is existing on Que Line");
+    } else {
+      insert();
     }
   };
 
   // Validating for creating user
   const creatingUser = async () => {
-    let x = 0;
-    let y = 0;
     let z = 0;
-
-    //Check student number if exist
-    if (selectedOption === "student" && selectedOption === "priority") {
-      let checkStudentNumber = query(
-        collection(db, "acadQueuing"),
-        where("studentNumber", "==", studentNumber)
-      );
-      let querySnapshotNumber = await getDocs(checkStudentNumber);
-      querySnapshotNumber.forEach(() => {
-        x++;
-      });
-
-      checkStudentNumber = query(
-        collection(db, "acadNowserving"),
-        where("studentNumber", "==", studentNumber)
-      );
-      querySnapshotNumber = await getDocs(checkStudentNumber);
-      querySnapshotNumber.forEach(() => {
-        x++;
-      });
-    }
-    // Check contact number if exist
-    else {
-      let checkContact = query(
-        collection(db, "acadQueuing"),
-        where("contact", "==", contact)
-      );
-      let querySnapshotContact = await getDocs(checkContact);
-      querySnapshotContact.forEach(() => {
-        y++;
-      });
-
-      checkContact = query(
-        collection(db, "acadNowserving"),
-        where("contact", "==", contact)
-      );
-      querySnapshotContact = await getDocs(checkContact);
-      querySnapshotContact.forEach(() => {
-        y++;
-      });
-    }
 
     // Check if Ticket exist on Acad Que Table
     let checkTicket = query(
@@ -214,11 +237,21 @@ const Form = () => {
       z++;
     });
 
+    // Check if Ticket exist on Acad Skip Table
+    checkTicket = query(
+      collection(db, "acadSkip"),
+      where("ticket", "==", window.ticket)
+    );
+    querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
     if (z > 0) {
       // IF exist then random again until generate unique ticket id
-      let y = 0;
+      let ctr = 0;
       do {
-        y = 0;
+        ctr = 0;
         window.ticket = "AP" + randomNumberInRange(99, 499);
         let getNum = query(
           collection(db, "acadQueuing"),
@@ -226,7 +259,7 @@ const Form = () => {
         );
         let querySnapshotNum = await getDocs(getNum);
         querySnapshotNum.forEach(() => {
-          y++;
+          ctr++;
         });
 
         getNum = query(
@@ -235,10 +268,12 @@ const Form = () => {
         );
         querySnapshotNum = await getDocs(getNum);
         querySnapshotNum.forEach(() => {
-          y++;
+          ctr++;
         });
-      } while (y > 0);
+      } while (ctr > 0);
     }
+    // Chkeck if student number or email are exist/s in queline
+
     // form requied fields validation
     if (selectedOption === "student") {
       if (
@@ -248,7 +283,7 @@ const Form = () => {
         yearSection.length > 0 &&
         studentNumber.length > 0
       ) {
-        insert();
+        checkExisting();
       } else {
         alert("Please fill all the reqiured fields!");
       }
@@ -260,7 +295,7 @@ const Form = () => {
         yearSection.length > 0 &&
         studentNumber.length > 0
       ) {
-        insert();
+        checkExisting();
       } else {
         alert("Please fill all the reqiured fields!");
       }
@@ -272,20 +307,20 @@ const Form = () => {
         contact.length > 0 &&
         address.length > 0
       ) {
-        insert();
+        checkExisting();
       } else {
         alert("Please fill all the reqiured fields!");
       }
     } else if (selectedOption === "parent") {
       if (
         name.length > 0 &&
-        transaction.length > 0 &&
+        email.length > 0 &&
         contact.length > 0 &&
         address.length > 0 &&
         yearSection.length > 0 &&
         studentNumber.length > 0
       ) {
-        insert();
+        checkExisting();
       } else {
         alert("Please fill all the reqiured fields!");
       }
@@ -293,7 +328,6 @@ const Form = () => {
       alert("Please fill all the reqiured fields!");
     }
   };
-
   return (
     <>
       <Box

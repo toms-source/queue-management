@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   Box,
   Stack,
@@ -16,12 +17,91 @@ import Theme from "../CustomTheme";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Appbar from "../Components/Landing/Appbar";
 import Footer from "../Components/Landing/Footer";
+import { db } from "../firebase-config";
+import { collection, query, getDocs, where } from "firebase/firestore";
 
 import waves from "../Img/wave.svg";
 const labelNameStyle = {
   fontWeight: "bold",
 };
+
 const TransactionAcad = () => {
+  let [search, setSearch] = useState("");
+  let [name, setName] = useState("");
+  let [transactions, setTransactions] = useState("");
+  let [ticket, setTicket] = useState("");
+  let filters = "";
+
+  const searchUser = async () => {
+    let j = 0;
+    let q = query(
+      collection(db, "acadQueuing"),
+      where("studentNumber", "==", search)
+    );
+    let querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(
+      collection(db, "acadNowserving"),
+      where("studentNumber", "==", search)
+    );
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "acadSkip"), where("studentNumber", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "acadQueuing"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "acadNowserving"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "acadSkip"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    if (search.length === 0) {
+      alert("Please fill the required input!");
+    } else {
+      if (j === 0) {
+        alert("Email or Student Number not found");
+        clearForm();
+      } else {
+        setName(filters.name);
+        setTransactions(filters.transaction);
+        setTicket(filters.ticket);
+      }
+    }
+  };
+
+  const clearForm = () => {
+    setName("");
+    setTransactions("");
+    setTicket("");
+  };
+
   const navigate = useNavigate();
   const transaction = () => {
     navigate("/generateform-acad");
@@ -48,20 +128,24 @@ const TransactionAcad = () => {
                 xs: "18px",
               }}
             >
-              Search your transaction using Email
+              Search your transaction using Email / Student No. ?
             </Typography>
             <TextField
               type="email"
               id="Username"
-              label="Email"
+              label="Email/StudentNo."
               required
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              value={search}
               color="pupMaroon"
-              placeholder="Ex. JuanDelacruz@yahoo.com..."
+              placeholder="Ex. JuanDelacruz@yahoo.com / 2019-00733-SM-0 ..."
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton>
-                      <SearchOutlinedIcon onClick />
+                      <SearchOutlinedIcon onClick={searchUser} />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -116,6 +200,10 @@ const TransactionAcad = () => {
                 Ticket Entry
               </Typography>
               <Typography
+                onChange={(e) => {
+                  setTicket(e.target.value);
+                }}
+                value={ticket}
                 sx={{
                   width: "100%",
                   textAlign: "center",
@@ -128,9 +216,13 @@ const TransactionAcad = () => {
                   textDecoration: "underline",
                 }}
               >
-                AP312
+                {ticket}
               </Typography>
               <Typography
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                value={name}
                 sx={{
                   width: "100%",
                   textAlign: "center",
@@ -143,9 +235,13 @@ const TransactionAcad = () => {
                   fontWeight: "bold",
                 }}
               >
-                Juan dela cruz
+                {name}
               </Typography>
               <Typography
+                onChange={(e) => {
+                  setTransactions(e.target.value);
+                }}
+                value={transactions}
                 sx={{
                   width: "100%",
                   textAlign: "center",
@@ -157,9 +253,7 @@ const TransactionAcad = () => {
                   },
                 }}
               >
-                Processing of Application for Shifting, Processing of Request
-                for Certification (Grades, Bonafide Student, General Weighted
-                Average)
+                {transactions}
               </Typography>
             </Box>
             <Box m={2}>

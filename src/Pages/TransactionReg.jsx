@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   Box,
   Stack,
@@ -16,15 +17,96 @@ import Theme from "../CustomTheme";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import Appbar from "../Components/Landing/Appbar";
 import Footer from "../Components/Landing/Footer";
+import { db } from "../firebase-config";
+import { collection, query, getDocs, where } from "firebase/firestore";
 
+import waves from "../Img/wave.svg";
 const labelNameStyle = {
   fontWeight: "bold",
 };
+
 const TransactionAcad = () => {
-  const navigate = useNavigate();
-  const landing = () => {
-    navigate("/");
+  let [search, setSearch] = useState("");
+  let [name, setName] = useState("");
+  let [transactions, setTransactions] = useState("");
+  let [ticket, setTicket] = useState("");
+  let filters = "";
+
+  const searchUser = async () => {
+    let j = 0;
+    let q = query(
+      collection(db, "regQueuing"),
+      where("studentNumber", "==", search)
+    );
+    let querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(
+      collection(db, "regNowserving"),
+      where("studentNumber", "==", search)
+    );
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "regSkip"), where("studentNumber", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "regQueuing"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "regNowserving"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    q = query(collection(db, "regSkip"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
+    if (search.length === 0) {
+      alert("Please fill the required input!");
+    } else {
+      if (j === 0) {
+        alert("Email or Student Number not found");
+        clearForm();
+      } else {
+        setName(filters.name);
+        setTransactions(filters.transaction);
+        setTicket(filters.ticket);
+      }
+    }
   };
+
+  const clearForm = () => {
+    setName("");
+    setTransactions("");
+    setTicket("");
+  };
+
+  const navigate = useNavigate();
+  const transaction = () => {
+    navigate("/generateform-reg");
+  };
+
   return (
     <>
       <Box>
@@ -41,24 +123,30 @@ const TransactionAcad = () => {
             <Typography
               mb={3}
               fontSize={{
-                lg: 30,
-                md: 25,
+                lg: "30px",
+                md: "25px",
+                sm: "20px",
+                xs: "18px",
               }}
             >
-              Search your transaction using Email
+              Search your transaction using Email / Student No. ?
             </Typography>
             <TextField
               type="email"
               id="Username"
-              label="Email"
+              label="Email/StudentNo."
               required
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+              value={search}
               color="pupMaroon"
-              placeholder="Ex. JuanDelacruz@yahoo.com..."
+              placeholder="Ex. JuanDelacruz@yahoo.com / 2019-00733-SM-0 ..."
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton>
-                      <SearchOutlinedIcon onClick />
+                      <SearchOutlinedIcon onClick={searchUser} />
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -72,59 +160,114 @@ const TransactionAcad = () => {
                 bgcolor: "white",
               }}
             />
+          </Box>
 
-            <Box component={Paper} my={10} p={5} elevation={5}>
-              <Stack spacing={3}>
-                <Stack>
-                  <Stack spacing={2} direction="row">
-                    <Stack>
-                      <Typography sx={labelNameStyle}>Ticket</Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography>RO8854</Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Stack>
-                  <Stack spacing={2} direction="row">
-                    <Stack>
-                      <Typography sx={labelNameStyle}>Name</Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography>Juan Dela Cruz</Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Stack>
-                  <Stack spacing={2} direction="row">
-                    <Stack>
-                      <Typography sx={labelNameStyle}>Transaction</Typography>
-                    </Stack>
-                    <Stack>
-                      <Typography>
-                        ISSUANCE OF CERTIFICATE OF REGISTRATION, ISSUANCE OF
-                        TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Stack>
-                <Stack spacing={2} direction="row">
-                  <Stack>
-                    <Button
-                      variant="outlined"
-                      sx={{ marginTop: "15px" }}
-                      onClick={landing}
-                    >
-                      Cancel
-                    </Button>
-                  </Stack>
-                  <Stack>
-                    <Button variant="contained" sx={{ marginTop: "15px" }}>
-                      Delete
-                    </Button>
-                  </Stack>
-                </Stack>
-              </Stack>
+          <Box
+            sx={{
+              px: { lg: 50, md: 20, xs: 0 },
+              pt: { lg: 5, md: 20, xs: 5 },
+            }}
+          >
+            <Box
+              component={Paper}
+              mx={2}
+              p={5}
+              sx={{
+                maxWidth: "1000px",
+                backgroundImage: `url(${waves})`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+              }}
+            >
+              <Typography
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1.1rem",
+                  },
+                  fontWeight: "bold",
+                  marginTop: {
+                    lg: "100px",
+                    md: "80px",
+                    sm: "60px",
+                    xs: "40px",
+                  },
+                }}
+              >
+                Ticket Entry
+              </Typography>
+              <Typography
+                onChange={(e) => {
+                  setTicket(e.target.value);
+                }}
+                value={ticket}
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1rem",
+                  },
+                  textDecoration: "underline",
+                }}
+              >
+                {ticket}
+              </Typography>
+              <Typography
+                onChange={(e) => {
+                  setName(e.target.value);
+                }}
+                value={name}
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1rem",
+                  },
+                  fontWeight: "bold",
+                }}
+              >
+                {name}
+              </Typography>
+              <Typography
+                onChange={(e) => {
+                  setTransactions(e.target.value);
+                }}
+                value={transactions}
+                sx={{
+                  width: "100%",
+                  textAlign: "center",
+                  fontSize: {
+                    lg: "2rem",
+                    md: "1.5rem",
+                    sm: "1.5rem",
+                    xs: "1rem",
+                  },
+                }}
+              >
+                {transactions}
+              </Typography>
+            </Box>
+            <Box m={2}>
+              <ThemeProvider theme={Theme}>
+                <Button
+                  variant="contained"
+                  color="pupMaroon"
+                  onClick={transaction}
+                  sx={{ width: "100%" }}
+                >
+                  Create Transaction Or View Queue Line
+                </Button>
+              </ThemeProvider>
             </Box>
           </Box>
         </ThemeProvider>

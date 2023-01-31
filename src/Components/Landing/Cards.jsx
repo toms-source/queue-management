@@ -27,7 +27,7 @@ const Cards = () => {
     const checkTime = () => {
       const currentTime = moment().tz(timezone);
       const startTime = moment.tz("08:00", "HH:mm", timezone);
-      const endTime = moment.tz("21:00", "HH:mm", timezone);
+      const endTime = moment.tz("24:00", "HH:mm", timezone);
 
       if (currentTime.isBetween(startTime, endTime)) {
         setIsDisabled(false);

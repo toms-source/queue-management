@@ -5,6 +5,16 @@ import Appbar from "../Components/Landing/Appbar";
 import { useNavigate } from "react-router-dom";
 import waves from "../Img/wave.svg";
 import Theme from "../CustomTheme";
+import { db } from "../firebase-config";
+import {
+  collection,
+  query,
+  getDocs,
+  where,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const GenerateAcad = () => {
   const navigate = useNavigate();

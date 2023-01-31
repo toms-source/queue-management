@@ -15,7 +15,17 @@ import {
   Paper,
   Tooltip,
 } from "@mui/material";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  deleteDoc,
+  onSnapshot,
+  serverTimestamp,
+  addDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase-config";
 
 // table header syle
@@ -79,6 +89,7 @@ const AdminQueueline = () => {
   const lastPostIndex = qlCurrentPage * QlPostPerPage;
   const firstPostIndex = lastPostIndex - QlPostPerPage;
   const currentPost = qlUserData.slice(firstPostIndex, lastPostIndex);
+  const userCollection = collection(db, "acadNowserving");
 
   for (let i = 1; i <= Math.ceil(qlUserData.length / QlPostPerPage); i++) {
     pages.push(i);
@@ -102,6 +113,33 @@ const AdminQueueline = () => {
     );
 
     return unsub;
+  };
+
+  const directDeleteUser = async (email) => {
+    const userDoc = doc(db, "acadQueuing", email);
+    await deleteDoc(userDoc);
+  };
+
+  const moveUser = async (id) => {
+    const docRef = doc(db, "acadQueuing", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollection, {
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: serverTimestamp(),
+    });
+    directDeleteUser(id);
+  };
+
+  const addUser = async (id) => {
+    moveUser(id);
   };
   return (
     <>
@@ -139,7 +177,14 @@ const AdminQueueline = () => {
               {currentPost.map((queue, index) => (
                 <TableRow key={index}>
                   <TableCell>
-                    <Button variant="contained">Serve Now</Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        addUser(queue.id);
+                      }}
+                    >
+                      Serve Now
+                    </Button>
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     {queue.ticket}

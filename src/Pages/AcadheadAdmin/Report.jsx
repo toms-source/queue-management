@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -14,10 +14,13 @@ import {
   TableCell,
   TableRow,
   createTheme,
+  Tooltip,
 } from "@mui/material";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
+import { db } from "../../firebase-config";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -69,6 +72,21 @@ const styleTableBody = createTheme({
 });
 
 const Report = () => {
+  const [qlUserData, setQluserData] = useState([]);
+
+  useEffect(() => {
+    tableQueryHistory();
+  }, []);
+
+  const tableQueryHistory = async () => {
+    const acadQueueCollection = collection(db, "acadSummaryreport");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -119,21 +137,34 @@ const Report = () => {
               <ThemeProvider theme={styleTableBody}>
                 {/* Table Body */}
                 <TableBody>
-                  <TableRow>
-                    <TableCell>Complete</TableCell>
-                    <TableCell>June 10 2023</TableCell>
-                    <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                      RO234
-                    </TableCell>
-                    <TableCell>Overload, Change Subject</TableCell>
-                    <TableCell>Juan dela Cruz</TableCell>
-                    <TableCell>2018-45632-SM-0</TableCell>
-                    <TableCell>juandc@gmail.com</TableCell>
-                    <TableCell>Student</TableCell>
-                    <TableCell>BSIT 3-2</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
+                  {qlUserData.map((queue, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{queue.status}</TableCell>
+                      <TableCell>{queue.date}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        {queue.ticket}
+                      </TableCell>
+                      <Tooltip title={queue.transaction} arrow>
+                        <TableCell
+                          sx={{
+                            maxWidth: "200px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {queue.transaction}
+                        </TableCell>
+                      </Tooltip>
+                      <TableCell>{queue.name}</TableCell>
+                      <TableCell>{queue.studentNumber}</TableCell>
+                      <TableCell>{queue.email}</TableCell>
+                      <TableCell>{queue.userType}</TableCell>
+                      <TableCell>{queue.yearSection}</TableCell>
+                      <TableCell>{queue.contact}</TableCell>
+                      <TableCell>{queue.address}</TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </ThemeProvider>
             </Table>

@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -27,10 +27,11 @@ import {
   collection,
   addDoc,
   serverTimestamp,
-  timestamp,
-  where,
+  doc,
   query,
-  getDocs,
+  orderBy,
+  deleteDoc,
+  onSnapshot,
 } from "firebase/firestore";
 
 // table header syle
@@ -81,20 +82,41 @@ const styleTableBody = createTheme({
 const Announcement = () => {
   const [announce, setAnnounce] = useState("");
   const announceCollection = collection(db, "acadAnnouncement");
+  const [userData, setUserData] = useState([]);
 
   const insert = async () => {
     if (announce.length > 0) {
-      await addDoc(announceCollection, {
-        announcement: announce,
-        timestamp: serverTimestamp(),
-      });
-
-      alert("inserted!");
-      setAnnounce("");
+      if (window.confirm("Are you sure you wish to add this announcement ?")) {
+        await addDoc(announceCollection, {
+          announcement: announce,
+          timestamp: serverTimestamp(),
+        });
+        setAnnounce("");
+      }
     } else {
       alert("Please fill all the reqiured fields!");
     }
   };
+
+  useEffect(() => {
+    tableQueryAnnouncement();
+  }, []);
+
+  const directDelete = async (email) => {
+    const userDoc = doc(db, "acadAnnouncement", email);
+    await deleteDoc(userDoc);
+  };
+
+  // Announcement Table
+  const tableQueryAnnouncement = async () => {
+    const acadQueueCollection = collection(db, "acadAnnouncement");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -123,6 +145,7 @@ const Announcement = () => {
             id="outlined-multiline-flexible"
             label="Announcement"
             multiline
+            value={announce}
             maxRows={4}
             fullWidth
             height="100px"
@@ -153,7 +176,6 @@ const Announcement = () => {
               <ThemeProvider theme={styleTableHead}>
                 <TableHead>
                   <TableRow>
-                    <TableCell>ID</TableCell>
                     <TableCell>Action</TableCell>
                     <TableCell>Announcement</TableCell>
                   </TableRow>
@@ -162,21 +184,24 @@ const Announcement = () => {
               <ThemeProvider theme={styleTableBody}>
                 {/* Table Body */}
                 <TableBody>
-                  <TableRow>
-                    <TableCell>1</TableCell>
-                    <TableCell>
-                      <Button variant="contained" color="red">
-                        Delete
-                      </Button>
-                    </TableCell>
-                    <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Repudiandae quia nesciunt quae, asperiores, itaque, ad
-                      dicta quisquam dolore a perferendis magnam maxime cumque
-                      voluptatum aliquid quos ut recusandae est facilis omnis
-                      eveniet! Veritatis provident minima reiciendis, ipsam
-                    </TableCell>
-                  </TableRow>
+                  {userData.map((queue, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Button
+                          variant="contained"
+                          color="red"
+                          onClick={() => {
+                            directDelete(queue.id);
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </TableCell>
+                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                        {queue.announcement}
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </ThemeProvider>
             </Table>
