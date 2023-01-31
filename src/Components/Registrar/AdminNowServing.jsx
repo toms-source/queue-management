@@ -1,10 +1,11 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import {
   Typography,
   Paper,
   TableContainer,
   Table,
   TableHead,
+  Tooltip,
   TableRow,
   TableCell,
   TableBody,
@@ -13,6 +14,8 @@ import {
   ThemeProvider,
   createTheme,
 } from "@mui/material";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase-config";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -57,6 +60,9 @@ const styleTableBody = createTheme({
         root: {
           whiteSpace: "nowrap",
           textAlign: "center",
+          maxWidth: "200px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         },
       },
     },
@@ -64,6 +70,33 @@ const styleTableBody = createTheme({
 });
 
 const AdminNowServing = () => {
+  const [userData, setUserData] = useState([]);
+  const currentPage = 1;
+  const postPerPage = 2;
+  let pages = [];
+
+  const lastPostIndex = currentPage * postPerPage;
+  const firstPostIndex = lastPostIndex - postPerPage;
+  const currentPost = userData.slice(firstPostIndex, lastPostIndex);
+
+  for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
+    pages.push(i);
+  }
+
+  useEffect(() => {
+    tableQueryNowserving();
+  }, []);
+
+  // QueueLinetable Query
+  const tableQueryNowserving = async () => {
+    const acadQueueCollection = collection(db, "regNowserving");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+
+    return unsub;
+  };
   return (
     <div>
       <Typography
@@ -97,38 +130,57 @@ const AdminNowServing = () => {
           <ThemeProvider theme={styleTableBody}>
             {/* Table Body */}
             <TableBody>
-              <TableRow>
-                <TableCell>
-                  <Stack spacing={1.5} direction="row">
-                    <Stack>
-                      <Button variant="contained" color="success">
-                        Complete
-                      </Button>
+              {currentPost.map((queue, index) => (
+                <TableRow key={index}>
+                  <TableCell sx={{ minWidth: "350px" }}>
+                    <Stack spacing={1.5} direction="row">
+                      <Stack>
+                        <Button variant="contained" color="success">
+                          Complete
+                        </Button>
+                      </Stack>
+                      <Stack>
+                        <Button variant="contained" color="red">
+                          Incomplete
+                        </Button>
+                      </Stack>
+                      <Stack>
+                        <Button variant="contained" color="yellow">
+                          Skip
+                        </Button>
+                      </Stack>
                     </Stack>
-                    <Stack>
-                      <Button variant="contained" color="red">
-                        Incomplete
-                      </Button>
-                    </Stack>
-                    <Stack>
-                      <Button variant="contained" color="yellow">
-                        Skip
-                      </Button>
-                    </Stack>
-                  </Stack>
-                </TableCell>
-                <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                  RO234
-                </TableCell>
-                <TableCell>Overload, Change Subject</TableCell>
-                <TableCell>Juan dela Cruz</TableCell>
-                <TableCell>2018-45632-SM-0</TableCell>
-                <TableCell>juandc@gmail.com</TableCell>
-                <TableCell>Student</TableCell>
-                <TableCell>BSIT 3-2</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-              </TableRow>
+                  </TableCell>
+                  <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                    {queue.ticket}
+                  </TableCell>
+
+                  <Tooltip title={queue.transaction} arrow>
+                    <TableCell>{queue.transaction}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.name} arrow>
+                    <TableCell>{queue.name}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.studentNumber} arrow>
+                    <TableCell>{queue.studentNumber}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.email} arrow>
+                    <TableCell>{queue.email}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.userType} arrow>
+                    <TableCell>{queue.userType}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.yearSection} arrow>
+                    <TableCell>{queue.yearSection}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.contact} arrow>
+                    <TableCell>{queue.contact} </TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.address} arrow>
+                    <TableCell>{queue.address}</TableCell>
+                  </Tooltip>
+                </TableRow>
+              ))}
             </TableBody>
           </ThemeProvider>
         </Table>

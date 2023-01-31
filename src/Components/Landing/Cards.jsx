@@ -27,7 +27,7 @@ const Cards = () => {
     const checkTime = () => {
       const currentTime = moment().tz(timezone);
       const startTime = moment.tz("08:00", "HH:mm", timezone);
-      const endTime = moment.tz("16:00", "HH:mm", timezone);
+      const endTime = moment.tz("21:00", "HH:mm", timezone);
 
       if (currentTime.isBetween(startTime, endTime)) {
         setIsDisabled(false);
@@ -90,7 +90,7 @@ const Cards = () => {
                     variant="contained"
                     endIcon={<AddToQueue />}
                     onClick={generateAcad}
-                    // disabled={isDisabled}
+                    disabled={isDisabled}
                     component={motion.div}
                     whileHover={{
                       scale: 1.05,
@@ -143,7 +143,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="contained"
                     onClick={generateReg}
-                    // disabled={isDisabled}
+                    disabled={isDisabled}
                     endIcon={<AddToQueue />}
                     component={motion.div}
                     whileHover={{

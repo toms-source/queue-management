@@ -130,13 +130,11 @@ const Login = () => {
                   }}
                 />
                 <Box>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Show Password"
-                      onChange={togglePassword}
-                    />
-                  </FormGroup>
+                  <FormControlLabel
+                    control={<Checkbox />}
+                    label="Show Password"
+                    onChange={togglePassword}
+                  />
                 </Box>
                 <Button
                   type="submit"

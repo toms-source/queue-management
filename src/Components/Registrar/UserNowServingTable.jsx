@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useState, useEffect } from "react";
 import {
   TableContainer,
   Table,
@@ -9,8 +9,37 @@ import {
   TableBody,
   Paper,
 } from "@mui/material";
+import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase-config";
 
 const UserNowServingTable = () => {
+  const [userData, setUserData] = useState([]);
+  const currentPage = 1;
+  const postPerPage = 1;
+  let pages = [];
+
+  const lastPostIndex = currentPage * postPerPage;
+  const firstPostIndex = lastPostIndex - postPerPage;
+  const currentPost = userData.slice(firstPostIndex, lastPostIndex);
+
+  for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
+    pages.push(i);
+  }
+
+  useEffect(() => {
+    tableQueryNowserving();
+  }, []);
+
+  // QueueLinetable Query
+  const tableQueryNowserving = async () => {
+    const acadQueueCollection = collection(db, "regNowserving");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+
+    return unsub;
+  };
   return (
     <>
       <TableContainer component={Paper} sx={{ minHeight: "160px" }}>
@@ -25,22 +54,16 @@ const UserNowServingTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                1
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                2
-              </TableCell>
-            </TableRow>
+            {currentPost.map((queue, index) => (
+              <TableRow key={index}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: "bold", border: "none" }}
+                >
+                  {queue.ticket}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

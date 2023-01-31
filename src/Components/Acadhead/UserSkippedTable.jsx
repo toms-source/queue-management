@@ -26,12 +26,12 @@ const UserSkippedTable = () => {
     pages.push(i);
   }
   useEffect(() => {
-    tableQueryQueue();
+    tableQuerySkip();
   }, []);
 
   // QueueLinetable Query
-  const tableQueryQueue = async () => {
-    const acadQueueCollection = collection(db, "acadQueuing");
+  const tableQuerySkip = async () => {
+    const acadQueueCollection = collection(db, "acadSkip");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))

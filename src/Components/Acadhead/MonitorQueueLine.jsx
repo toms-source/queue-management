@@ -43,7 +43,7 @@ const MonitorQueueLine = () => {
   };
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "447px" }}>
+      <TableContainer component={Paper} sx={{ minHeight: "100%" }}>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>

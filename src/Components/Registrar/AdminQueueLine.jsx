@@ -8,6 +8,7 @@ import {
   createTheme,
   TableHead,
   TableRow,
+  Tooltip,
   TableCell,
   TableBody,
   Button,
@@ -60,6 +61,9 @@ const styleTableBody = createTheme({
         root: {
           whiteSpace: "nowrap",
           textAlign: "center",
+          maxWidth: "200px",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
         },
       },
     },
@@ -91,7 +95,7 @@ const AdminQueueLine = () => {
 
   // QueueLinetable Query
   const tableQueryQueue = async () => {
-    const acadQueueCollection = collection(db, "acadQueuing");
+    const acadQueueCollection = collection(db, "regQueuing");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -140,14 +144,31 @@ const AdminQueueLine = () => {
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
                     {queue.ticket}
                   </TableCell>
-                  <TableCell>{queue.transaction}</TableCell>
-                  <TableCell>{queue.name}</TableCell>
-                  <TableCell>{queue.studentNumber}</TableCell>
-                  <TableCell>{queue.email}</TableCell>
-                  <TableCell>{queue.userType}</TableCell>
-                  <TableCell>{queue.yearSection}</TableCell>
-                  <TableCell>{queue.contact}</TableCell>
-                  <TableCell>{queue.address}</TableCell>
+
+                  <Tooltip title={queue.transaction} arrow>
+                    <TableCell>{queue.transaction}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.name} arrow>
+                    <TableCell>{queue.name}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.studentNumber} arrow>
+                    <TableCell>{queue.studentNumber}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.email} arrow>
+                    <TableCell>{queue.email}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.userType} arrow>
+                    <TableCell>{queue.userType}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.yearSection} arrow>
+                    <TableCell>{queue.yearSection}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.contact} arrow>
+                    <TableCell>{queue.contact}</TableCell>
+                  </Tooltip>
+                  <Tooltip title={queue.address} arrow>
+                    <TableCell>{queue.address}</TableCell>
+                  </Tooltip>
                 </TableRow>
               ))}
             </TableBody>

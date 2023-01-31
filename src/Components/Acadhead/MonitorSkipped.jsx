@@ -32,7 +32,7 @@ const MonitorSkipped = () => {
 
   // QueueLinetable Query
   const tableQueryQueue = async () => {
-    const acadQueueCollection = collection(db, "acadQueuing");
+    const acadQueueCollection = collection(db, "acadSkip");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -42,7 +42,6 @@ const MonitorSkipped = () => {
   };
   return (
     <>
-      {" "}
       <TableContainer component={Paper} sx={{ minHeight: "447px" }}>
         <Table aria-label="simple table">
           <TableHead>
