@@ -470,7 +470,7 @@ const Form = () => {
                       <FormControlLabel
                         value="priority"
                         control={<Radio color="pupMaroon" />}
-                        label="PWD and Pregnant"
+                        label="PWD/Pregnant/Senior"
                       />
                       <FormControlLabel
                         value="guest"
