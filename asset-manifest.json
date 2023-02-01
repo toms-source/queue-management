@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/queue-management/static/css/main.c31ce7fc.css",
+    "main.js": "/queue-management/static/js/main.3d7d49fb.js",
+    "static/media/img3.jpg": "/queue-management/static/media/img3.445bc1e82a76db034e1f.jpg",
+    "static/media/img2.jpg": "/queue-management/static/media/img2.f5a380ce2238bae02557.jpg",
+    "static/media/img4.jpg": "/queue-management/static/media/img4.aa35c031de60c6d2af4e.jpg",
+    "static/media/img6.jpg": "/queue-management/static/media/img6.e6c75f320e3ad0937101.jpg",
+    "static/media/img5.jpg": "/queue-management/static/media/img5.7349383e8b31f34588bc.jpg",
+    "static/media/img1.jpg": "/queue-management/static/media/img1.f5fbc8e33c3cd6403a26.jpg",
+    "static/media/img8.jpg": "/queue-management/static/media/img8.5d85cfd5c83b1fcaee61.jpg",
+    "static/media/img7.jpg": "/queue-management/static/media/img7.c257383c6a5dece4690d.jpg",
+    "static/media/img9.jpg": "/queue-management/static/media/img9.c1f4f0bebe9e3c47eaf9.jpg",
+    "static/media/img10.jpg": "/queue-management/static/media/img10.89ebe484f34f1c5b67bc.jpg",
+    "static/media/seal.png": "/queue-management/static/media/seal.885897c3770d7ec16c4c.png",
+    "index.html": "/queue-management/index.html",
+    "static/media/wave.svg": "/queue-management/static/media/wave.bcad5a3b9027bb84b3d542a41f23395d.svg",
+    "main.c31ce7fc.css.map": "/queue-management/static/css/main.c31ce7fc.css.map",
+    "main.3d7d49fb.js.map": "/queue-management/static/js/main.3d7d49fb.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c31ce7fc.css",
+    "static/js/main.3d7d49fb.js"
+  ]
+}
