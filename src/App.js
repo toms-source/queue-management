@@ -1,6 +1,7 @@
 import "./App.css";
 import Landing from "./Landing";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import PrivateRoutes from "./PrivateRoutes";
 import GenerateFormAcad from "./Pages/GenerateFormAcad";
 import GenerateFormReg from "./Pages/GenerateFormReg";
 import TransactionReg from "./Pages/TransactionReg";
@@ -17,13 +18,11 @@ import GenerateAcad from "./Pages/GenerateAcad";
 import GenerateReg from "./Pages/GenerateReg";
 
 import Login from "./Pages/Login";
-import AcadLogin from "./Pages/AcadheadAdmin/Login";
-import RegLogin from "./Pages/RegistrarAdmin/Login";
 import Notfound from "./Pages/Notfound";
 function App() {
   return (
     <>
-      <Router>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
           {/* Acad head */}
@@ -38,24 +37,28 @@ function App() {
 
           {/* Admin */}
           <Route path="admin" element={<Login />} />
-          {/* Acad head Admin*/}
-          <Route path="acad-head-controll" element={<AControll />} />
-          <Route path="acad-head-announcement" element={<AAnnouncement />} />
-          <Route path="acad-head-monitor" element={<AMonitor />} />
-          <Route path="acad-head-report" element={<AReport />} />
-          <Route path="acad-head-login" element={<AcadLogin />} />
+          <Route element={<PrivateRoutes />}>
+            {/* Acad head Admin*/}
+            <Route path="acad-head-controll" element={<AControll />} />
+            <Route path="acad-head-announcement" element={<AAnnouncement />} />
 
-          {/* Registrar Admin*/}
-          <Route path="reg-controll" element={<RControll />} />
-          <Route path="reg-announcement" element={<RAnnouncement />} />
+            <Route path="acad-head-report" element={<AReport />} />
+
+            {/* Registrar Admin*/}
+            <Route path="reg-controll" element={<RControll />} />
+            <Route path="reg-announcement" element={<RAnnouncement />} />
+
+            <Route path="reg-report" element={<RReport />} />
+          </Route>
+
+          {/* monitor */}
+          <Route path="acad-head-monitor" element={<AMonitor />} />
           <Route path="reg-monitor" element={<RMonitor />} />
-          <Route path="reg-report" element={<RReport />} />
-          <Route path="reg-login" element={<RegLogin />} />
 
           {/* Excess */}
           <Route path="*" element={<Notfound />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </>
   );
 }

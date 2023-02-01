@@ -316,8 +316,6 @@ const Form = () => {
         name.length > 0 &&
         email.length > 0 &&
         contact.length > 0 &&
-        address.length > 0 &&
-        yearSection.length > 0 &&
         studentNumber.length > 0
       ) {
         checkExisting();

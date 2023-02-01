@@ -23,8 +23,13 @@ import {
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import Theme from "../CustomTheme";
+import { auth } from "../firebase-config";
+import { ThemeContext } from "@emotion/react";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [pass, setPassword] = useState("");
+
   const [isShown, setIsSHown] = useState(false);
   const navigate = useNavigate();
   const landing = () => {
@@ -34,15 +39,22 @@ const Login = () => {
   const togglePassword = () => {
     setIsSHown((isShown) => !isShown);
   };
-  // OnsubmitFormFunction
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   console.log({
-  //     email: data.get("email"),
-  //     password: data.get("password"),
-  //   });
-  // };
+
+  const validate = async () => {
+    if (username.length !== 0 || pass.length !== 0) {
+      if (pass === "admin" && username === "adminacad") {
+        window.authentication = true;
+        navigate("/acad-head-controll");
+      } else if (pass === "admin" && username === "adminreg") {
+        window.authentication = true;
+        navigate("/reg-controll");
+      } else {
+        alert("Invalid credential");
+      }
+    } else if (username === "" || pass === "") {
+      alert("Please fill out the form");
+    }
+  };
 
   return (
     <div>
@@ -93,6 +105,7 @@ const Login = () => {
                 sx={{ mt: 1 }}
               >
                 <TextField
+                  onChange={(e) => setUsername(e.target.value)}
                   margin="normal"
                   required
                   fullWidth
@@ -112,6 +125,7 @@ const Login = () => {
                   }}
                 />
                 <TextField
+                  onChange={(e) => setPassword(e.target.value)}
                   margin="normal"
                   required
                   fullWidth
@@ -137,6 +151,7 @@ const Login = () => {
                   />
                 </Box>
                 <Button
+                  onClick={validate}
                   type="submit"
                   fullWidth
                   variant="contained"

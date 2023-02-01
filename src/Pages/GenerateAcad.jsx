@@ -1,5 +1,5 @@
 import { Box, Paper, Typography, Button, ThemeProvider } from "@mui/material";
-import React from "react";
+import { useState, useEffect } from "react";
 import Appbar from "../Components/Landing/Appbar";
 
 import { useNavigate } from "react-router-dom";
@@ -17,10 +17,62 @@ import {
 } from "firebase/firestore";
 
 const GenerateAcad = () => {
+  const [que, setQue] = useState([]);
+  const [skip, setSkip] = useState([]);
+  const [nowserve, setNowserve] = useState([]);
+  let currentTimestamp = Date.now();
+  let date = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(currentTimestamp);
+
   const navigate = useNavigate();
   const landing = () => {
     navigate("/");
   };
+
+  useEffect(() => {
+    nowServing();
+    skipped();
+    queuing();
+    readQue();
+  }, []);
+
+  const nowServing = async () => {
+    const userCollection = collection(db, "acadNowserving");
+    const x = query(userCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(x, (snapshot) =>
+      setNowserve(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+  const queuing = async () => {
+    const userCollection = collection(db, "acadSkip");
+    const x = query(userCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(x, (snapshot) =>
+      setSkip(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+  const skipped = async () => {
+    const userCollection = collection(db, "acadQueueing");
+    const x = query(userCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(x, (snapshot) =>
+      setQue(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+
+  const readQue = () => {
+    que.map((element) => {
+      console.log(element.ticket);
+    });
+  };
+
   return (
     <>
       <Box>
@@ -85,7 +137,7 @@ const GenerateAcad = () => {
               },
             }}
           >
-            Time and date
+            {date}
           </Typography>
 
           <Typography
@@ -102,7 +154,7 @@ const GenerateAcad = () => {
               textDecoration: "underline",
             }}
           >
-            AP317
+            {window.ticket}
           </Typography>
           <Typography
             sx={{
@@ -116,7 +168,7 @@ const GenerateAcad = () => {
               },
             }}
           >
-            There are 14 queue ahead of you
+            Thank you for using PUPSMB QMS
           </Typography>
         </Box>
         <Box m={2}>

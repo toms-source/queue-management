@@ -25,9 +25,9 @@ const Cards = () => {
   // to disable time in specific time only
   useEffect(() => {
     const checkTime = () => {
-      const currentTime = moment().tz(timezone);
-      const startTime = moment.tz("08:00", "HH:mm", timezone);
-      const endTime = moment.tz("24:00", "HH:mm", timezone);
+      let currentTime = moment().tz(timezone);
+      let startTime = moment.tz("08:00", "HH:mm a", timezone);
+      let endTime = moment.tz("17:00", "HH:mm a", timezone);
 
       if (currentTime.isBetween(startTime, endTime)) {
         setIsDisabled(false);
@@ -36,7 +36,7 @@ const Cards = () => {
       }
     };
 
-    const intervalId = setInterval(checkTime, 1000);
+    const intervalId = setInterval(checkTime, 500);
 
     return () => clearInterval(intervalId);
   }, []);
