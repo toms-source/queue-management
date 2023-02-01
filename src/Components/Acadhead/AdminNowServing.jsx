@@ -248,7 +248,7 @@ const AdminNowServing = () => {
                     </Stack>
                   </TableCell>
                   <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                    RO234
+                    {queue.ticket}
                   </TableCell>
 
                   <Tooltip title={queue.transaction} arrow>
