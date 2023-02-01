@@ -1,13 +1,17 @@
 import React from "react";
-import ReactPlayer from "react-player";
 import { Box } from "@mui/material";
-const TutorialVid = () => {
+import ReactPlayer from "react-player";
+
+const EntertainementVid = () => {
   return (
-    <>
+    <div>
+      {" "}
       <Box
-        my={{ lg: 8, md: 12 }}
-        mx={{ lg: 27, md: 10, sm: 5, xs: 4 }}
-        py={{ lg: 40, md: 30, sm: 20, xs: 20 }}
+        // my={{ lg: 8, md: 12 }}
+        // mx={{ lg: 27, md: 10, sm: 5, xs: 4 }}
+        m={5}
+        py={{ lg: "24.7vh", md: 30, sm: 20, xs: 20 }}
+        px={{ lg: "10px", md: 30, sm: 20, xs: 20 }}
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -20,12 +24,15 @@ const TutorialVid = () => {
           width="100%"
           height="100%"
           controls={true}
+          playing={true}
+          muted
           pip="true"
           style={{ position: "absolute", top: 0, left: 0 }}
+          loop={true}
         />
       </Box>
-    </>
+    </div>
   );
 };
 
-export default TutorialVid;
+export default EntertainementVid;

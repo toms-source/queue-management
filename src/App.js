@@ -17,6 +17,8 @@ import GenerateAcad from "./Pages/GenerateAcad";
 import GenerateReg from "./Pages/GenerateReg";
 
 import Login from "./Pages/Login";
+import AcadLogin from "./Pages/AcadheadAdmin/Login";
+import RegLogin from "./Pages/RegistrarAdmin/Login";
 import Notfound from "./Pages/Notfound";
 function App() {
   return (
@@ -41,12 +43,14 @@ function App() {
           <Route path="acad-head-announcement" element={<AAnnouncement />} />
           <Route path="acad-head-monitor" element={<AMonitor />} />
           <Route path="acad-head-report" element={<AReport />} />
+          <Route path="acad-head-login" element={<AcadLogin />} />
 
           {/* Registrar Admin*/}
           <Route path="reg-controll" element={<RControll />} />
           <Route path="reg-announcement" element={<RAnnouncement />} />
           <Route path="reg-monitor" element={<RMonitor />} />
           <Route path="reg-report" element={<RReport />} />
+          <Route path="reg-login" element={<RegLogin />} />
 
           {/* Excess */}
           <Route path="*" element={<Notfound />} />
