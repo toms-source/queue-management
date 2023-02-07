@@ -143,7 +143,7 @@ const Sidebar = () => {
                     primary={
                       <Typography style={{ fontSize: "1.5rem" }}>
                         <Link
-                          href="http://localhost:3000/reg-monitor"
+                          href="https://pupqueuemanagement.netlify.app/reg-monitor"
                           target="_blank"
                           rel="noreferrer"
                           underline="none"

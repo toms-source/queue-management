@@ -65,7 +65,7 @@ const Cards = () => {
             justifyContent="center"
           >
             <Grid item>
-              <Card sx={{ maxWidth: 500 }}>
+              <Card sx={{ maxWidth: 450 }}>
                 <CardMedia
                   component="img"
                   alt="green iguana"
@@ -120,7 +120,7 @@ const Cards = () => {
             </Grid>
 
             <Grid item>
-              <Card sx={{ maxWidth: 500 }}>
+              <Card sx={{ maxWidth: 450 }}>
                 <CardMedia
                   component="img"
                   alt="green iguana"
