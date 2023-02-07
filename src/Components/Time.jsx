@@ -24,7 +24,7 @@ const Time = () => {
         }}
       >
         <Typography
-          sx={{ fontSize: "2rem", color: "#880000", textAlign: "center" }}
+          sx={{ fontSize: "2em", color: "#880000", textAlign: "center" }}
         >
           {currentTime}
         </Typography>
