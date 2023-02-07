@@ -63,7 +63,7 @@ const MonitorSkipped = () => {
                   sx={{
                     fontWeight: "bold",
                     border: "none",
-                    fontSize: "1.8rem",
+                    fontSize: "1.5rem",
                   }}
                 >
                   {queue.ticket}
