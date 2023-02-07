@@ -18,7 +18,7 @@ const Time = () => {
           width: "185px",
           margin: "20px",
           borderRadius: "15px",
-          padding: "10px 220px",
+          padding: "10px 240px",
           backgroundColor: "cornsilk",
           boxShadow: "rgba(0, 0, 0, 0.35) 0 5px 15px",
         }}
