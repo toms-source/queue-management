@@ -7,7 +7,7 @@ import UserSkippedTable from "./UserSkippedTable";
 const Usertable = () => {
   return (
     <>
-      <Box my={4} sx={{ px: { lg: 50, md: 23, sm: 5, xs: 3 } }}>
+      <Box my={5} sx={{ px: { lg: 50, md: 23, sm: 5, xs: 3 } }}>
         <Grid container spacing={1.2}>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <UserNowServingTable />
@@ -21,22 +21,6 @@ const Usertable = () => {
             <UserSkippedTable />
           </Grid>
         </Grid>
-        {/* Pagination */}
-        {/* <Box
-          mt={4}
-          sx={{
-            width: "100%",
-            justifyContent: "center",
-            display: "flex",
-          }}
-        >
-          <Pagination
-            count={lastPostIndex}
-            page={currentPage}
-            onChange={handleChangePagination}
-            shape="rounded"
-          />
-        </Box> */}
       </Box>
     </>
   );

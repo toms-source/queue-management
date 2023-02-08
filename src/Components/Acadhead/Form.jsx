@@ -17,6 +17,7 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
+  Checkbox,
   RadioGroup,
 } from "@mui/material";
 import {
@@ -39,6 +40,7 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { yrSections, yrSN, transactionsAcad } from "../Selectfunctions";
 
 // Function for generate random number
 function randomNumberInRange(min, max) {
@@ -47,25 +49,13 @@ function randomNumberInRange(min, max) {
 
 window.ticket = "AP" + randomNumberInRange(99, 499); // Global variable for store ticket number
 
-const transactions = [
-  "Processing of Application for Overload of Subjects",
-  "Processing of Application for Change of Enrollment (Adding of Subject)",
-  "Processing of Application for Change of Enrollment (Change of Schedule/Subject)",
-  "Processing of Application for Correction of Grade Entry, Late Reporting of Grades and Removal of Incomplete Mark",
-  "Processing of Application for Cross-Enrollment",
-  "Processing of Application for Shifting",
-  "Processing of Manual Enrollment ",
-  "Processing of Online Petition of Subject",
-  "Processing of Online Request for Tutorial of Subject",
-  "Processing of Request for Certification (Grades, Bonafide Student, General Weighted Average)",
-];
-
 const Form = () => {
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
+  const [sNYear, setSNYear] = useState("");
   const [yearSection, setYearSection] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
   const [transaction, setTransaction] = useState([]);
@@ -96,7 +86,14 @@ const Form = () => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
       setContact(e.target.value);
+      setStudentNumber(e.target.value);
     }
+  };
+
+  // Function only letters can accept
+  const letterOnly = (e) => {
+    const onlyLetters = e.target.value.replace(/[^a-zA-Z- " "]/g, "");
+    setName(onlyLetters);
   };
 
   // Function for clear selected fields
@@ -365,33 +362,12 @@ const Form = () => {
                     autoFocus
                     placeholder="Ex. Juan Dela Cruz"
                     value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }} //set name
+                    onChange={letterOnly} //set name
                     color="pupMaroon"
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
                           <Badge />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    type="email"
-                    id="outlined-textarea"
-                    required
-                    label="Email"
-                    value={email}
-                    placeholder="Ex. JuanDelacruz@yahoo.com"
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }} //set email
-                    color="pupMaroon"
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <AlternateEmail />
                         </InputAdornment>
                       ),
                     }}
@@ -426,7 +402,7 @@ const Form = () => {
                         },
                       }}
                     >
-                      {transactions.map((transaction) => (
+                      {transactionsAcad.map((transaction) => (
                         <MenuItem
                           key={transaction}
                           value={transaction}
@@ -440,6 +416,33 @@ const Form = () => {
                         </MenuItem>
                       ))}
                     </Select>
+                  </FormControl>
+
+                  <FormControl>
+                    <FormLabel
+                      id="demo-row-radio-buttons-group-label"
+                      color="pupMaroon"
+                      required
+                    >
+                      Type of Transaction
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      color="pupMaroon"
+                    >
+                      <FormControlLabel
+                        value="Normal"
+                        control={<Radio color="pupMaroon" />}
+                        label="Normal"
+                      />
+                      <FormControlLabel
+                        value="pwd/pregnant/senior"
+                        control={<Radio color="pupMaroon" />}
+                        label="pwd/pregnant/senior"
+                      />
+                    </RadioGroup>
                   </FormControl>
 
                   <FormControl>
@@ -467,85 +470,120 @@ const Form = () => {
                         label="Student"
                         color="pupMaroon"
                       />
+
                       <FormControlLabel
-                        value="priority"
+                        value="guest/parent/alumni"
                         control={<Radio color="pupMaroon" />}
-                        label="PWD/Pregnant/Senior"
-                      />
-                      <FormControlLabel
-                        value="guest"
-                        control={<Radio color="pupMaroon" />}
-                        label="Guest"
-                      />
-                      <FormControlLabel
-                        value="parent"
-                        control={<Radio color="pupMaroon" />}
-                        label="Parent"
+                        label="Guest/Parent/Alumni"
                       />
                     </RadioGroup>
                     {selectedOption === "student" && (
                       <>
                         <Stack spacing={2} direction="column">
+                          <Stack spacing={1.5} direction="row">
+                            <FormControl
+                              sx={{
+                                minWidth: {
+                                  lg: "200px",
+                                  sx: "180px",
+                                  xs: "100px",
+                                },
+                              }}
+                            >
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                color="pupMaroon"
+                              >
+                                SN-Year
+                              </InputLabel>
+                              <Select
+                                required
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={sNYear}
+                                label="SN-Year"
+                                onChange={(e) => {
+                                  setSNYear(e.target.value);
+                                }}
+                                color="pupMaroon"
+                              >
+                                {yrSN.map((yrSn) => (
+                                  <MenuItem key={yrSn} value={yrSn}>
+                                    {yrSn}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+
+                            <TextField
+                              required
+                              type="text"
+                              id="outlined-textarea"
+                              label="Student Number"
+                              value={studentNumber}
+                              onChange={numOnly}
+                              placeholder="00215"
+                              color="pupMaroon"
+                              inputProps={{ maxLength: 5 }}
+                            />
+                            <TextField
+                              disabled
+                              type="text"
+                              id="outlined-textarea"
+                              value="SM-0"
+                            />
+                          </Stack>
+
+                          <FormControl fullWidth>
+                            <InputLabel
+                              id="demo-simple-select-label"
+                              color="pupMaroon"
+                            >
+                              Year & Section
+                            </InputLabel>
+                            <Select
+                              required
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              value={yearSection}
+                              label="Year & Section"
+                              onChange={(e) => {
+                                setYearSection(e.target.value);
+                              }}
+                              color="pupMaroon"
+                            >
+                              {yrSections.map((yrSec) => (
+                                <MenuItem key={yrSec} value={yrSec}>
+                                  {yrSec}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
                           <TextField
-                            type="text"
+                            type="email"
                             id="outlined-textarea"
                             required
-                            value={yearSection}
+                            label="Email"
+                            value={email}
+                            placeholder="Ex. JuanDelacruz@yahoo.com"
                             onChange={(e) => {
-                              setYearSection(e.target.value);
+                              setEmail(e.target.value);
                             }}
-                            label="Year & Section"
-                            placeholder="BSIT 1-1"
                             color="pupMaroon"
-                          />
-                          <TextField
-                            type="text"
-                            id="outlined-textarea"
-                            required
-                            value={studentNumber}
-                            onChange={(e) => {
-                              setStudentNumber(e.target.value);
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <AlternateEmail />
+                                </InputAdornment>
+                              ),
                             }}
-                            label="Student Number"
-                            placeholder="EX. 2018-12022-SM-0"
-                            color="pupMaroon"
-                            maxlength="15"
                           />
                         </Stack>
                       </>
                     )}
-                    {selectedOption === "priority" && (
-                      <>
-                        <Stack spacing={2} direction="column">
-                          <TextField
-                            type="text"
-                            id="outlined-textarea"
-                            required
-                            value={yearSection}
-                            onChange={(e) => {
-                              setYearSection(e.target.value);
-                            }}
-                            label="Year & Section"
-                            placeholder="BSIT 1-1"
-                            color="pupMaroon"
-                          />
-                          <TextField
-                            type="text"
-                            id="outlined-textarea"
-                            required
-                            value={studentNumber}
-                            onChange={(e) => {
-                              setStudentNumber(e.target.value);
-                            }}
-                            label="Student Number"
-                            placeholder="EX. 2018-12022-SM-0"
-                            color="pupMaroon"
-                            maxlength="15"
-                          />
-                        </Stack>
-                      </>
-                    )}
-                    {selectedOption === "guest" && (
+
+                    {selectedOption === "guest/parent/alumni" && (
                       <>
                         <Stack spacing={2} direction="column">
                           <TextField
@@ -554,10 +592,29 @@ const Form = () => {
                             required
                             label="Contact Number"
                             placeholder="Ex. 09997845244"
+                            inputProps={{ maxLength: 11 }}
                             value={contact}
                             onChange={numOnly}
                             color="pupMaroon"
                             maxlength="10"
+                          />
+                          <TextField
+                            type="email"
+                            id="outlined-textarea"
+                            label="Email"
+                            value={email}
+                            placeholder="Ex. JuanDelacruz@yahoo.com"
+                            onChange={(e) => {
+                              setEmail(e.target.value);
+                            }}
+                            color="pupMaroon"
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  <AlternateEmail />
+                                </InputAdornment>
+                              ),
+                            }}
                           />
                           <TextField
                             type="text"
@@ -569,59 +626,6 @@ const Form = () => {
                             }}
                             placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
                             color="pupMaroon"
-                          />
-                        </Stack>
-                      </>
-                    )}
-                    {selectedOption === "parent" && (
-                      <>
-                        <Stack spacing={2} direction="column">
-                          <TextField
-                            type="text"
-                            id="outlined-textarea"
-                            value={yearSection}
-                            onChange={(e) => {
-                              setYearSection(e.target.value);
-                            }}
-                            label="Year & Section of student, if representative"
-                            placeholder="BSIT 1-1"
-                            color="pupMaroon"
-                          />
-                          <TextField
-                            required
-                            type="text"
-                            id="outlined-textarea"
-                            label="Student Number of student, if representative"
-                            value={studentNumber}
-                            onChange={(e) => {
-                              setStudentNumber(e.target.value);
-                            }}
-                            placeholder="EX. 2018-12022-SM-0"
-                            color="pupMaroon"
-                            maxlength="15"
-                          />
-                          <TextField
-                            type="tel"
-                            id="outlined-textarea"
-                            required
-                            label="Contact Number"
-                            inputmode="numeric"
-                            placeholder="Ex. 09997845244"
-                            value={contact}
-                            onChange={numOnly}
-                            color="pupMaroon"
-                            maxlength="10"
-                          />
-                          <TextField
-                            type="text"
-                            id="outlined-textarea"
-                            label="Address"
-                            placeholder="Ex. Pulong Buhangin Sta. Maria Bulacan"
-                            color="pupMaroon"
-                            value={address}
-                            onChange={(e) => {
-                              setAddress(e.target.value);
-                            }}
                           />
                         </Stack>
                       </>

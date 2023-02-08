@@ -20,6 +20,7 @@ import Footer from "../Components/Landing/Footer";
 import { db } from "../firebase-config";
 import { collection, query, getDocs, where } from "firebase/firestore";
 
+import Usertable from "../Components/Acadhead/Usertable";
 import waves from "../Img/wave.svg";
 const labelNameStyle = {
   fontWeight: "bold",
@@ -128,7 +129,7 @@ const TransactionAcad = () => {
                 xs: "18px",
               }}
             >
-              Search your transaction using Email / Student No. ?
+              Search your transaction using Email/Student Num
             </Typography>
             <TextField
               type="email"
@@ -254,22 +255,28 @@ const TransactionAcad = () => {
                 }}
               >
                 {transactions}
-              </Typography>
-            </Box>
-            <Box m={2}>
-              <ThemeProvider theme={Theme}>
-                <Button
-                  variant="contained"
-                  color="pupMaroon"
-                  onClick={transaction}
-                  sx={{ width: "100%" }}
-                >
-                  Create Transaction Or View Queue Line
-                </Button>
-              </ThemeProvider>
+              </Typography>{" "}
+              <Box m={0.5}>
+                <ThemeProvider theme={Theme}>
+                  <Button
+                    variant="contained"
+                    color="pupMaroon"
+                    onClick={transaction}
+                    sx={{ width: "100%" }}
+                  >
+                    Clear
+                  </Button>
+                </ThemeProvider>
+              </Box>
             </Box>
           </Box>
         </ThemeProvider>
+        <Divider>
+          <Typography color="#939393" textAlign="center">
+            Queue's
+          </Typography>
+        </Divider>
+        <Usertable />
         <Divider>
           <Typography color="#939393" textAlign="center">
             © Group-7

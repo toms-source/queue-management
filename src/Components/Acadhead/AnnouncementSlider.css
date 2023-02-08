@@ -2,6 +2,9 @@
   0% {
     transform: translateX(100%);
   }
+  75% {
+    transform: translateX(-75%);
+  }
   100% {
     transform: translateX(-100%);
   }
@@ -15,14 +18,14 @@
   overflow: hidden;
   position: absolute;
   bottom: 0;
-  width: 100%;
+  width: 100vw;
 }
 
 .slider::before,
 .slider::after {
   height: 100px;
   position: absolute;
-  width: 100px;
+  width: 100vw;
   z-index: 2;
 }
 
@@ -33,9 +36,9 @@
 }
 
 .slider .slide-track {
-  animation: scroll 40s linear infinite;
+  animation: scroll 30s linear infinite;
   display: flex;
-  width: calc(220px * 14);
+  width: calc(200px * 10);
 }
 
 .slider .slide {
@@ -44,4 +47,5 @@
 
 h2 {
   color: #ffffff;
+  white-space: nowrap;
 }

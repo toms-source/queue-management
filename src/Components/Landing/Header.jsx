@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 const Header = () => {
   return (
     <Box pt={5} px={{ lg: 30, md: 5 }}>
-      <Typography variant="h5" sx={{ textAlign: "center" }}>
+      <Typography variant="h5" sx={{ textAlign: "center", fontWeight: "bold" }}>
         Welcome to PUPSMB-QMS
       </Typography>
 

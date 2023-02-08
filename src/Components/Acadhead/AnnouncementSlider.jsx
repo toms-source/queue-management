@@ -26,7 +26,9 @@ const AnnouncementSlider = () => {
         <div class="slide-track">
           {data.map((value, index) => (
             <div class="slide" key={index}>
-              <h2>{value.announcement}</h2>
+              <h2>
+                {""} {value.announcement} {" * "}
+              </h2>
             </div>
           ))}
           {/* <div class="slide">

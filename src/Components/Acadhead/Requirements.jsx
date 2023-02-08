@@ -15,7 +15,7 @@ const Requirements = () => {
       <Box
         sx={{
           px: { lg: 48, md: 20, sx: 0 },
-          pt: { lg: 5, md: 20, sx: 0 },
+          py: { lg: 5, md: 20, sx: 0 },
         }}
       >
         <Typography

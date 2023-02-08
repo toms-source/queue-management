@@ -41,6 +41,7 @@ const Cards = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  // navigations
   const navigate = useNavigate();
   const generateAcad = () => {
     navigate("/generateform-acad");
@@ -65,7 +66,7 @@ const Cards = () => {
             justifyContent="center"
           >
             <Grid item>
-              <Card sx={{ maxWidth: 450 }}>
+              <Card sx={{ maxWidth: 500 }}>
                 <CardMedia
                   component="img"
                   alt="green iguana"
@@ -90,7 +91,7 @@ const Cards = () => {
                     variant="contained"
                     endIcon={<AddToQueue />}
                     onClick={generateAcad}
-                    disabled={isDisabled}
+                    // disabled={isDisabled}
                     component={motion.div}
                     whileHover={{
                       scale: 1.05,
@@ -120,7 +121,7 @@ const Cards = () => {
             </Grid>
 
             <Grid item>
-              <Card sx={{ maxWidth: 450 }}>
+              <Card sx={{ maxWidth: 500 }}>
                 <CardMedia
                   component="img"
                   alt="green iguana"
@@ -143,7 +144,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="contained"
                     onClick={generateReg}
-                    disabled={isDisabled}
+                    // disabled={isDisabled}
                     endIcon={<AddToQueue />}
                     component={motion.div}
                     whileHover={{
