@@ -36,7 +36,6 @@ const MonitorNowServing = () => {
       <Box
         component={Paper}
         sx={{
-          height: "180px",
           padding: "15px 40px",
           backgroundColor: "#880000",
           color: "#ffffff",

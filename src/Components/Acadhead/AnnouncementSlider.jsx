@@ -31,39 +31,6 @@ const AnnouncementSlider = () => {
               </h2>
             </div>
           ))}
-          {/* <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div>
-          <div class="slide">
-            <h2>lorem5</h2>
-          </div> */}
         </div>
       </div>
     </div>

@@ -64,22 +64,6 @@ const UserNowServingTable = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {/* <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                1
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell
-                align="center"
-                sx={{ fontWeight: "bold", border: "none" }}
-              >
-                2
-              </TableCell>
-            </TableRow> */}
           </TableBody>
         </Table>
       </TableContainer>
