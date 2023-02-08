@@ -27,7 +27,7 @@ const AnnouncementSlider = () => {
           {data.map((value, index) => (
             <div class="slide" key={index}>
               <h2>
-                {""} {value.announcement} {" * "}
+                {value.announcement} {" | "}
               </h2>
             </div>
           ))}
