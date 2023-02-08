@@ -14,17 +14,7 @@ import { db } from "../../firebase-config";
 
 const UserSkippedTable = () => {
   const [userData, setUserData] = useState([]);
-  const currentPage = 1;
-  const postPerPage = 5;
-  let pages = [];
 
-  const lastPostIndex = currentPage * postPerPage;
-  const firstPostIndex = lastPostIndex - postPerPage;
-  const currentPost = userData.slice(firstPostIndex, lastPostIndex);
-
-  for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
-    pages.push(i);
-  }
   useEffect(() => {
     tableQuerySkip();
   }, []);
@@ -41,9 +31,18 @@ const UserSkippedTable = () => {
   };
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "320px" }}>
-        <Table aria-label="simple table">
-          <TableHead>
+      <TableContainer
+        component={Paper}
+        sx={{
+          height: "320px",
+          margin: "auto",
+          "&::-webkit-scrollbar": {
+            width: "2px",
+          },
+        }}
+      >
+        <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
+          <TableHead sx={{ position: "sticky", top: 0 }}>
             <TableRow sx={{ bgcolor: "#880000" }}>
               <TableCell align="center">
                 <Typography sx={{ fontWeight: "bold", color: "wheat" }}>
@@ -53,7 +52,7 @@ const UserSkippedTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentPost.map((queue, index) => (
+            {userData.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell
                   align="center"
