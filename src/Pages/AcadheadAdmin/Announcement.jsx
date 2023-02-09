@@ -23,6 +23,7 @@ import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   addDoc,
@@ -83,7 +84,15 @@ const Announcement = () => {
   const [announce, setAnnounce] = useState("");
   const announceCollection = collection(db, "acadAnnouncement");
   const [userData, setUserData] = useState([]);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password") !== "admin" &&
+      localStorage.getItem("Username") !== "adminacad"
+    ) {
+      navigate("/admin");
+    }
+  });
   const insert = async () => {
     if (announce.length > 0) {
       if (window.confirm("Are you sure you wish to add this announcement ?")) {

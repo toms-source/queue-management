@@ -21,6 +21,7 @@ import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -73,6 +74,16 @@ const styleTableBody = createTheme({
 
 const Report = () => {
   const [qlUserData, setQluserData] = useState([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password1") !== "admin" &&
+      localStorage.getItem("Username1") !== "adminreg"
+    ) {
+      navigate("/admin");
+    }
+    console.log("Running");
+  });
 
   useEffect(() => {
     tableQueryHistory();

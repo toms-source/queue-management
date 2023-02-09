@@ -35,7 +35,6 @@ const Cards = () => {
         setIsDisabled(true);
       }
     };
-
     const intervalId = setInterval(checkTime, 500);
 
     return () => clearInterval(intervalId);

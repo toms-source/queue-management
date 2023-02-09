@@ -64,6 +64,8 @@ const Sidebar = () => {
     navigate("/acad-head-report");
   };
   const acadHeadSignOut = () => {
+    localStorage.removeItem("Username");
+    localStorage.removeItem("Password");
     navigate("/admin");
   };
   return (

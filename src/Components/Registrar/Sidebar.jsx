@@ -64,6 +64,8 @@ const Sidebar = () => {
     navigate("/reg-report");
   };
   const registrarLogout = () => {
+    localStorage.removeItem("Username1");
+    localStorage.removeItem("Password1");
     navigate("/admin");
   };
   return (

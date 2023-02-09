@@ -166,6 +166,7 @@ const TransactionAcad = () => {
             sx={{
               px: { lg: 50, md: 20, xs: 0 },
               pt: { lg: 5, md: 20, xs: 5 },
+              mb: "10px",
             }}
           >
             <Box
@@ -255,19 +256,7 @@ const TransactionAcad = () => {
                 }}
               >
                 {transactions}
-              </Typography>{" "}
-              <Box m={0.5}>
-                <ThemeProvider theme={Theme}>
-                  <Button
-                    variant="contained"
-                    color="pupMaroon"
-                    onClick={transaction}
-                    sx={{ width: "100%" }}
-                  >
-                    Clear
-                  </Button>
-                </ThemeProvider>
-              </Box>
+              </Typography>
             </Box>
           </Box>
         </ThemeProvider>

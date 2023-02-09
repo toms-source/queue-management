@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -7,6 +7,7 @@ import {
   Box,
   Grid,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../Components/Registrar/Sidebar";
 import Theme from "../../CustomTheme";
 import img from "../../Img/seal.png";
@@ -15,6 +16,16 @@ import QueueLine from "../../Components/Registrar/AdminQueueLine";
 import Skip from "../../Components/Registrar/AdminSkip";
 
 const Controll = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password1") !== "admin" &&
+      localStorage.getItem("Username1") !== "adminreg"
+    ) {
+      navigate("/admin");
+    }
+    console.log("Running");
+  });
   return (
     <>
       <ThemeProvider theme={Theme}>

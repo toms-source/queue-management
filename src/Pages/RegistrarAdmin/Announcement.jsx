@@ -33,6 +33,7 @@ import {
   deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -83,7 +84,17 @@ const Announcement = () => {
   const [announce, setAnnounce] = useState("");
   const announceCollection = collection(db, "acadAnnouncement");
   const [userData, setUserData] = useState([]);
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password1") !== "admin" &&
+      localStorage.getItem("Username1") !== "adminreg"
+    ) {
+      navigate("/admin");
+    }
+    console.log("Running");
+  });
   const insert = async () => {
     if (announce.length > 0) {
       if (window.confirm("Are you sure you wish to add this announcement ?")) {

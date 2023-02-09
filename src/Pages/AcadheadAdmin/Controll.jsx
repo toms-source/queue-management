@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useEffect } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -13,7 +13,18 @@ import img from "../../Img/seal.png";
 import QueueLine from "../../Components/Acadhead/AdminQueueline";
 import NowServing from "../../Components/Acadhead/AdminNowServing";
 import Skip from "../../Components/Acadhead/AdminSkip";
+import { useNavigate } from "react-router-dom";
 const Controll = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password") !== "admin" &&
+      localStorage.getItem("Username") !== "adminacad"
+    ) {
+      navigate("/admin");
+    }
+  });
   return (
     <>
       <ThemeProvider theme={Theme}>

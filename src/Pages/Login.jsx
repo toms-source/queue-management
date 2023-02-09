@@ -24,12 +24,12 @@ import {
 import { motion } from "framer-motion";
 import Theme from "../CustomTheme";
 import { auth } from "../firebase-config";
-import { ThemeContext } from "@emotion/react";
+//import { ThemeContext } from "@emotion/react";
+import { useEffect } from "react";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [pass, setPassword] = useState("");
-
   const [isShown, setIsSHown] = useState(false);
   const navigate = useNavigate();
   const landing = () => {
@@ -40,16 +40,38 @@ const Login = () => {
     setIsSHown((isShown) => !isShown);
   };
 
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password") === "admin" &&
+      localStorage.getItem("Username") === "adminacad"
+    ) {
+      navigate("/acad-head-controll");
+    }
+    if (
+      localStorage.getItem("Password1") === "admin" &&
+      localStorage.getItem("Username1") === "adminreg"
+    ) {
+      navigate("/reg-controll");
+    }
+    console.log(localStorage.getItem("Username1"));
+    console.log(localStorage.getItem("Password1"));
+  });
+
   const validate = async () => {
-    if (username.length !== 0 || pass.length !== 0) {
+    if (username.length !== 0 && pass.length !== 0) {
       if (pass === "admin" && username === "adminacad") {
-        window.authentication = true;
+        //window.Authentication = true;
+        localStorage.setItem("Password", "admin");
+        localStorage.setItem("Username", "adminacad");
         navigate("/acad-head-controll");
       } else if (pass === "admin" && username === "adminreg") {
-        window.authentication = true;
+        //window.Authentication = true;
+        localStorage.setItem("Password1", "admin");
+        localStorage.setItem("Username1", "adminreg");
         navigate("/reg-controll");
       } else {
         alert("Invalid credential");
+        console.log(auth);
       }
     } else if (username === "" || pass === "") {
       alert("Please fill out the form");
@@ -85,7 +107,7 @@ const Login = () => {
             {/* <Appbar /> */}
             <Box
               sx={{
-                my: 10,
+                my: 20,
                 mx: 4,
                 display: "flex",
                 flexDirection: "column",
@@ -144,11 +166,13 @@ const Login = () => {
                   }}
                 />
                 <Box>
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Show Password"
-                    onChange={togglePassword}
-                  />
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Show Password"
+                      onChange={togglePassword}
+                    />
+                  </FormGroup>
                 </Box>
                 <Button
                   onClick={validate}
@@ -172,7 +196,7 @@ const Login = () => {
                   fullWidth
                   variant="outlined"
                   color="pupMaroon"
-                  onClick={landing}
+                  //onClick={landing}
                   sx={{ mb: 4 }}
                   component={motion.div}
                   whileHover={{

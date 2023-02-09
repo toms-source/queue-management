@@ -37,19 +37,18 @@ function App() {
 
           {/* Admin */}
           <Route path="admin" element={<Login />} />
-          <Route element={<PrivateRoutes />}>
-            {/* Acad head Admin*/}
-            <Route path="acad-head-controll" element={<AControll />} />
-            <Route path="acad-head-announcement" element={<AAnnouncement />} />
 
-            <Route path="acad-head-report" element={<AReport />} />
+          {/* Acad head Admin*/}
+          <Route path="acad-head-controll" element={<AControll />} />
+          <Route path="acad-head-announcement" element={<AAnnouncement />} />
 
-            {/* Registrar Admin*/}
-            <Route path="reg-controll" element={<RControll />} />
-            <Route path="reg-announcement" element={<RAnnouncement />} />
+          <Route path="acad-head-report" element={<AReport />} />
 
-            <Route path="reg-report" element={<RReport />} />
-          </Route>
+          {/* Registrar Admin*/}
+          <Route path="reg-controll" element={<RControll />} />
+          <Route path="reg-announcement" element={<RAnnouncement />} />
+
+          <Route path="reg-report" element={<RReport />} />
 
           {/* monitor */}
           <Route path="acad-head-monitor" element={<AMonitor />} />
