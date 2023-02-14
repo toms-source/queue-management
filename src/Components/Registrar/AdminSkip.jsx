@@ -82,13 +82,6 @@ const styleTableBody = createTheme({
 });
 const AdminSkip = () => {
   const [userData, setUserData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const QlPostPerPage = 3;
-  let pages = [];
-
-  const lastPostIndex = currentPage * QlPostPerPage;
-  const firstPostIndex = lastPostIndex - QlPostPerPage;
-  const currentPost = userData.slice(firstPostIndex, lastPostIndex);
   const userCollectionHistory = collection(db, "regSummaryreport");
   const userCollectionNowserving = collection(db, "regNowserving");
   const current = new Date();
@@ -96,18 +89,9 @@ const AdminSkip = () => {
     `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
   );
 
-  for (let i = 1; i <= Math.ceil(userData.length / QlPostPerPage); i++) {
-    pages.push(i);
-  }
-
   useEffect(() => {
     tableQuerySkip();
-    // tableQueryServing();
   }, []);
-
-  const handleChangePagination = (event, value) => {
-    setCurrentPage(value);
-  };
 
   // QueueLinetable Query
   const tableQuerySkip = async () => {
@@ -177,10 +161,19 @@ const AdminSkip = () => {
       >
         Skip
       </Typography>
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
+      <TableContainer
+        component={Paper}
+        sx={{
+          height: "320px",
+          margin: "auto",
+          "&::-webkit-scrollbar": {
+            width: "2px",
+          },
+        }}
+      >
+        <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
           <ThemeProvider theme={styleTableHead}>
-            <TableHead>
+            <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
               <TableRow>
                 <TableCell>Actions</TableCell>
                 <TableCell>Ticket</TableCell>
@@ -198,7 +191,7 @@ const AdminSkip = () => {
           <ThemeProvider theme={styleTableBody}>
             {/* Table Body */}
             <TableBody>
-              {currentPost.map((queue, index) => (
+              {userData.map((queue, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ minWidth: "300px" }}>
                     <Stack spacing={1.5} direction="row">
@@ -259,22 +252,6 @@ const AdminSkip = () => {
           </ThemeProvider>
         </Table>
       </TableContainer>
-      {/* Pagination */}
-      <Box
-        mt={4}
-        sx={{
-          width: "100%",
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
-        <Pagination
-          count={25}
-          page={currentPage}
-          onChange={handleChangePagination}
-          shape="rounded"
-        />
-      </Box>
     </>
   );
 };

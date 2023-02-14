@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import Appbar from "../Components/Landing/Appbar";
 import Form from "../Components/Registrar/Form";
-import Usertable from "../Components/Registrar/Usertable";
 import Requirements from "../Components/Registrar/Requirements";
 import Footer from "../Components/Landing/Footer";
 const GenerateFormReg = () => {
@@ -13,7 +12,7 @@ const GenerateFormReg = () => {
           <Appbar />
           <Form />
           <Requirements />
-          <Usertable />
+
           <Divider>
             <Typography color="#939393" textAlign="center">
               © Group-7

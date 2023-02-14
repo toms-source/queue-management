@@ -41,9 +41,18 @@ const UserSkippedTable = () => {
   };
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "320px" }}>
-        <Table aria-label="simple table">
-          <TableHead>
+      <TableContainer
+        component={Paper}
+        sx={{
+          height: "320px",
+          margin: "auto",
+          "&::-webkit-scrollbar": {
+            width: "2px",
+          },
+        }}
+      >
+        <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
+          <TableHead sx={{ position: "sticky", top: 0 }}>
             <TableRow sx={{ bgcolor: "#880000" }}>
               <TableCell align="center">
                 <Typography sx={{ fontWeight: "bold", color: "wheat" }}>

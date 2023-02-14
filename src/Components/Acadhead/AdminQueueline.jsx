@@ -149,7 +149,7 @@ const AdminQueueline = () => {
       >
         <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
           <ThemeProvider theme={styleTableHead}>
-            <TableHead sx={{ position: "sticky", top: 0 }}>
+            <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
               <TableRow>
                 <TableCell>Actions</TableCell>
                 <TableCell>Ticket</TableCell>

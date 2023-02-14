@@ -88,7 +88,7 @@ const AdminNowServing = () => {
   const userCollectionHistory = collection(db, "regSummaryreport");
   const userCollectionSkip = collection(db, "regSkip");
   const currentPage = 1;
-  const postPerPage = 2;
+  const postPerPage = 1;
   let pages = [];
 
   const lastPostIndex = currentPage * postPerPage;

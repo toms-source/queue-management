@@ -82,27 +82,10 @@ const styleTableBody = createTheme({
 
 const AdminQueueLine = () => {
   const [qlUserData, setQluserData] = useState([]);
-  const [qlCurrentPage, setQlCurrentPost] = useState(1);
-  const QlPostPerPage = 3;
   const userCollection = collection(db, "regNowserving");
-  let pages = [];
-
-  const lastPostIndex = qlCurrentPage * QlPostPerPage;
-  const firstPostIndex = lastPostIndex - QlPostPerPage;
-  const currentPost = qlUserData.slice(firstPostIndex, lastPostIndex);
-
-  for (let i = 1; i <= Math.ceil(qlUserData.length / QlPostPerPage); i++) {
-    pages.push(i);
-  }
-
   useEffect(() => {
     tableQueryQueue();
-    // tableQueryServing();
   }, []);
-
-  const handleChangePagination = (event, value) => {
-    setQlCurrentPost(value);
-  };
 
   // QueueLinetable Query
   const tableQueryQueue = async () => {
@@ -153,10 +136,19 @@ const AdminQueueLine = () => {
       >
         Queue Line
       </Typography>
-      <TableContainer component={Paper}>
-        <Table aria-label="simple table">
+      <TableContainer
+        component={Paper}
+        sx={{
+          height: "320px",
+          margin: "auto",
+          "&::-webkit-scrollbar": {
+            width: "2px",
+          },
+        }}
+      >
+        <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
           <ThemeProvider theme={styleTableHead}>
-            <TableHead>
+            <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
               <TableRow>
                 <TableCell>Actions</TableCell>
                 <TableCell>Ticket</TableCell>
@@ -174,7 +166,7 @@ const AdminQueueLine = () => {
           <ThemeProvider theme={styleTableBody}>
             {/* Table Body */}
             <TableBody>
-              {currentPost.map((queue, index) => (
+              {qlUserData.map((queue, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <Button
@@ -220,22 +212,6 @@ const AdminQueueLine = () => {
           </ThemeProvider>
         </Table>
       </TableContainer>
-      {/* Pagination */}
-      <Box
-        mt={4}
-        sx={{
-          width: "100%",
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
-        <Pagination
-          count={25}
-          page={qlCurrentPage}
-          onChange={handleChangePagination}
-          shape="rounded"
-        />
-      </Box>
     </>
   );
 };

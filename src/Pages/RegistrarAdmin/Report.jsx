@@ -17,7 +17,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import img from "../../Img/seal.png";
-import Sidebar from "../../Components/Acadhead/Sidebar";
+import Sidebar from "../../Components/Registrar/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
