@@ -12,7 +12,7 @@ const AnnouncementSlider = () => {
 
   // QueueLinetable Query
   const tableQueryQueue = async () => {
-    const acadQueueCollection = collection(db, "acadAnnouncement");
+    const acadQueueCollection = collection(db, "regAnnouncement");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
