@@ -169,10 +169,19 @@ const Report = () => {
           </Button>
         </Box>
         <Box px={5} py={2} mb={5}>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+          <TableContainer
+            component={Paper}
+            sx={{
+              height: "425px",
+              margin: "auto",
+              "&::-webkit-scrollbar": {
+                width: "2px",
+              },
+            }}
+          >
+            <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
               <ThemeProvider theme={styleTableHead}>
-                <TableHead>
+                <TableHead sx={{ position: "sticky", top: 0 }}>
                   <TableRow>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>

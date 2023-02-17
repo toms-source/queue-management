@@ -15,17 +15,11 @@ import { db } from "../../firebase-config";
 const UserQueueLineTable = () => {
   const [userData, setUserData] = useState([]);
   const currentPage = 1;
-
   const postPerPage = 5;
-  // let pages = [];
-
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPost = userData.slice(firstPostIndex, lastPostIndex);
 
-  // for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
-  //   pages.push(i);
-  // }
   useEffect(() => {
     tableQueryQueue();
   }, []);

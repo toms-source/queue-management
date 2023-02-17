@@ -21,22 +21,6 @@ const Usertable = () => {
             <UserSkippedTable />
           </Grid>
         </Grid>
-        {/* Pagination */}
-        {/* <Box
-          mt={4}
-          sx={{
-            width: "100%",
-            justifyContent: "center",
-            display: "flex",
-          }}
-        >
-          <Pagination
-            count={lastPostIndex}
-            page={currentPage}
-            onChange={handleChangePagination}
-            shape="rounded"
-          />
-        </Box> */}
       </Box>
     </>
   );

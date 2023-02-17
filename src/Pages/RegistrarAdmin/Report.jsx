@@ -15,7 +15,11 @@ import {
   TableRow,
   createTheme,
   Tooltip,
+  TextField,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Registrar/Sidebar";
 import Theme from "../../CustomTheme";
@@ -74,6 +78,7 @@ const styleTableBody = createTheme({
 
 const Report = () => {
   const [qlUserData, setQluserData] = useState([]);
+  const [search, setSearch] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
     if (
@@ -120,16 +125,65 @@ const Report = () => {
           </AppBar>
         </Box>
 
-        <Box p={5} sx={{ display: "flex", justifyContent: "end" }}>
+        <Box
+          py={5}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            type="email"
+            id="Username"
+            label="Email/Contact"
+            required
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            value={search}
+            color="pupMaroon"
+            placeholder="Ex. JuanDelacruz@yahoo.com/09458744562"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchOutlinedIcon
+                    // onClick={}
+                    />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              width: {
+                xs: "100%",
+                md: "100%",
+                lg: "95%",
+              },
+              bgcolor: "white",
+            }}
+          />
+        </Box>
+        <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
           <Button variant="outlined" color="pupMaroon">
             Print
           </Button>
         </Box>
-        <Box px={5}>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+        <Box px={5} py={2} mb={5}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              height: "425px",
+              margin: "auto",
+              "&::-webkit-scrollbar": {
+                width: "2px",
+              },
+            }}
+          >
+            <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
               <ThemeProvider theme={styleTableHead}>
-                <TableHead>
+                <TableHead sx={{ position: "sticky", top: 0 }}>
                   <TableRow>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>
