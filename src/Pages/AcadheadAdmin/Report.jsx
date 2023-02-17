@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useRef } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -26,7 +26,7 @@ import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-
+import { useReactToPrint } from "react-to-print";
 // table header syle
 const styleTableHead = createTheme({
   components: {
@@ -80,6 +80,11 @@ const Report = () => {
   const [qlUserData, setQluserData] = useState([]);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const printRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: "Summary Report PDF",
+  });
   useEffect(() => {
     if (
       localStorage.getItem("Password") !== "admin" &&
@@ -164,7 +169,7 @@ const Report = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
-          <Button variant="outlined" color="pupMaroon">
+          <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
             Print
           </Button>
         </Box>
@@ -179,7 +184,10 @@ const Report = () => {
               },
             }}
           >
-            <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
+            <Table
+              sx={{ tableLayout: "auto", height: "maxContent" }}
+              ref={printRef}
+            >
               <ThemeProvider theme={styleTableHead}>
                 <TableHead sx={{ position: "sticky", top: 0 }}>
                   <TableRow>
@@ -208,16 +216,7 @@ const Report = () => {
                         {queue.ticket}
                       </TableCell>
                       <Tooltip title={queue.transaction} arrow>
-                        <TableCell
-                          sx={{
-                            maxWidth: "200px",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {queue.transaction}
-                        </TableCell>
+                        <TableCell>{queue.transaction}</TableCell>
                       </Tooltip>
                       <TableCell>{queue.name}</TableCell>
                       <TableCell>{queue.studentNumber}</TableCell>
