@@ -82,7 +82,7 @@ const styleTableBody = createTheme({
 
 const Announcement = () => {
   const [announce, setAnnounce] = useState("");
-  const announceCollection = collection(db, "acadAnnouncement");
+  const announceCollection = collection(db, "regAnnouncement");
   const [userData, setUserData] = useState([]);
   const navigate = useNavigate();
 
@@ -114,7 +114,7 @@ const Announcement = () => {
   }, []);
 
   const directDelete = async (email) => {
-    const userDoc = doc(db, "acadAnnouncement", email);
+    const userDoc = doc(db, "regAnnouncement", email);
     if (window.confirm("Are you sure you wish to delete this announcement ?")) {
       await deleteDoc(userDoc);
     }
