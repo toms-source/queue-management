@@ -47,7 +47,7 @@ const UserQueueLineTable = () => {
         }}
       >
         <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
-          <TableHead sx={{ position: "sticky", top: 0 }}>
+          <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
             <TableRow sx={{ bgcolor: "#880000" }}>
               <TableCell align="center">
                 <Typography sx={{ fontWeight: "bold", color: "wheat" }}>

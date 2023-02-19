@@ -188,7 +188,14 @@ const AdminNowServing = () => {
       >
         Now Serving
       </Typography>
-      <TableContainer component={Paper}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          "&::-webkit-scrollbar": {
+            width: "2px",
+          },
+        }}
+      >
         <Table aria-label="simple table">
           <ThemeProvider theme={styleTableHead}>
             <TableHead>

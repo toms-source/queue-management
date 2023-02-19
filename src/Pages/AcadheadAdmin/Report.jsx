@@ -18,6 +18,7 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  Checkbox,
 } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import img from "../../Img/seal.png";
@@ -79,6 +80,7 @@ const styleTableBody = createTheme({
 const Report = () => {
   const [qlUserData, setQluserData] = useState([]);
   const [search, setSearch] = useState("");
+  const [checked, setChecked] = useState(true);
   const navigate = useNavigate();
   const printRef = useRef();
   const handlePrint = useReactToPrint({
@@ -107,6 +109,9 @@ const Report = () => {
     return unsub;
   };
 
+  const handleCheckbox = (event) => {
+    setChecked(event.target.checked);
+  };
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -169,6 +174,12 @@ const Report = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
+          <Button variant="outlined" color="pupMaroon">
+            View All
+          </Button>
+          <Button variant="outlined" color="pupMaroon">
+            Delete All
+          </Button>
           <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
             Print
           </Button>
@@ -189,8 +200,9 @@ const Report = () => {
               ref={printRef}
             >
               <ThemeProvider theme={styleTableHead}>
-                <TableHead sx={{ position: "sticky", top: 0 }}>
+                <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
                   <TableRow>
+                    <TableCell>Select</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell>Ticket</TableCell>
@@ -210,6 +222,11 @@ const Report = () => {
                 <TableBody>
                   {qlUserData.map((queue, index) => (
                     <TableRow key={index}>
+                      <TableCell>
+                        <ThemeProvider theme={Theme}>
+                          <Checkbox onChange={handleCheckbox} color="pupGold" />
+                        </ThemeProvider>
+                      </TableCell>
                       <TableCell>{queue.status}</TableCell>
                       <TableCell>{queue.date}</TableCell>
                       <TableCell align="right" sx={{ fontWeight: "bold" }}>

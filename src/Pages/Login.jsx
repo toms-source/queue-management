@@ -53,8 +53,6 @@ const Login = () => {
     ) {
       navigate("/reg-controll");
     }
-    console.log(localStorage.getItem("Username1"));
-    console.log(localStorage.getItem("Password1"));
   });
 
   const validate = async () => {
