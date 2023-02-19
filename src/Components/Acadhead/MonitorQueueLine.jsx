@@ -14,6 +14,7 @@ import { db } from "../../firebase-config";
 
 const MonitorQueueLine = () => {
   const [userData, setUserData] = useState([]);
+  const [userData1, setUserData1] = useState([]);
   const currentPage = 1;
 
   const postPerPage = 5;
@@ -22,6 +23,7 @@ const MonitorQueueLine = () => {
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
   const currentPost = userData.slice(firstPostIndex, lastPostIndex);
+  const currentPost1 = userData1.slice(firstPostIndex, lastPostIndex);
 
   for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
     pages.push(i);
@@ -29,6 +31,7 @@ const MonitorQueueLine = () => {
 
   useEffect(() => {
     tableQueryQueue();
+    tableQueryQueue1();
   }, []);
 
   // QueueLinetable Query
@@ -37,6 +40,16 @@ const MonitorQueueLine = () => {
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+
+    return unsub;
+  };
+  // QueueLinetable Query
+  const tableQueryQueue1 = async () => {
+    const acadQueueCollection = collection(db, "acadPriority");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setUserData1(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
 
     return unsub;
@@ -57,6 +70,20 @@ const MonitorQueueLine = () => {
             </TableRow>
           </TableHead>
           <TableBody>
+            {currentPost1.map((queue, index) => (
+              <TableRow key={index}>
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontWeight: "bold",
+                    border: "none",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  {queue.ticket}
+                </TableCell>
+              </TableRow>
+            ))}
             {currentPost.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell

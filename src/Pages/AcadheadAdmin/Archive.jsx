@@ -1,4 +1,4 @@
-import { React, useState, useEffect, useRef } from "react";
+import { React, useEffect, useState } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -15,19 +15,16 @@ import {
   TableRow,
   createTheme,
   Tooltip,
-  TextField,
-  InputAdornment,
   IconButton,
-  Checkbox,
 } from "@mui/material";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { Delete, Restore } from "@mui/icons-material";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { useReactToPrint } from "react-to-print";
+
 // table header syle
 const styleTableHead = createTheme({
   components: {
@@ -77,17 +74,9 @@ const styleTableBody = createTheme({
   },
 });
 
-const Report = () => {
-  const [qlUserData, setQluserData] = useState([]);
-  const [search, setSearch] = useState("");
-  const [checked, setChecked] = useState(true);
+const Archive = () => {
+  const [userdata, setUserData] = useState([]);
   const navigate = useNavigate();
-  const printRef = useRef();
-  const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: "Summary Report PDF",
-  });
-
   useEffect(() => {
     if (
       localStorage.getItem("Password") !== "admin" &&
@@ -98,20 +87,16 @@ const Report = () => {
   });
 
   useEffect(() => {
-    tableQueryHistory();
+    tableQueryArchive();
   }, []);
 
-  const tableQueryHistory = async () => {
-    const acadQueueCollection = collection(db, "acadSummaryreport");
-    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+  const tableQueryArchive = async () => {
+    const acadArchiveCollection = collection(db, "acadArchieve");
+    const q = query(acadArchiveCollection);
     const unsub = onSnapshot(q, (snapshot) =>
-      setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
     return unsub;
-  };
-
-  const handleCheckbox = (event) => {
-    setChecked(event.target.checked);
   };
   return (
     <>
@@ -129,7 +114,7 @@ const Report = () => {
                 sx={{ flexGrow: 1 }}
                 color="white"
               >
-                Summary Report
+                Archives
               </Typography>
             </Toolbar>
           </AppBar>
@@ -141,48 +126,10 @@ const Report = () => {
             flexDirection: "column",
             alignItems: "center",
           }}
-        >
-          <TextField
-            type="email"
-            id="Username"
-            label="Email/Contact"
-            required
-            onChange={(e) => {
-              setSearch(e.target.value);
-            }}
-            value={search}
-            color="pupMaroon"
-            placeholder="Ex. JuanDelacruz@yahoo.com/09458744562"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton>
-                    <SearchOutlinedIcon
-                    // onClick={}
-                    />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              width: {
-                xs: "100%",
-                md: "100%",
-                lg: "95%",
-              },
-              bgcolor: "white",
-            }}
-          />
-        </Box>
+        ></Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
           <Button variant="outlined" color="pupMaroon">
-            View All
-          </Button>
-          <Button variant="outlined" color="pupMaroon">
             Delete All
-          </Button>
-          <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
-            Print
           </Button>
         </Box>
         <Box px={5} py={2} mb={5}>
@@ -196,14 +143,12 @@ const Report = () => {
               },
             }}
           >
-            <Table
-              sx={{ tableLayout: "auto", height: "maxContent" }}
-              ref={printRef}
-            >
+            <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
               <ThemeProvider theme={styleTableHead}>
                 <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
                   <TableRow>
-                    <TableCell>Select</TableCell>
+                    <TableCell>Restore</TableCell>
+                    <TableCell>Delete</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell>Ticket</TableCell>
@@ -221,12 +166,17 @@ const Report = () => {
               <ThemeProvider theme={styleTableBody}>
                 {/* Table Body */}
                 <TableBody>
-                  {qlUserData.map((queue, index) => (
+                  {userdata.map((queue, index) => (
                     <TableRow key={index}>
                       <TableCell>
-                        <ThemeProvider theme={Theme}>
-                          <Checkbox onChange={handleCheckbox} color="pupGold" />
-                        </ThemeProvider>
+                        <IconButton>
+                          <Restore />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell>
+                        <IconButton>
+                          <Delete />
+                        </IconButton>
                       </TableCell>
                       <TableCell>{queue.status}</TableCell>
                       <TableCell>{queue.date}</TableCell>
@@ -255,4 +205,4 @@ const Report = () => {
   );
 };
 
-export default Report;
+export default Archive;

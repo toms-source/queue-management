@@ -194,7 +194,7 @@ const Login = () => {
                   fullWidth
                   variant="outlined"
                   color="pupMaroon"
-                  //onClick={landing}
+                  onClick={landing}
                   sx={{ mb: 4 }}
                   component={motion.div}
                   whileHover={{

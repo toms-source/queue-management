@@ -8,6 +8,7 @@ import TransactionReg from "./Pages/TransactionReg";
 import TransactionAcad from "./Pages/TransactionAcad";
 import AControll from "./Pages/AcadheadAdmin/Controll";
 import AAnnouncement from "./Pages/AcadheadAdmin/Announcement";
+import AArchive from "./Pages/AcadheadAdmin/Archive";
 import AMonitor from "./Pages/AcadheadAdmin/MonitorAcad";
 import AReport from "./Pages/AcadheadAdmin/Report";
 import RControll from "./Pages/RegistrarAdmin/Controll";
@@ -41,7 +42,7 @@ function App() {
           {/* Acad head Admin*/}
           <Route path="acad-head-controll" element={<AControll />} />
           <Route path="acad-head-announcement" element={<AAnnouncement />} />
-
+          <Route path="acad-head-archive" element={<AArchive />} />
           <Route path="acad-head-report" element={<AReport />} />
 
           {/* Registrar Admin*/}

@@ -21,6 +21,7 @@ import {
   InsertChartOutlinedOutlined,
   Logout,
   Menu,
+  Archive,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Theme from "../../CustomTheme";
@@ -62,6 +63,9 @@ const Sidebar = () => {
 
   const acadHeadreport = () => {
     navigate("/acad-head-report");
+  };
+  const acadHeadarchive = () => {
+    navigate("/acad-head-archive");
   };
   const acadHeadSignOut = () => {
     localStorage.removeItem("Username");
@@ -168,6 +172,21 @@ const Sidebar = () => {
                     primary={
                       <Typography style={{ fontSize: "1.5rem" }}>
                         Summary Report
+                      </Typography>
+                    }
+                  ></ListItemText>
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={acadHeadarchive}>
+                  <ListItemIcon>
+                    <Archive />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography style={{ fontSize: "1.5rem" }}>
+                        Archive
                       </Typography>
                     }
                   ></ListItemText>
