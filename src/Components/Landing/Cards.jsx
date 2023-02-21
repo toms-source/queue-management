@@ -19,7 +19,6 @@ import Theme from "../../CustomTheme";
 
 const Cards = () => {
   const [isDisabled, setIsDisabled] = useState(true);
-  // const setIsDisabled = "true";
   const timezone = "Asia/Manila";
 
   // to disable time in specific time only
@@ -27,12 +26,14 @@ const Cards = () => {
     const checkTime = () => {
       let currentTime = moment().tz(timezone);
       let startTime = moment.tz("08:00", "HH:mm a", timezone);
-      let endTime = moment.tz("17:00", "HH:mm a", timezone);
+      let endTime = moment.tz("20:00", "HH:mm a", timezone);
 
       if (currentTime.isBetween(startTime, endTime)) {
         setIsDisabled(false);
+        sessionStorage.setItem("Auth", true);
       } else {
         setIsDisabled(true);
+        sessionStorage.setItem("Auth", false);
       }
     };
     const intervalId = setInterval(checkTime, 500);
@@ -90,7 +91,7 @@ const Cards = () => {
                     variant="contained"
                     endIcon={<AddToQueue />}
                     onClick={generateAcad}
-                    // disabled={isDisabled}
+                    disabled={isDisabled}
                     component={motion.div}
                     whileHover={{
                       scale: 1.05,
@@ -105,6 +106,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="outlined"
                     onClick={transactionAcad}
+                    disabled={isDisabled}
                     endIcon={<PersonSearch />}
                     component={motion.div}
                     whileHover={{
@@ -143,7 +145,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="contained"
                     onClick={generateReg}
-                    // disabled={isDisabled}
+                    disabled={isDisabled}
                     endIcon={<AddToQueue />}
                     component={motion.div}
                     whileHover={{
@@ -159,6 +161,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="outlined"
                     onClick={transactionReg}
+                    disabled={isDisabled}
                     endIcon={<PersonSearch />}
                     component={motion.div}
                     whileHover={{

@@ -56,7 +56,17 @@ const MonitorQueueLine = () => {
   };
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "420px" }}>
+      <TableContainer
+        component={Paper}
+        sx={{
+          margin: "auto",
+          minHeight: "420px",
+          maxHeight: "420px",
+          "&::-webkit-scrollbar": {
+            width: "2px",
+          },
+        }}
+      >
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>

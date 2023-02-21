@@ -6,20 +6,9 @@ import { useNavigate } from "react-router-dom";
 import waves from "../Img/wave.svg";
 import Theme from "../CustomTheme";
 import { db } from "../firebase-config";
-import {
-  collection,
-  query,
-  getDocs,
-  where,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
-} from "firebase/firestore";
+import { collection, getCountFromServer } from "firebase/firestore";
 
 const GenerateAcad = () => {
-  const [que, setQue] = useState([]);
-  const [skip, setSkip] = useState([]);
-  const [nowserve, setNowserve] = useState([]);
   let currentTimestamp = Date.now();
   let date = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -29,48 +18,44 @@ const GenerateAcad = () => {
     minute: "2-digit",
     second: "2-digit",
   }).format(currentTimestamp);
+  let [aheadTicket, setAheadTicket] = useState(0);
+  let j = 0;
+  let k = 0;
+  let l = 0;
+  const count = async () => {
+    if (window.ticket.charAt(0) === "P") {
+      const coll1 = collection(db, "acadNowserving");
+      const snapshot1 = await getCountFromServer(coll1);
+      k = snapshot1.data().count;
+
+      const coll2 = collection(db, "acadPriority");
+      const snapshot2 = await getCountFromServer(coll2);
+      l = snapshot2.data().count;
+    } else {
+      const coll1 = collection(db, "acadNowserving");
+      const snapshot1 = await getCountFromServer(coll1);
+      k = snapshot1.data().count;
+
+      const coll2 = collection(db, "acadPriority");
+      const snapshot2 = await getCountFromServer(coll2);
+      l = snapshot2.data().count;
+
+      const coll = collection(db, "acadQueuing");
+      const snapshot = await getCountFromServer(coll);
+      j = snapshot.data().count;
+    }
+
+    setAheadTicket(j + k + l - 1);
+    return aheadTicket;
+  };
+
+  useEffect(() => {
+    count();
+  });
 
   const navigate = useNavigate();
   const landing = () => {
     navigate("/");
-  };
-
-  useEffect(() => {
-    nowServing();
-    skipped();
-    queuing();
-    readQue();
-  }, []);
-
-  const nowServing = async () => {
-    const userCollection = collection(db, "acadNowserving");
-    const x = query(userCollection, orderBy("timestamp", "asc"));
-    const unsub = onSnapshot(x, (snapshot) =>
-      setNowserve(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-    );
-    return unsub;
-  };
-  const queuing = async () => {
-    const userCollection = collection(db, "acadSkip");
-    const x = query(userCollection, orderBy("timestamp", "asc"));
-    const unsub = onSnapshot(x, (snapshot) =>
-      setSkip(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-    );
-    return unsub;
-  };
-  const skipped = async () => {
-    const userCollection = collection(db, "acadQueueing");
-    const x = query(userCollection, orderBy("timestamp", "asc"));
-    const unsub = onSnapshot(x, (snapshot) =>
-      setQue(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-    );
-    return unsub;
-  };
-
-  const readQue = () => {
-    que.map((element) => {
-      console.log(element.ticket);
-    });
   };
 
   return (
@@ -168,7 +153,7 @@ const GenerateAcad = () => {
               },
             }}
           >
-            Thank you for using PUPSMB QMS
+            There are {aheadTicket} queue ahead of you
           </Typography>
         </Box>
         <Box m={2}>

@@ -7,12 +7,12 @@ import {
   TableHead,
   TableRow,
   TableCell,
-  Tooltip,
   TableBody,
   Stack,
   Button,
   ThemeProvider,
   createTheme,
+  Tooltip,
 } from "@mui/material";
 import {
   collection,
@@ -70,9 +70,6 @@ const styleTableBody = createTheme({
         root: {
           whiteSpace: "nowrap",
           textAlign: "center",
-          maxWidth: "200px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
         },
       },
     },
@@ -80,40 +77,40 @@ const styleTableBody = createTheme({
 });
 
 const AdminNowServing = () => {
-  const [userData, setUserData] = useState([]);
+  const [qlUserData, setQluserData] = useState([]);
+  const [qlCurrentPage, setQlCurrentPost] = useState(1);
+  const QlPostPerPage = 2;
+  let pages = [];
+
+  const lastPostIndex = qlCurrentPage * QlPostPerPage;
+  const firstPostIndex = lastPostIndex - QlPostPerPage;
+  const currentPost = qlUserData.slice(firstPostIndex, lastPostIndex);
+  const userCollectionHistory = collection(db, "acadSummaryreport");
+  const userCollectionSkip = collection(db, "acadSkip");
+
   const current = new Date();
   const [date, setDate] = useState(
     `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
   );
-  const userCollectionHistory = collection(db, "acadSummaryreport");
-  const userCollectionSkip = collection(db, "acadSkip");
-  const currentPage = 1;
-  const postPerPage = 2;
-  let pages = [];
 
-  const lastPostIndex = currentPage * postPerPage;
-  const firstPostIndex = lastPostIndex - postPerPage;
-  const currentPost = userData.slice(firstPostIndex, lastPostIndex);
-
-  for (let i = 1; i <= Math.ceil(userData.length / postPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(qlUserData.length / QlPostPerPage); i++) {
     pages.push(i);
   }
 
   useEffect(() => {
-    tableQueryNowserving();
+    tableQueryQueue();
   }, []);
 
   // QueueLinetable Query
-  const tableQueryNowserving = async () => {
+  const tableQueryQueue = async () => {
     const acadQueueCollection = collection(db, "acadNowserving");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
-      setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
-
     return unsub;
   };
-  //button function
+
   const directDeleteUser = async (email) => {
     const userDoc = doc(db, "acadNowserving", email);
     await deleteDoc(userDoc);
@@ -133,6 +130,7 @@ const AdminNowServing = () => {
       userType: snapshot.data().userType,
       yearSection: snapshot.data().yearSection,
       ticket: snapshot.data().ticket,
+      timestamp: serverTimestamp(),
       date: date,
     });
     directDeleteUser(id);
@@ -175,6 +173,7 @@ const AdminNowServing = () => {
     });
     directDeleteUser(id);
   };
+
   return (
     <>
       <Typography
@@ -190,6 +189,7 @@ const AdminNowServing = () => {
       <TableContainer
         component={Paper}
         sx={{
+          height: "220px",
           "&::-webkit-scrollbar": {
             width: "2px",
           },
@@ -217,7 +217,7 @@ const AdminNowServing = () => {
             <TableBody>
               {currentPost.map((queue, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={{ minWidth: "350px" }}>
+                  <TableCell>
                     <Stack spacing={1.5} direction="row">
                       <Stack>
                         <Button
@@ -257,31 +257,25 @@ const AdminNowServing = () => {
                   <TableCell align="right" sx={{ fontWeight: "bold" }}>
                     {queue.ticket}
                   </TableCell>
-
                   <Tooltip title={queue.transaction} arrow>
-                    <TableCell>{queue.transaction}</TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.name} arrow>
-                    <TableCell>{queue.name}</TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.studentNumber} arrow>
-                    <TableCell>{queue.studentNumber}</TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.email} arrow>
-                    <TableCell>{queue.email}</TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.userType} arrow>
-                    <TableCell>{queue.userType}</TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.yearSection} arrow>
-                    <TableCell>{queue.yearSection}</TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.contact} arrow>
-                    <TableCell>{queue.contact} </TableCell>
-                  </Tooltip>
-                  <Tooltip title={queue.address} arrow>
-                    <TableCell>{queue.address}</TableCell>
-                  </Tooltip>
+                    <TableCell
+                      sx={{
+                        maxWidth: "200px",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {queue.transaction}
+                    </TableCell>
+                  </Tooltip>{" "}
+                  <TableCell>{queue.name}</TableCell>
+                  <TableCell>{queue.studentNumber}</TableCell>
+                  <TableCell>{queue.email}</TableCell>
+                  <TableCell>{queue.userType}</TableCell>
+                  <TableCell>{queue.yearSection}</TableCell>
+                  <TableCell>{queue.contact}</TableCell>
+                  <TableCell>{queue.address}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

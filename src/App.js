@@ -48,7 +48,6 @@ function App() {
           {/* Registrar Admin*/}
           <Route path="reg-controll" element={<RControll />} />
           <Route path="reg-announcement" element={<RAnnouncement />} />
-
           <Route path="reg-report" element={<RReport />} />
 
           {/* monitor */}

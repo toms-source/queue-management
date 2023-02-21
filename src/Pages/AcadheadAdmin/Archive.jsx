@@ -17,13 +17,25 @@ import {
   Tooltip,
   IconButton,
 } from "@mui/material";
-import { Delete, Restore } from "@mui/icons-material";
+import { Delete, Restore, Sync } from "@mui/icons-material";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
-import { collection, onSnapshot, query } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  getDocs,
+  doc,
+  deleteDoc,
+  getDoc,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -76,6 +88,46 @@ const styleTableBody = createTheme({
 
 const Archive = () => {
   const [userdata, setUserData] = useState([]);
+  const userCollectionSummaryreport = collection(db, "acadSummaryreport");
+
+  const deleteSingleData = async (id) => {
+    const docRef = doc(db, "acadArchieve", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionSummaryreport, {
+      status: snapshot.data().status,
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: snapshot.data().timestamp,
+      date: snapshot.data().date,
+    });
+    const userDoc = doc(db, "acadArchieve", id);
+    await deleteDoc(userDoc);
+  };
+
+  const deletePermanentSingleData = async (id) => {
+    if (
+      window.confirm("Are you sure want to permanent delete this transaction?")
+    ) {
+      const userDoc = doc(db, "acadArchieve", id);
+      await deleteDoc(userDoc);
+    }
+  };
+
+  const deleteAllPermanentData = async () => {
+    if (window.confirm("Are you sure you want to permanent delete all")) {
+      userdata.map(
+        async (queue) => await deleteDoc(doc(db, "acadArchieve", queue.id))
+      );
+    }
+  };
+
   const navigate = useNavigate();
   useEffect(() => {
     if (
@@ -92,7 +144,7 @@ const Archive = () => {
 
   const tableQueryArchive = async () => {
     const acadArchiveCollection = collection(db, "acadArchieve");
-    const q = query(acadArchiveCollection);
+    const q = query(acadArchiveCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
@@ -102,7 +154,7 @@ const Archive = () => {
     <>
       <ThemeProvider theme={Theme}>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" color="pupMaroon">
+          <AppBar position="fixed" color="pupMaroon">
             <Toolbar>
               <Sidebar />
               <Box px={2}>
@@ -128,7 +180,11 @@ const Archive = () => {
           }}
         ></Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
-          <Button variant="outlined" color="pupMaroon">
+          <Button
+            onClick={deleteAllPermanentData}
+            variant="outlined"
+            color="pupMaroon"
+          >
             Delete All
           </Button>
         </Box>
@@ -169,12 +225,20 @@ const Archive = () => {
                   {userdata.map((queue, index) => (
                     <TableRow key={index}>
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => {
+                            deleteSingleData(queue.id);
+                          }}
+                        >
                           <Restore />
                         </IconButton>
                       </TableCell>
                       <TableCell>
-                        <IconButton>
+                        <IconButton
+                          onClick={() => {
+                            deletePermanentSingleData(queue.id);
+                          }}
+                        >
                           <Delete />
                         </IconButton>
                       </TableCell>

@@ -130,7 +130,7 @@ const Announcement = () => {
     <>
       <ThemeProvider theme={Theme}>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" color="pupMaroon">
+          <AppBar position="fixed" color="pupMaroon">
             <Toolbar>
               <Sidebar />
               <Box px={2}>
@@ -149,7 +149,7 @@ const Announcement = () => {
         </Box>
 
         {/* Announcement textfield */}
-        <Box p={5}>
+        <Box p={5} mt={10}>
           <TextField
             id="outlined-multiline-flexible"
             label="Announcement"

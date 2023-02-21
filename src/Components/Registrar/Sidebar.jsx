@@ -63,6 +63,7 @@ const Sidebar = () => {
   const registrarReport = () => {
     navigate("/reg-report");
   };
+
   const registrarLogout = () => {
     localStorage.removeItem("Username1");
     localStorage.removeItem("Password1");

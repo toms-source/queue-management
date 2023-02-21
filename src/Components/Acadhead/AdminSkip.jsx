@@ -26,6 +26,7 @@ import {
   onSnapshot,
   serverTimestamp,
   addDoc,
+  getCountFromServer,
 } from "firebase/firestore";
 import { db } from "../../firebase-config";
 
@@ -85,12 +86,31 @@ const AdminSkip = () => {
   const userCollectionHistory = collection(db, "acadSummaryreport");
   const userCollectionNowserving = collection(db, "acadNowserving");
   const current = new Date();
+  const [isDisable, setIsDisable] = useState(false);
+
   const [date, setDate] = useState(
     `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
   );
 
   useEffect(() => {
     tableQuerySkip();
+  }, []);
+
+  useEffect(() => {
+    const checkTime = async () => {
+      let check = 0;
+      const coll = collection(db, "acadNowserving");
+      const snapshot = await getCountFromServer(coll);
+      check = snapshot.data().count;
+
+      if (check >= 2) {
+        setIsDisable(true);
+      } else if (check <= 1) {
+        setIsDisable(false);
+      }
+    };
+    const intervalId = setInterval(checkTime, 3000);
+    return () => clearInterval(intervalId);
   }, []);
 
   // QueueLinetable Query
@@ -198,6 +218,7 @@ const AdminSkip = () => {
                     <Stack spacing={1.5} direction="row">
                       <Stack>
                         <Button
+                          disabled={isDisable}
                           variant="contained"
                           onClick={() => {
                             addUser(queue.id);

@@ -14,14 +14,11 @@ import { db } from "../../firebase-config";
 
 const UserQueueLineTable = () => {
   const [userData, setUserData] = useState([]);
-  const currentPage = 1;
-  const postPerPage = 5;
-  const lastPostIndex = currentPage * postPerPage;
-  const firstPostIndex = lastPostIndex - postPerPage;
-  const currentPost = userData.slice(firstPostIndex, lastPostIndex);
+  const [userData1, setUserData1] = useState([]);
 
   useEffect(() => {
     tableQueryQueue();
+    tableQueryQueue1();
   }, []);
 
   // QueueLinetable Query
@@ -30,6 +27,15 @@ const UserQueueLineTable = () => {
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    console.log("render");
+    return unsub;
+  };
+  const tableQueryQueue1 = async () => {
+    const acadQueueCollection = collection(db, "acadPriority");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setUserData1(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
     console.log("render");
     return unsub;
@@ -57,7 +63,17 @@ const UserQueueLineTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentPost.map((queue, index) => (
+            {userData1.map((queue, index) => (
+              <TableRow key={index}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: "bold", border: "none" }}
+                >
+                  {queue.ticket}
+                </TableCell>
+              </TableRow>
+            ))}
+            {userData.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell
                   align="center"

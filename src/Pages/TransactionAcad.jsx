@@ -62,6 +62,16 @@ const TransactionAcad = () => {
       j++;
     });
 
+    q = query(
+      collection(db, "acadPriority"),
+      where("studentNumber", "==", search)
+    );
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
     q = query(collection(db, "acadQueuing"), where("email", "==", search));
     querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -83,11 +93,18 @@ const TransactionAcad = () => {
       j++;
     });
 
+    q = query(collection(db, "acadPriority"), where("email", "==", search));
+    querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      filters = (doc.id, " => ", doc.data());
+      j++;
+    });
+
     if (search.length === 0) {
       alert("Please fill the required input!");
     } else {
       if (j === 0) {
-        alert("Email or Student Number not found");
+        alert("Contact Number or Student Number not found");
         clearForm();
       } else {
         setName(filters.name);
@@ -134,7 +151,7 @@ const TransactionAcad = () => {
             <TextField
               type="email"
               id="Username"
-              label="Email/StudentNo."
+              label="Contact/StudentNo."
               required
               onChange={(e) => {
                 setSearch(e.target.value);

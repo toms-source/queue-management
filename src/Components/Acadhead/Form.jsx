@@ -209,19 +209,19 @@ const Form = () => {
     let subcontact = contact;
     let subaddress = address;
     if (email.length === 0) {
-      subemail = "None";
+      subemail = "N/A";
     }
     if (studentNumber.length === 0) {
-      fullStudentNumber = "None";
+      fullStudentNumber = "N/A";
     }
     if (yearSection.length === 0) {
-      subyearSection = "None";
+      subyearSection = "N/A";
     }
     if (contact.length === 0) {
-      subcontact = "None";
+      subcontact = "N/A";
     }
     if (address.length === 0) {
-      subaddress = "None";
+      subaddress = "N/A";
     }
     if (selectedForm === "Normal") {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
