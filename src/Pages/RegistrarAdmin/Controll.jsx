@@ -24,7 +24,6 @@ const Controll = () => {
     ) {
       navigate("/admin");
     }
-    console.log("Running");
   });
   return (
     <>

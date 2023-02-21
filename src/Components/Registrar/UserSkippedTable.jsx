@@ -31,7 +31,6 @@ const UserSkippedTable = () => {
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
-    console.log("render");
     return unsub;
   };
   return (

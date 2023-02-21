@@ -100,7 +100,6 @@ const AdminQueueline = () => {
       } else if (check <= 1) {
         setIsDisable(false);
       }
-      console.log(isDisable);
     };
     const intervalId = setInterval(checkTime, 3000);
     return () => clearInterval(intervalId);

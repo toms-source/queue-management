@@ -181,7 +181,6 @@ const Form = () => {
     if (sessionStorage.getItem("Auth") === "false") {
       navigate("/");
     }
-    console.log("Running");
   });
 
   const landing = () => {

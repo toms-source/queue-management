@@ -93,7 +93,6 @@ const Announcement = () => {
     ) {
       navigate("/admin");
     }
-    console.log("Running");
   });
   const insert = async () => {
     if (announce.length > 0) {

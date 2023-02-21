@@ -69,7 +69,6 @@ const Login = () => {
         navigate("/reg-controll");
       } else {
         alert("Invalid credential");
-        console.log(auth);
       }
     } else if (username === "" || pass === "") {
       alert("Please fill out the form");

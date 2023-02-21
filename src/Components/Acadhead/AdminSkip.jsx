@@ -81,8 +81,8 @@ const styleTableBody = createTheme({
 });
 const AdminSkip = () => {
   const [userData, setUserData] = useState([]);
-  const userCollectionHistory = collection(db, "regSummaryreport");
-  const userCollectionNowserving = collection(db, "regNowserving");
+  const userCollectionHistory = collection(db, "acadSummaryreport");
+  const userCollectionNowserving = collection(db, "acadNowserving");
   const current = new Date();
   const [isDisable, setIsDisable] = useState(false);
 
@@ -97,7 +97,7 @@ const AdminSkip = () => {
   useEffect(() => {
     const checkTime = async () => {
       let check = 0;
-      const coll = collection(db, "regNowserving");
+      const coll = collection(db, "acadNowserving");
       const snapshot = await getCountFromServer(coll);
       check = snapshot.data().count;
 
@@ -113,7 +113,7 @@ const AdminSkip = () => {
 
   // QueueLinetable Query
   const tableQuerySkip = async () => {
-    const acadQueueCollection = collection(db, "regSkip");
+    const acadQueueCollection = collection(db, "acadSkip");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -123,12 +123,12 @@ const AdminSkip = () => {
   };
 
   const directDeleteUser = async (email) => {
-    const userDoc = doc(db, "regSkip", email);
+    const userDoc = doc(db, "acadSkip", email);
     await deleteDoc(userDoc);
   };
 
   const moveUser = async (id) => {
-    const docRef = doc(db, "regSkip", id);
+    const docRef = doc(db, "acadSkip", id);
     const snapshot = await getDoc(docRef);
     await addDoc(userCollectionNowserving, {
       name: snapshot.data().name,
@@ -145,7 +145,7 @@ const AdminSkip = () => {
     directDeleteUser(id);
   };
   const moveUserToHistory = async (id) => {
-    const docRef = doc(db, "regSkip", id);
+    const docRef = doc(db, "acadSkip", id);
     const snapshot = await getDoc(docRef);
     await addDoc(userCollectionHistory, {
       status: "Incomplete",

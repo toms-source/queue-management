@@ -34,7 +34,6 @@ const UserQueueLineTable = () => {
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
-    console.log("render");
     return unsub;
   };
   // QueueLinetable Query
@@ -44,7 +43,6 @@ const UserQueueLineTable = () => {
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData1(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
-    console.log("render");
     return unsub;
   };
   return (
