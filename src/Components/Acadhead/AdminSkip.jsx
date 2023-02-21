@@ -6,11 +6,9 @@ import {
   Table,
   TableHead,
   TableRow,
-  Box,
   TableCell,
   TableBody,
   Tooltip,
-  Pagination,
   Stack,
   Button,
   ThemeProvider,
@@ -83,8 +81,8 @@ const styleTableBody = createTheme({
 });
 const AdminSkip = () => {
   const [userData, setUserData] = useState([]);
-  const userCollectionHistory = collection(db, "acadSummaryreport");
-  const userCollectionNowserving = collection(db, "acadNowserving");
+  const userCollectionHistory = collection(db, "regSummaryreport");
+  const userCollectionNowserving = collection(db, "regNowserving");
   const current = new Date();
   const [isDisable, setIsDisable] = useState(false);
 
@@ -99,7 +97,7 @@ const AdminSkip = () => {
   useEffect(() => {
     const checkTime = async () => {
       let check = 0;
-      const coll = collection(db, "acadNowserving");
+      const coll = collection(db, "regNowserving");
       const snapshot = await getCountFromServer(coll);
       check = snapshot.data().count;
 
@@ -115,7 +113,7 @@ const AdminSkip = () => {
 
   // QueueLinetable Query
   const tableQuerySkip = async () => {
-    const acadQueueCollection = collection(db, "acadSkip");
+    const acadQueueCollection = collection(db, "regSkip");
     const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -125,12 +123,12 @@ const AdminSkip = () => {
   };
 
   const directDeleteUser = async (email) => {
-    const userDoc = doc(db, "acadSkip", email);
+    const userDoc = doc(db, "regSkip", email);
     await deleteDoc(userDoc);
   };
 
   const moveUser = async (id) => {
-    const docRef = doc(db, "acadSkip", id);
+    const docRef = doc(db, "regSkip", id);
     const snapshot = await getDoc(docRef);
     await addDoc(userCollectionNowserving, {
       name: snapshot.data().name,
@@ -147,7 +145,7 @@ const AdminSkip = () => {
     directDeleteUser(id);
   };
   const moveUserToHistory = async (id) => {
-    const docRef = doc(db, "acadSkip", id);
+    const docRef = doc(db, "regSkip", id);
     const snapshot = await getDoc(docRef);
     await addDoc(userCollectionHistory, {
       status: "Incomplete",
@@ -194,7 +192,7 @@ const AdminSkip = () => {
       >
         <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
           <ThemeProvider theme={styleTableHead}>
-            <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
+            <TableHead sx={{ position: "sticky", top: 0 }}>
               <TableRow>
                 <TableCell>Actions</TableCell>
                 <TableCell>Ticket</TableCell>

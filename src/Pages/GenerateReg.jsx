@@ -1,10 +1,12 @@
 import { Box, Paper, Typography, Button, ThemeProvider } from "@mui/material";
-import React from "react";
+import { useState, useEffect } from "react";
 import Appbar from "../Components/Landing/Appbar";
 
 import { useNavigate } from "react-router-dom";
 import waves from "../Img/wave.svg";
 import Theme from "../CustomTheme";
+import { db } from "../firebase-config";
+import { collection, getCountFromServer } from "firebase/firestore";
 
 const GenerateReg = () => {
   let currentTimestamp = Date.now();
@@ -16,11 +18,46 @@ const GenerateReg = () => {
     minute: "2-digit",
     second: "2-digit",
   }).format(currentTimestamp);
+  let [aheadTicket, setAheadTicket] = useState(0);
+  let j = 0;
+  let k = 0;
+  let l = 0;
+  const count = async () => {
+    if (window.ticket.charAt(0) === "P") {
+      const coll1 = collection(db, "regNowserving");
+      const snapshot1 = await getCountFromServer(coll1);
+      k = snapshot1.data().count;
+
+      const coll2 = collection(db, "regPriority");
+      const snapshot2 = await getCountFromServer(coll2);
+      l = snapshot2.data().count;
+    } else {
+      const coll1 = collection(db, "regNowserving");
+      const snapshot1 = await getCountFromServer(coll1);
+      k = snapshot1.data().count;
+
+      const coll2 = collection(db, "regPriority");
+      const snapshot2 = await getCountFromServer(coll2);
+      l = snapshot2.data().count;
+
+      const coll = collection(db, "regQueuing");
+      const snapshot = await getCountFromServer(coll);
+      j = snapshot.data().count;
+    }
+
+    setAheadTicket(j + k + l - 1);
+    return aheadTicket;
+  };
+
+  useEffect(() => {
+    count();
+  });
 
   const navigate = useNavigate();
   const landing = () => {
     navigate("/");
   };
+
   return (
     <>
       <Box>
@@ -71,7 +108,7 @@ const GenerateReg = () => {
               },
             }}
           >
-            Registrar Office
+            Registrar
           </Typography>
           <Typography
             sx={{
@@ -102,7 +139,7 @@ const GenerateReg = () => {
               textDecoration: "underline",
             }}
           >
-            {window.ticket1}
+            {window.ticket}
           </Typography>
           <Typography
             sx={{
@@ -116,7 +153,7 @@ const GenerateReg = () => {
               },
             }}
           >
-            Thank you for using PUPSMB QMS
+            There are {aheadTicket} queue ahead of you
           </Typography>
         </Box>
         <Box m={2}>

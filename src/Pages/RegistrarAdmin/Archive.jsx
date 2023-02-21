@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import { Delete, Restore, Sync } from "@mui/icons-material";
 import img from "../../Img/seal.png";
-import Sidebar from "../../Components/Acadhead/Sidebar";
+import Sidebar from "../../Components/Registrar/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
 import { useNavigate } from "react-router-dom";
@@ -88,10 +88,10 @@ const styleTableBody = createTheme({
 
 const Archive = () => {
   const [userdata, setUserData] = useState([]);
-  const userCollectionSummaryreport = collection(db, "acadSummaryreport");
+  const userCollectionSummaryreport = collection(db, "regSummaryreport");
 
   const deleteSingleData = async (id) => {
-    const docRef = doc(db, "acadArchieve", id);
+    const docRef = doc(db, "regArchieve", id);
     const snapshot = await getDoc(docRef);
     await addDoc(userCollectionSummaryreport, {
       status: snapshot.data().status,
@@ -107,7 +107,7 @@ const Archive = () => {
       timestamp: snapshot.data().timestamp,
       date: snapshot.data().date,
     });
-    const userDoc = doc(db, "acadArchieve", id);
+    const userDoc = doc(db, "regArchieve", id);
     await deleteDoc(userDoc);
   };
 
@@ -115,7 +115,7 @@ const Archive = () => {
     if (
       window.confirm("Are you sure want to permanent delete this transaction?")
     ) {
-      const userDoc = doc(db, "acadArchieve", id);
+      const userDoc = doc(db, "regArchieve", id);
       await deleteDoc(userDoc);
     }
   };
@@ -123,7 +123,7 @@ const Archive = () => {
   const deleteAllPermanentData = async () => {
     if (window.confirm("Are you sure you want to permanent delete all")) {
       userdata.map(
-        async (queue) => await deleteDoc(doc(db, "acadArchieve", queue.id))
+        async (queue) => await deleteDoc(doc(db, "regArchieve", queue.id))
       );
     }
   };
@@ -131,8 +131,8 @@ const Archive = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (
-      localStorage.getItem("Password") !== "admin" &&
-      localStorage.getItem("Username") !== "adminacad"
+      localStorage.getItem("Password1") !== "admin" &&
+      localStorage.getItem("Username1") !== "adminreg"
     ) {
       navigate("/admin");
     }
@@ -143,7 +143,7 @@ const Archive = () => {
   }, []);
 
   const tableQueryArchive = async () => {
-    const acadArchiveCollection = collection(db, "acadArchieve");
+    const acadArchiveCollection = collection(db, "regArchieve");
     const q = query(acadArchiveCollection, orderBy("timestamp", "asc"));
     const unsub = onSnapshot(q, (snapshot) =>
       setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -154,7 +154,7 @@ const Archive = () => {
     <>
       <ThemeProvider theme={Theme}>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="fixed" color="pupMaroon">
+          <AppBar position="static" color="pupMaroon">
             <Toolbar>
               <Sidebar />
               <Box px={2}>

@@ -13,6 +13,7 @@ import AMonitor from "./Pages/AcadheadAdmin/MonitorAcad";
 import AReport from "./Pages/AcadheadAdmin/Report";
 import RControll from "./Pages/RegistrarAdmin/Controll";
 import RAnnouncement from "./Pages/RegistrarAdmin/Announcement";
+import RArchive from "./Pages/RegistrarAdmin/Archive";
 import RMonitor from "./Pages/RegistrarAdmin/MonitorReg";
 import RReport from "./Pages/RegistrarAdmin/Report";
 import GenerateAcad from "./Pages/GenerateAcad";
@@ -48,6 +49,7 @@ function App() {
           {/* Registrar Admin*/}
           <Route path="reg-controll" element={<RControll />} />
           <Route path="reg-announcement" element={<RAnnouncement />} />
+          <Route path="reg-archive" element={<RArchive />} />
           <Route path="reg-report" element={<RReport />} />
 
           {/* monitor */}

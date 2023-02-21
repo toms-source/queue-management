@@ -21,6 +21,7 @@ import {
   InsertChartOutlinedOutlined,
   Logout,
   Menu,
+  Archive,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Theme from "../../CustomTheme";
@@ -62,6 +63,9 @@ const Sidebar = () => {
 
   const registrarReport = () => {
     navigate("/reg-report");
+  };
+  const acadHeadarchive = () => {
+    navigate("/reg-archive");
   };
 
   const registrarLogout = () => {
@@ -169,6 +173,21 @@ const Sidebar = () => {
                     primary={
                       <Typography style={{ fontSize: "1.5rem" }}>
                         Summary Report
+                      </Typography>
+                    }
+                  ></ListItemText>
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={acadHeadarchive}>
+                  <ListItemIcon>
+                    <Archive />
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography style={{ fontSize: "1.5rem" }}>
+                        Archive
                       </Typography>
                     }
                   ></ListItemText>

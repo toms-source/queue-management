@@ -30,7 +30,7 @@ const Controll = () => {
     <>
       <ThemeProvider theme={Theme}>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" color="pupMaroon">
+          <AppBar position="fixed" color="pupMaroon">
             <Toolbar>
               <Sidebar />
               <Box px={2}>
@@ -50,7 +50,7 @@ const Controll = () => {
       </ThemeProvider>
 
       {/* Control Table */}
-      <Box p={5}>
+      <Box p={5} mt={10}>
         <Grid container spacing={5}>
           {/* Now Serving */}
           <Grid item lg={12}>

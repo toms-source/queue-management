@@ -18,7 +18,6 @@ import {
   TextField,
   InputAdornment,
   IconButton,
-  Checkbox,
 } from "@mui/material";
 import { SearchOutlined, Delete } from "@mui/icons-material";
 import img from "../../Img/seal.png";
@@ -292,7 +291,7 @@ const Report = () => {
             Delete All
           </Button>
           <Button onClick={viewAll} variant="outlined" color="pupMaroon">
-            View All
+            Refresh
           </Button>
           <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
             Print

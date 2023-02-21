@@ -18,14 +18,28 @@ import {
   TextField,
   InputAdornment,
   IconButton,
+  Checkbox,
 } from "@mui/material";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Registrar/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  getDocs,
+  doc,
+  deleteDoc,
+  getDoc,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { async } from "@firebase/util";
 import { useReactToPrint } from "react-to-print";
 
 // table header syle
@@ -79,7 +93,17 @@ const styleTableBody = createTheme({
 
 const Report = () => {
   const [qlUserData, setQluserData] = useState([]);
+  const [searchData, setSearchData] = useState([]);
+  const [tableMap, setTableMap] = useState(true);
   const [search, setSearch] = useState("");
+  const [checked, setChecked] = useState(true);
+  const [isDisable, setIsDisable] = useState(true);
+  const current = new Date();
+  const [date, setDate] = useState(
+    `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
+  );
+  const userCollectionArchieve = collection(db, "regArchieve");
+
   const navigate = useNavigate();
   const printRef = useRef();
   const handlePrint = useReactToPrint({
@@ -93,7 +117,6 @@ const Report = () => {
     ) {
       navigate("/admin");
     }
-    console.log("Running");
   });
 
   useEffect(() => {
@@ -107,6 +130,96 @@ const Report = () => {
       setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
     );
     return unsub;
+  };
+  const checkPoint = async () => {
+    let acadQueueCollection = collection(db, "regSummaryreport");
+    let q = query(acadQueueCollection, where("name", "==", search));
+    let unsub = onSnapshot(q, (snapshot) =>
+      setSearchData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+  const tableQuerySearch = async () => {
+    checkPoint();
+    let j = 0;
+    let q = query(
+      collection(db, "regSummaryreport"),
+      where("name", "==", search)
+    );
+    let querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      j++;
+    });
+    if (search.length === 0) {
+      alert("Please fill required field");
+    } else {
+      if (j === 0) {
+        setTableMap(true);
+        setIsDisable(true);
+        alert("No data found");
+      } else {
+        setTableMap(false);
+        setIsDisable(false);
+      }
+    }
+  };
+
+  const viewAll = () => {
+    setTableMap(true);
+  };
+  const deleteSingleData = async (id) => {
+    const docRef = doc(db, "regSummaryreport", id);
+    const snapshot = await getDoc(docRef);
+    await addDoc(userCollectionArchieve, {
+      status: snapshot.data().status,
+      name: snapshot.data().name,
+      transaction: snapshot.data().transaction,
+      email: snapshot.data().email,
+      studentNumber: snapshot.data().studentNumber,
+      address: snapshot.data().address,
+      contact: snapshot.data().contact,
+      userType: snapshot.data().userType,
+      yearSection: snapshot.data().yearSection,
+      ticket: snapshot.data().ticket,
+      timestamp: snapshot.data().timestamp,
+      date: snapshot.data().date,
+    });
+
+    const userDoc = doc(db, "regSummaryreport", id);
+    await deleteDoc(userDoc);
+  };
+
+  const deleteAll = () => {
+    if (window.confirm("Are you sure you want to delete ?")) {
+      moveAllData();
+    }
+  };
+
+  const moveAllData = async () => {
+    let docRef = doc(db, "regSummaryreport", "ddwd");
+    let snapshot = await getDoc(docRef);
+
+    qlUserData.map(
+      async (queue) => (
+        (docRef = doc(db, "regSummaryreport", queue.id)),
+        (snapshot = await getDoc(docRef)),
+        await addDoc(userCollectionArchieve, {
+          status: snapshot.data().status,
+          name: snapshot.data().name,
+          transaction: snapshot.data().transaction,
+          email: snapshot.data().email,
+          studentNumber: snapshot.data().studentNumber,
+          address: snapshot.data().address,
+          contact: snapshot.data().contact,
+          userType: snapshot.data().userType,
+          yearSection: snapshot.data().yearSection,
+          ticket: snapshot.data().ticket,
+          timestamp: snapshot.data().timestamp,
+          date: snapshot.data().date,
+        }),
+        await deleteDoc(doc(db, "regSummaryreport", queue.id))
+      )
+    );
   };
 
   return (
@@ -130,7 +243,6 @@ const Report = () => {
             </Toolbar>
           </AppBar>
         </Box>
-
         <Box
           py={5}
           sx={{
@@ -142,21 +254,19 @@ const Report = () => {
           <TextField
             type="email"
             id="Username"
-            label="Email/Contact"
+            label="StudentNo/Contact"
             required
             onChange={(e) => {
               setSearch(e.target.value);
             }}
             value={search}
             color="pupMaroon"
-            placeholder="Ex. JuanDelacruz@yahoo.com/09458744562"
+            placeholder="Ex. 2020-23129-SM-0/09458744562"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton>
-                    <SearchOutlinedIcon
-                    // onClick={}
-                    />
+                    <SearchOutlinedIcon onClick={tableQuerySearch} />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -172,28 +282,31 @@ const Report = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            disable={isDisable}
+            onClick={deleteAll}
+            variant="outlined"
+            color="pupMaroon"
+          >
+            Delete All
+          </Button>
+          <Button onClick={viewAll} variant="outlined" color="pupMaroon">
+            Refresh
+          </Button>
           <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
             Print
           </Button>
         </Box>
         <Box px={5} py={2} mb={5}>
-          <TableContainer
-            component={Paper}
-            sx={{
-              height: "425px",
-              margin: "auto",
-              "&::-webkit-scrollbar": {
-                width: "2px",
-              },
-            }}
-          >
+          <TableContainer component={Paper}>
             <Table
               sx={{ tableLayout: "auto", height: "maxContent" }}
               ref={printRef}
             >
               <ThemeProvider theme={styleTableHead}>
-                <TableHead sx={{ position: "sticky", top: 0 }}>
+                <TableHead>
                   <TableRow>
+                    <TableCell>Action</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell>Ticket</TableCell>
@@ -208,30 +321,103 @@ const Report = () => {
                   </TableRow>
                 </TableHead>
               </ThemeProvider>
-              <ThemeProvider theme={styleTableBody}>
-                {/* Table Body */}
-                <TableBody>
-                  {qlUserData.map((queue, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{queue.status}</TableCell>
-                      <TableCell>{queue.date}</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                        {queue.ticket}
-                      </TableCell>
-                      <Tooltip title={queue.transaction} arrow>
-                        <TableCell>{queue.transaction}</TableCell>
-                      </Tooltip>
-                      <TableCell>{queue.name}</TableCell>
-                      <TableCell>{queue.studentNumber}</TableCell>
-                      <TableCell>{queue.email}</TableCell>
-                      <TableCell>{queue.userType}</TableCell>
-                      <TableCell>{queue.yearSection}</TableCell>
-                      <TableCell>{queue.contact}</TableCell>
-                      <TableCell>{queue.address}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </ThemeProvider>
+              {tableMap === true && (
+                <>
+                  <ThemeProvider theme={styleTableBody}>
+                    {/* Table Body */}
+                    <TableBody>
+                      {qlUserData.map((queue, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="success"
+                              onClick={() => {
+                                deleteSingleData(queue.id);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                          <TableCell>{queue.status}</TableCell>
+                          <TableCell>{queue.date}</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                            {queue.ticket}
+                          </TableCell>
+                          <Tooltip title={queue.transaction} arrow>
+                            <TableCell
+                              sx={{
+                                maxWidth: "200px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {queue.transaction}
+                            </TableCell>
+                          </Tooltip>
+
+                          <TableCell>{queue.name}</TableCell>
+                          <TableCell>{queue.studentNumber}</TableCell>
+                          <TableCell>{queue.email}</TableCell>
+                          <TableCell>{queue.userType}</TableCell>
+                          <TableCell>{queue.yearSection}</TableCell>
+                          <TableCell>{queue.contact}</TableCell>
+                          <TableCell>{queue.address}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </ThemeProvider>
+                </>
+              )}
+              {tableMap === false && (
+                <>
+                  <ThemeProvider theme={styleTableBody}>
+                    {/* Table Body */}
+                    <TableBody>
+                      {searchData.map((queue, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Button
+                              variant="contained"
+                              color="success"
+                              onClick={() => {
+                                deleteSingleData(queue.id);
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                          <TableCell>{queue.status}</TableCell>
+                          <TableCell>{queue.date}</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                            {queue.ticket}
+                          </TableCell>
+                          <Tooltip title={queue.transaction} arrow>
+                            <TableCell
+                              sx={{
+                                maxWidth: "200px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {queue.transaction}
+                            </TableCell>
+                          </Tooltip>
+                          <TableCell>{queue.name}</TableCell>
+                          <TableCell>{queue.studentNumber}</TableCell>
+                          <TableCell>{queue.email}</TableCell>
+                          <TableCell>{queue.userType}</TableCell>
+                          <TableCell>{queue.yearSection}</TableCell>
+                          <TableCell>{queue.contact}</TableCell>
+                          <TableCell>{queue.address}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </ThemeProvider>
+                </>
+              )}
             </Table>
           </TableContainer>
         </Box>

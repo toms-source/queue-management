@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ThemeProvider,
   TextField,
@@ -17,7 +17,6 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
-  Checkbox,
   RadioGroup,
 } from "@mui/material";
 import {
@@ -27,10 +26,11 @@ import {
   ChevronRight,
   HighlightOff,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
+import moment from "moment-timezone";
 import { db } from "../../firebase-config";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   addDoc,
@@ -40,102 +40,12 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { transactionsAcad, yrSN, yrSections } from "../Selectfunctions";
 
 // Function for generate random number
 function randomNumberInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-const transactions = [
-  "Processing of Application for Overload of Subjects",
-  "Processing of Application for Change of Enrollment (Adding of Subject)",
-  "Processing of Application for Change of Enrollment (Change of Schedule/Subject)",
-  "Processing of Application for Correction of Grade Entry, Late Reporting of Grades and Removal of Incomplete Mark",
-  "Processing of Application for Cross-Enrollment",
-  "Processing of Application for Shifting",
-  "Processing of Manual Enrollment ",
-  "Processing of Online Petition of Subject",
-  "Processing of Online Request for Tutorial of Subject",
-  "Processing of Request for Certification (Grades, Bonafide Student, General Weighted Average)",
-];
-
-const yrSections = [
-  "BSIT 1-1",
-  "BSIT 1-2",
-  "BSIT 2-1",
-  "BSIT 2-2",
-  "BSIT 3-1",
-  "BSIT 3-2",
-  "BSIT 4-1",
-  "BSIT 4-2",
-  "BSCpE 1-1",
-  "BSCpE 1-2",
-  "BSCpE 2-1",
-  "BSCpE 2-2",
-  "BSCpE 3-1",
-  "BSCpE 3-2",
-  "BSCpE 4-1",
-  "BSCpE 4-2",
-  "BSA 1-1",
-  "BSA 1-2",
-  "BSA 2-1",
-  "BSA 2-2",
-  "BSA 3-1",
-  "BSA 3-2",
-  "BSA 4-1",
-  "BSA 4-2",
-  "BSHM 1-2",
-  "BSHM 1-1",
-  "BSHM 2-1",
-  "BSHM 2-2",
-  "BSHM 3-1",
-  "BSHM 3-2",
-  "BSHM 4-1",
-  "BSHM 4-2",
-  "BSENTREP 1-1",
-  "BSENTREP 1-2",
-  "BSENTREP 2-1",
-  "BSENTREP 2-2",
-  "BSENTREP 3-1",
-  "BSENTREP 3-2",
-  "BSENTREP 4-1",
-  "BSENTREP 4-2",
-  "BSENTREP 1-1",
-  "BSEd Eng 1-2",
-  "BSEd Eng 2-1",
-  "BSEd Eng 2-2",
-  "BSEd Eng 3-1",
-  "BSEd Eng 3-2",
-  "BSEd Eng 4-1",
-  "BSEd Eng 4-2",
-  "BSEd Math 1-2",
-  "BSEd Math 2-1",
-  "BSEd Math 2-2",
-  "BSEd Math 3-1",
-  "BSEd Math 3-2",
-  "BSEd Math 4-1",
-  "BSEd Math 4-2",
-  "DOMT 1-2",
-  "DOMT 2-1",
-  "DOMT 2-2",
-  "DOMT 3-1",
-  "DOMT 3-2",
-];
-
-const yrSN = [
-  "2019",
-  "2020",
-  "2021",
-  "2022",
-  "2023",
-  "2024",
-  "2025",
-  "2026",
-  "2027",
-  "2028",
-  "2029",
-  "2030",
-];
 
 const Form = () => {
   const [address, setAddress] = useState("");
@@ -152,6 +62,32 @@ const Form = () => {
   const userCollection1 = collection(db, "acadQueuing");
   const userCollection2 = collection(db, "acadPriority");
   let fullStudentNumber = snYear + "-" + studentNumber + "-" + "SM-0";
+
+  const timezone = "Asia/Manila";
+
+  // to disable time in specific time only
+  useEffect(() => {
+    const checkTime = () => {
+      let currentTime = moment().tz(timezone);
+      let startTime = moment.tz("08:00", "HH:mm a", timezone);
+      let endTime = moment.tz("20:00", "HH:mm a", timezone);
+
+      if (currentTime.isBetween(startTime, endTime)) {
+        sessionStorage.setItem("Auth", "true");
+      } else {
+        sessionStorage.setItem("Auth", "false");
+      }
+    };
+    const intervalId = setInterval(checkTime, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("Auth") === "false") {
+      navigate("/");
+    }
+  });
 
   const landing = () => {
     navigate("/");
@@ -558,7 +494,7 @@ const Form = () => {
                         },
                       }}
                     >
-                      {transactions.map((transaction) => (
+                      {transactionsAcad.map((transaction) => (
                         <MenuItem
                           key={transaction}
                           value={transaction}

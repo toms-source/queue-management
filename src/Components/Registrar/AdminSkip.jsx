@@ -2,17 +2,17 @@ import { React, useState, useEffect } from "react";
 import {
   Typography,
   Paper,
-  Box,
-  Pagination,
   TableContainer,
   Table,
   TableHead,
   TableRow,
+  Box,
   TableCell,
   TableBody,
+  Tooltip,
+  Pagination,
   Stack,
   Button,
-  Tooltip,
   ThemeProvider,
   createTheme,
 } from "@mui/material";
@@ -26,6 +26,7 @@ import {
   onSnapshot,
   serverTimestamp,
   addDoc,
+  getCountFromServer,
 } from "firebase/firestore";
 import { db } from "../../firebase-config";
 
@@ -85,12 +86,31 @@ const AdminSkip = () => {
   const userCollectionHistory = collection(db, "regSummaryreport");
   const userCollectionNowserving = collection(db, "regNowserving");
   const current = new Date();
+  const [isDisable, setIsDisable] = useState(false);
+
   const [date, setDate] = useState(
     `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
   );
 
   useEffect(() => {
     tableQuerySkip();
+  }, []);
+
+  useEffect(() => {
+    const checkTime = async () => {
+      let check = 0;
+      const coll = collection(db, "regNowserving");
+      const snapshot = await getCountFromServer(coll);
+      check = snapshot.data().count;
+
+      if (check >= 2) {
+        setIsDisable(true);
+      } else if (check <= 1) {
+        setIsDisable(false);
+      }
+    };
+    const intervalId = setInterval(checkTime, 3000);
+    return () => clearInterval(intervalId);
   }, []);
 
   // QueueLinetable Query
@@ -149,6 +169,7 @@ const AdminSkip = () => {
   const addUser = async (id) => {
     moveUser(id);
   };
+
   return (
     <>
       <Typography
@@ -173,7 +194,7 @@ const AdminSkip = () => {
       >
         <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
           <ThemeProvider theme={styleTableHead}>
-            <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
+            <TableHead sx={{ position: "sticky", top: 0 }}>
               <TableRow>
                 <TableCell>Actions</TableCell>
                 <TableCell>Ticket</TableCell>
@@ -197,6 +218,7 @@ const AdminSkip = () => {
                     <Stack spacing={1.5} direction="row">
                       <Stack>
                         <Button
+                          disabled={isDisable}
                           variant="contained"
                           onClick={() => {
                             addUser(queue.id);

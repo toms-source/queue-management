@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ThemeProvider,
   TextField,
@@ -6,46 +6,141 @@ import {
   Box,
   Card,
   Stack,
-  Select,
   Button,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Link,
   InputAdornment,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-  FormLabel,
+  FormControl,
+  InputLabel,
+  Select,
   OutlinedInput,
+  MenuItem,
+  FormControlLabel,
+  Radio,
+  FormLabel,
+  Checkbox,
+  RadioGroup,
 } from "@mui/material";
 import {
-  Article,
+  School,
   Badge,
   AlternateEmail,
   ChevronRight,
   HighlightOff,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
+import moment from "moment-timezone";
 import { db } from "../../firebase-config";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   addDoc,
   serverTimestamp,
+  timestamp,
   where,
   query,
   getDocs,
 } from "firebase/firestore";
-import { yrSections, yrSN, transactionsReg } from "../Selectfunctions";
 
 // Function for generate random number
 function randomNumberInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-window.ticket1 = "RO" + randomNumberInRange(99, 499);
+const transactions = [
+  "ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD",
+  "ISSUANCE OF Duplicate Copy of Registration card",
+  "ISSUANCE OF CERTIFICATE OF ENROLLMENT",
+  "ISSUANCE OF PERMIT TO CROSS ENROLL COURSE",
+  "ISSUANCE OF CERTIFICATION, AUTHENTICATION AND VERIFICATION",
+  "ISSUANCE OF STUDENT VERIFICATION",
+  "ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and General Weighted Average for Graduate Students",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT ( for TOR Employment for Undergraduate)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS TOR Employment (for graduate/H.D/Further studies/ evaluation)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT (for TOR Evaluation / Re-Admission)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT (for TOR Honorable Dismissal)",
+  "ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students (1st requeest)",
+  "ISSUANCE OF CERTIFICATE OF GRADES",
+  "ISSUANCE OF CERTIFICATE OF REGISTRATION",
+];
+
+const yrSections = [
+  "BSIT 1-1",
+  "BSIT 1-2",
+  "BSIT 2-1",
+  "BSIT 2-2",
+  "BSIT 3-1",
+  "BSIT 3-2",
+  "BSIT 4-1",
+  "BSIT 4-2",
+  "BSCpE 1-1",
+  "BSCpE 1-2",
+  "BSCpE 2-1",
+  "BSCpE 2-2",
+  "BSCpE 3-1",
+  "BSCpE 3-2",
+  "BSCpE 4-1",
+  "BSCpE 4-2",
+  "BSA 1-1",
+  "BSA 1-2",
+  "BSA 2-1",
+  "BSA 2-2",
+  "BSA 3-1",
+  "BSA 3-2",
+  "BSA 4-1",
+  "BSA 4-2",
+  "BSHM 1-2",
+  "BSHM 1-1",
+  "BSHM 2-1",
+  "BSHM 2-2",
+  "BSHM 3-1",
+  "BSHM 3-2",
+  "BSHM 4-1",
+  "BSHM 4-2",
+  "BSENTREP 1-1",
+  "BSENTREP 1-2",
+  "BSENTREP 2-1",
+  "BSENTREP 2-2",
+  "BSENTREP 3-1",
+  "BSENTREP 3-2",
+  "BSENTREP 4-1",
+  "BSENTREP 4-2",
+  "BSENTREP 1-1",
+  "BSEd Eng 1-2",
+  "BSEd Eng 2-1",
+  "BSEd Eng 2-2",
+  "BSEd Eng 3-1",
+  "BSEd Eng 3-2",
+  "BSEd Eng 4-1",
+  "BSEd Eng 4-2",
+  "BSEd Math 1-2",
+  "BSEd Math 2-1",
+  "BSEd Math 2-2",
+  "BSEd Math 3-1",
+  "BSEd Math 3-2",
+  "BSEd Math 4-1",
+  "BSEd Math 4-2",
+  "DOMT 1-2",
+  "DOMT 2-1",
+  "DOMT 2-2",
+  "DOMT 3-1",
+  "DOMT 3-2",
+];
+
+const yrSN = [
+  "2019",
+  "2020",
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "2026",
+  "2027",
+  "2028",
+  "2029",
+  "2030",
+];
 
 const Form = () => {
   const [address, setAddress] = useState("");
@@ -53,14 +148,48 @@ const Form = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
-  const [sNYear, setSNYear] = useState("");
+  const [snYear, setSnYear] = useState("");
   const [yearSection, setYearSection] = useState("");
-  const userCollection1 = collection(db, "regQueuing");
-  const userCollection2 = collection(db, "regNowserving");
-
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedForm, setSelectedForm] = useState("");
   const [transaction, setTransaction] = useState([]);
   const navigate = useNavigate();
+  const userCollection1 = collection(db, "regQueuing");
+  const userCollection2 = collection(db, "regPriority");
+  let fullStudentNumber = snYear + "-" + studentNumber + "-" + "SM-0";
+
+  const timezone = "Asia/Manila";
+
+  // to disable time in specific time only
+  useEffect(() => {
+    const checkTime = () => {
+      let currentTime = moment().tz(timezone);
+      let startTime = moment.tz("08:00", "HH:mm a", timezone);
+      let endTime = moment.tz("20:00", "HH:mm a", timezone);
+
+      if (currentTime.isBetween(startTime, endTime)) {
+        sessionStorage.setItem("Auth", "true");
+      } else {
+        sessionStorage.setItem("Auth", "false");
+      }
+    };
+    const intervalId = setInterval(checkTime, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+  useEffect(() => {
+    if (sessionStorage.getItem("Auth") === "false") {
+      navigate("/");
+    }
+    console.log("Running");
+  });
+
+  const landing = () => {
+    navigate("/");
+  };
+  const generateSuccess = () => {
+    navigate("/generate-reg");
+  };
 
   // Dropdown textbox handle
   const handleChange = (event) => {
@@ -74,52 +203,69 @@ const Form = () => {
   };
 
   // Function only numbers can accept
-  const numOnly = (e) => {
+  const numOnlySN = (e) => {
+    const re = /^[0-9\b]+$/;
+    if (e.target.value === "" || re.test(e.target.value)) {
+      setStudentNumber(e.target.value);
+    }
+  };
+
+  const numOnlyContact = (e) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
       setContact(e.target.value);
-      setStudentNumber(e.target.value);
     }
   };
 
   // Function only letters can accept
   const letterOnly = (e) => {
-    const onlyLetters = e.target.value.replace(/[^a-zA-Z- " "]/g, "");
+    //const onlyLetters = e.target.value.replace(/[^a-zA-Z-]/g, "");
+    const onlyLetters = e.target.value;
     setName(onlyLetters);
   };
 
   // Function for clear selected fields
   const clearForm = () => {
     setStudentNumber("");
+    setSnYear("");
     setAddress("");
     setContact("");
     setYearSection("");
+    setEmail("");
   };
 
-  const landing = () => {
-    navigate("/");
-  };
-
-  const generateSuccess = () => {
-    navigate("/generate-reg");
-  };
-
-  // Function for inserting user between (priorty or regular)
   const insert = async () => {
-    let transactions = transaction.join(", ");
-
-    if (selectedOption !== "priority") {
+    let subemail = email;
+    let subyearSection = yearSection;
+    let subcontact = contact;
+    let subaddress = address;
+    if (email.length === 0) {
+      subemail = "None";
+    }
+    if (studentNumber.length === 0) {
+      fullStudentNumber = "None";
+    }
+    if (yearSection.length === 0) {
+      subyearSection = "None";
+    }
+    if (contact.length === 0) {
+      subcontact = "None";
+    }
+    if (address.length === 0) {
+      subaddress = "None";
+    }
+    if (selectedForm === "Normal") {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
         await addDoc(userCollection1, {
           name: name,
-          transaction: transactions,
-          email: email,
-          studentNumber: studentNumber,
-          address: address,
-          contact: contact,
-          userType: selectedOption,
-          yearSection: yearSection,
-          ticket: window.ticket1,
+          transaction: transaction,
+          email: subemail,
+          studentNumber: fullStudentNumber,
+          address: subaddress,
+          contact: subcontact,
+          userType: selectedForm,
+          yearSection: subyearSection,
+          ticket: window.ticket,
           timestamp: serverTimestamp(),
         });
         generateSuccess();
@@ -128,14 +274,14 @@ const Form = () => {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
         await addDoc(userCollection2, {
           name: name,
-          transaction: transactions,
-          email: email,
-          studentNumber: studentNumber,
-          address: address,
-          contact: contact,
-          userType: selectedOption,
-          yearSection: yearSection,
-          ticket: window.ticket1,
+          transaction: transaction,
+          email: subemail,
+          studentNumber: fullStudentNumber,
+          address: subaddress,
+          contact: subcontact,
+          userType: selectedForm,
+          yearSection: subyearSection,
+          ticket: window.ticket,
           timestamp: serverTimestamp(),
         });
         generateSuccess();
@@ -143,68 +289,94 @@ const Form = () => {
     }
   };
 
+  // Function for inserting user between (priorty or regular)
+
   const checkExisting = async () => {
     let x = 0;
     let y = 0;
 
     //Check student number if exist
-    let checkStudentNumber = query(
-      collection(db, "regQueuing"),
-      where("studentNumber", "==", studentNumber)
-    );
-    let querySnapshotNumber = await getDocs(checkStudentNumber);
-    querySnapshotNumber.forEach(() => {
-      x++;
-    });
+    if (selectedUser === "Student") {
+      let checkStudentNumber = query(
+        collection(db, "regQueuing"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      let querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
 
-    checkStudentNumber = query(
-      collection(db, "regNowserving"),
-      where("studentNumber", "==", studentNumber)
-    );
-    querySnapshotNumber = await getDocs(checkStudentNumber);
-    querySnapshotNumber.forEach(() => {
-      x++;
-    });
+      checkStudentNumber = query(
+        collection(db, "regNowserving"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
 
-    checkStudentNumber = query(
-      collection(db, "regSkip"),
-      where("studentNumber", "==", studentNumber)
-    );
-    querySnapshotNumber = await getDocs(checkStudentNumber);
-    querySnapshotNumber.forEach(() => {
-      x++;
-    });
-    // Check email  if exist
-    let checkEmail = query(
-      collection(db, "regQueuing"),
-      where("email", "==", email)
-    );
-    let querySnapshotEmail = await getDocs(checkEmail);
-    querySnapshotEmail.forEach(() => {
-      y++;
-    });
+      checkStudentNumber = query(
+        collection(db, "regSkip"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
 
-    checkEmail = query(
-      collection(db, "regNowserving"),
-      where("email", "==", email)
-    );
-    querySnapshotEmail = await getDocs(checkEmail);
-    querySnapshotEmail.forEach(() => {
-      y++;
-    });
+      checkStudentNumber = query(
+        collection(db, "regPriority"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+    } else {
+      // Check contact if exist
+      let checkContact = query(
+        collection(db, "regQueuing"),
+        where("contact", "==", contact)
+      );
+      let querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
 
-    checkEmail = query(collection(db, "regSkip"), where("email", "==", email));
-    querySnapshotEmail = await getDocs(checkEmail);
-    querySnapshotEmail.forEach(() => {
-      y++;
-    });
+      checkContact = query(
+        collection(db, "regNowserving"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "regSkip"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "regPriority"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+    }
 
     if (x > 0 && y === 0) {
       alert("Student Number is existing on Que Line");
     } else if (x === 0 && y > 0) {
-      alert("Email is existing on Que Line");
+      alert("Contact is existing on Que Line");
     } else if (x > 0 && y > 0) {
-      alert("Email and Stundent Number is existing on Que Line");
+      alert("Contact and Stundent Number is existing on Que Line");
     } else {
       insert();
     }
@@ -212,12 +384,17 @@ const Form = () => {
 
   // Validating for creating user
   const creatingUser = async () => {
-    let z = 0;
+    if (selectedForm === "Priority") {
+      window.ticket = "P" + randomNumberInRange(99, 499);
+    } else if (selectedForm === "Normal") {
+      window.ticket = "N" + randomNumberInRange(99, 499);
+    }
 
+    let z = 0;
     // Check if Ticket exist on Acad Que Table
     let checkTicket = query(
       collection(db, "regQueuing"),
-      where("ticket", "==", window.ticket1)
+      where("ticket", "==", window.ticket)
     );
     let querySnapshotTicket = await getDocs(checkTicket);
     querySnapshotTicket.forEach(() => {
@@ -227,7 +404,7 @@ const Form = () => {
     // Check if Ticket exist on Acad Now Serving Table
     checkTicket = query(
       collection(db, "regNowserving"),
-      where("ticket", "==", window.ticket1)
+      where("ticket", "==", window.ticket)
     );
     querySnapshotTicket = await getDocs(checkTicket);
     querySnapshotTicket.forEach(() => {
@@ -237,22 +414,37 @@ const Form = () => {
     // Check if Ticket exist on Acad Skip Table
     checkTicket = query(
       collection(db, "regSkip"),
-      where("ticket", "==", window.ticket1)
+      where("ticket", "==", window.ticket)
     );
     querySnapshotTicket = await getDocs(checkTicket);
     querySnapshotTicket.forEach(() => {
       z++;
     });
 
+    // Check if Ticket exist on Priority Table
+    checkTicket = query(
+      collection(db, "regPriority"),
+      where("ticket", "==", window.ticket)
+    );
+    querySnapshotTicket = await getDocs(checkTicket);
+    querySnapshotTicket.forEach(() => {
+      z++;
+    });
+
+    // IF exist then random again until generate unique ticket id
     if (z > 0) {
-      // IF exist then random again until generate unique ticket id
       let ctr = 0;
       do {
         ctr = 0;
-        window.ticket1 = "RO" + randomNumberInRange(99, 499);
+        if (selectedForm === "Priority") {
+          window.ticket = "P" + randomNumberInRange(99, 499);
+        } else if (selectedForm === "Normal") {
+          window.ticket = "N" + randomNumberInRange(99, 499);
+        }
+
         let getNum = query(
           collection(db, "regQueuing"),
-          where("ticket", "==", window.ticket1)
+          where("ticket", "==", window.ticket)
         );
         let querySnapshotNum = await getDocs(getNum);
         querySnapshotNum.forEach(() => {
@@ -261,7 +453,25 @@ const Form = () => {
 
         getNum = query(
           collection(db, "regNowserving"),
-          where("ticket", "==", window.ticket1)
+          where("ticket", "==", window.ticket)
+        );
+        querySnapshotNum = await getDocs(getNum);
+        querySnapshotNum.forEach(() => {
+          ctr++;
+        });
+
+        getNum = query(
+          collection(db, "regSkip"),
+          where("ticket", "==", window.ticket)
+        );
+        querySnapshotNum = await getDocs(getNum);
+        querySnapshotNum.forEach(() => {
+          ctr++;
+        });
+
+        getNum = query(
+          collection(db, "regPriority"),
+          where("ticket", "==", window.ticket)
         );
         querySnapshotNum = await getDocs(getNum);
         querySnapshotNum.forEach(() => {
@@ -272,48 +482,24 @@ const Form = () => {
     // Chkeck if student number or email are exist/s in queline
 
     // form requied fields validation
-    if (selectedOption === "student") {
+    if (selectedUser === "Student") {
       if (
         name.length > 0 &&
-        email.length > 0 &&
+        selectedForm.length > 0 &&
         transaction.length > 0 &&
-        yearSection.length > 0 &&
+        email.length > 0 &&
         studentNumber.length > 0
       ) {
         checkExisting();
       } else {
         alert("Please fill all the reqiured fields!");
       }
-    } else if (selectedOption === "priority") {
+    } else if (selectedUser === "Guest/Parent/Alumni") {
       if (
         name.length > 0 &&
-        email.length > 0 &&
+        selectedForm.length > 0 &&
         transaction.length > 0 &&
-        yearSection.length > 0 &&
-        studentNumber.length > 0
-      ) {
-        checkExisting();
-      } else {
-        alert("Please fill all the reqiured fields!");
-      }
-    } else if (selectedOption === "guest") {
-      if (
-        name.length > 0 &&
-        email.length > 0 &&
-        transaction.length > 0 &&
-        contact.length > 0 &&
-        address.length > 0
-      ) {
-        checkExisting();
-      } else {
-        alert("Please fill all the reqiured fields!");
-      }
-    } else if (selectedOption === "parent") {
-      if (
-        name.length > 0 &&
-        email.length > 0 &&
-        contact.length > 0 &&
-        studentNumber.length > 0
+        contact.length > 0
       ) {
         checkExisting();
       } else {
@@ -350,8 +536,8 @@ const Form = () => {
                     p={4}
                     mt={3}
                   >
-                    <Article />
-                    Registrar Office
+                    <School />
+                    Registrar QMS Form
                   </Typography>
                 </Box>
                 <Stack spacing={2} direction="column" p={3}>
@@ -363,7 +549,7 @@ const Form = () => {
                     autoFocus
                     placeholder="Ex. Juan Dela Cruz"
                     value={name}
-                    onChange={letterOnly}
+                    onChange={letterOnly} //set name
                     color="pupMaroon"
                     InputProps={{
                       endAdornment: (
@@ -403,7 +589,7 @@ const Form = () => {
                         },
                       }}
                     >
-                      {transactionsReg.map((transaction) => (
+                      {transactions.map((transaction) => (
                         <MenuItem
                           key={transaction}
                           value={transaction}
@@ -432,6 +618,8 @@ const Form = () => {
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
                       color="pupMaroon"
+                      value={selectedForm}
+                      onChange={(event) => setSelectedForm(event.target.value)}
                     >
                       <FormControlLabel
                         value="Normal"
@@ -439,9 +627,9 @@ const Form = () => {
                         label="Normal"
                       />
                       <FormControlLabel
-                        value="pwd/pregnant/senior"
+                        value="Priority"
                         control={<Radio color="pupMaroon" />}
-                        label="pwd/pregnant/senior"
+                        label="PWD/Pregnant/Senior"
                       />
                     </RadioGroup>
                   </FormControl>
@@ -459,26 +647,26 @@ const Form = () => {
                       aria-labelledby="demo-row-radio-buttons-group-label"
                       name="row-radio-buttons-group"
                       color="pupMaroon"
-                      value={selectedOption}
+                      value={selectedUser}
                       onChange={(event) => {
-                        setSelectedOption(event.target.value);
+                        setSelectedUser(event.target.value);
                         clearForm();
                       }}
                     >
                       <FormControlLabel
-                        value="student"
+                        value="Student"
                         control={<Radio color="pupMaroon" />}
                         label="Student"
                         color="pupMaroon"
                       />
 
                       <FormControlLabel
-                        value="guest/parent/alumni"
+                        value="Guest/Parent/Alumni"
                         control={<Radio color="pupMaroon" />}
                         label="Guest/Parent/Alumni"
                       />
                     </RadioGroup>
-                    {selectedOption === "student" && (
+                    {selectedUser === "Student" && (
                       <>
                         <Stack spacing={2} direction="column">
                           <Stack spacing={1.5} direction="row">
@@ -501,10 +689,10 @@ const Form = () => {
                                 required
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={sNYear}
+                                value={snYear}
                                 label="SN-Year"
                                 onChange={(e) => {
-                                  setSNYear(e.target.value);
+                                  setSnYear(e.target.value);
                                 }}
                                 color="pupMaroon"
                               >
@@ -522,7 +710,7 @@ const Form = () => {
                               id="outlined-textarea"
                               label="Student Number"
                               value={studentNumber}
-                              onChange={numOnly}
+                              onChange={numOnlySN}
                               placeholder="00215"
                               color="pupMaroon"
                               inputProps={{ maxLength: 5 }}
@@ -584,7 +772,7 @@ const Form = () => {
                       </>
                     )}
 
-                    {selectedOption === "guest/parent/alumni" && (
+                    {selectedUser === "Guest/Parent/Alumni" && (
                       <>
                         <Stack spacing={2} direction="column">
                           <TextField
@@ -595,7 +783,7 @@ const Form = () => {
                             placeholder="Ex. 09997845244"
                             inputProps={{ maxLength: 11 }}
                             value={contact}
-                            onChange={numOnly}
+                            onChange={numOnlyContact}
                             color="pupMaroon"
                             maxlength="10"
                           />
@@ -698,5 +886,4 @@ const Form = () => {
     </>
   );
 };
-
 export default Form;
