@@ -101,6 +101,7 @@ const transactionsAcad = [
   "Processing of Online Petition of Subject",
   "Processing of Online Request for Tutorial of Subject",
   "Processing of Request for Certification (Grades, Bonafide Student, General Weighted Average)",
+  "Others...",
 ];
 
 const transactionsReg = [
@@ -118,5 +119,6 @@ const transactionsReg = [
   "ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students (1st requeest)",
   "ISSUANCE OF CERTIFICATE OF GRADES",
   "ISSUANCE OF CERTIFICATE OF REGISTRATION",
+  "Inquiry",
 ];
 export { sm, yrSections, yrSN, transactionsAcad, transactionsReg };

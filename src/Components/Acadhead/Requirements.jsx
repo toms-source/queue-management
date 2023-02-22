@@ -52,11 +52,18 @@ const Requirements = () => {
                     College/Branch/Campus)
                   </li>
                   <li>
-                    Fully-accomplished ACE form (Adding of Subject of Changing
-                    of Subject/Schedule)
+                    Fully-accomplished ACE form (Adding of Subject){" "}
+                    <Link
+                      href="https://drive.google.com/file/d/16ZETU6Dnl6Nk0krqCJnVEJJO6Lcta1tV/view?usp=sharing"
+                      target="_blank"
+                      rel="noreferrer"
+                      underline="none"
+                    >
+                      {" "}
+                      link
+                    </Link>
                   </li>
                   <li>Certificate of Registration for the current semester</li>
-                  <li>SIS Generated Curriculum Profile</li>
                 </ol>
               </Typography>
             </AccordionDetails>
@@ -88,6 +95,7 @@ const Requirements = () => {
                       link
                     </Link>
                   </li>
+                  <li>Certificate of Registration for the current semester</li>
                 </ol>
               </Typography>
             </AccordionDetails>
@@ -119,6 +127,7 @@ const Requirements = () => {
                       link
                     </Link>
                   </li>
+                  <li>Certificate of Registration for the current semester</li>
                 </ol>
               </Typography>
             </AccordionDetails>
@@ -138,7 +147,17 @@ const Requirements = () => {
               <Typography>
                 <ol style={{ padding: "5px 30px" }}>
                   <li>Removal of Incomplete Mark</li>
-                  <li>Completion Form (3 original copies)</li>
+                  <li>
+                    Completion Form (3 original copies){" "}
+                    <Link
+                      href="https://drive.google.com/file/d/1OaO1TpNH5kiAz3B_7HW5pPRZtpwxCXsr/view?usp=sharing"
+                      target="_blank"
+                      rel="noreferrer"
+                      underline="none"
+                    >
+                      link
+                    </Link>
+                  </li>
                   <li>Copy of Class Record</li>
                   <li>
                     Notarized affidavit for change of grade of professor (for
@@ -173,7 +192,9 @@ const Requirements = () => {
               aria-controls="panel2a-content"
               id="panel2a-header"
             >
-              <Typography>Processing of Application for Shifting</Typography>
+              <Typography>
+                Processing of Application for accreditation of subjects
+              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
@@ -211,13 +232,12 @@ const Requirements = () => {
                     Accomplished and printed copy of the R0 Form downloadable
                     from
                     <Link
-                      href="https://www.pup.edu.ph/"
+                      href="https://docs.google.com/document/d/1_Pw6kPgz1DytPBd1aW0oO6zo2t3bG-OB/edit?usp=sharing&ouid=104657717816851735043&rtpof=true&sd=true"
                       target="_blank"
                       rel="noreferrer"
                       underline="none"
                     >
-                      {" "}
-                      www.pup.edu.ph
+                      Link
                     </Link>
                   </li>
                 </ol>
@@ -235,7 +255,17 @@ const Requirements = () => {
             <AccordionDetails>
               <Typography>
                 <ol style={{ padding: "5px 30px" }}>
-                  <li>Online petition of subject</li>
+                  <li>
+                    Online petition of subject{" "}
+                    <Link
+                      href="https://apps.pup.edu.ph/sisstudent/Login"
+                      target="_blank"
+                      rel="noreferrer"
+                      underline="none"
+                    >
+                      Link
+                    </Link>
+                  </li>
                 </ol>
               </Typography>
             </AccordionDetails>
@@ -253,7 +283,17 @@ const Requirements = () => {
             <AccordionDetails>
               <Typography>
                 <ol style={{ padding: "5px 30px" }}>
-                  <li>Online petition of subject</li>
+                  <li>
+                    Online petition of subject{" "}
+                    <Link
+                      href="https://apps.pup.edu.ph/sisstudent/Login"
+                      target="_blank"
+                      rel="noreferrer"
+                      underline="none"
+                    >
+                      Link
+                    </Link>
+                  </li>
                 </ol>
               </Typography>
             </AccordionDetails>

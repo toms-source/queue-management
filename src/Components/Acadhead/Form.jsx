@@ -536,7 +536,6 @@ const Form = () => {
                       ),
                     }}
                   />
-
                   <FormControl fullWidth required>
                     <InputLabel
                       id="demo-multiple-name-label"
@@ -581,7 +580,15 @@ const Form = () => {
                       ))}
                     </Select>
                   </FormControl>
-
+                  {transaction[0] === "Others..." && (
+                    <>
+                      <TextField
+                        type="text"
+                        placeholder="Please Specify..."
+                        label="Others"
+                      />
+                    </>
+                  )}
                   <FormControl>
                     <FormLabel
                       id="demo-row-radio-buttons-group-label"
@@ -610,7 +617,6 @@ const Form = () => {
                       />
                     </RadioGroup>
                   </FormControl>
-
                   <FormControl>
                     <FormLabel
                       id="demo-row-radio-buttons-group-label"
@@ -825,7 +831,6 @@ const Form = () => {
                       </>
                     )}
                   </FormControl>
-
                   <Box>
                     By using this service, you understood and agree to the PUP
                     Online Services{" "}
