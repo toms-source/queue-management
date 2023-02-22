@@ -583,6 +583,9 @@ const Form = () => {
                   {transaction[0] === "Others..." && (
                     <>
                       <TextField
+                        id="outlined-textarea"
+                        color="pupMaroon"
+                        required
                         type="text"
                         placeholder="Please Specify..."
                         label="Others"
