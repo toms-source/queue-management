@@ -15,7 +15,7 @@ import { db } from "../../firebase-config";
 const UserNowServingTable = () => {
   const [userData, setUserData] = useState([]);
   const currentPage = 1;
-  const postPerPage = 1;
+  const postPerPage = 2;
   let pages = [];
 
   const lastPostIndex = currentPage * postPerPage;

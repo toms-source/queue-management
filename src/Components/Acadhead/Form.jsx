@@ -35,12 +35,11 @@ import {
   collection,
   addDoc,
   serverTimestamp,
-  timestamp,
   where,
   query,
   getDocs,
 } from "firebase/firestore";
-import { transactionsAcad, yrSN, yrSections } from "../Selectfunctions";
+import { sm, transactionsAcad, yrSN, yrSections } from "../Selectfunctions";
 
 // Function for generate random number
 function randomNumberInRange(min, max) {
@@ -54,6 +53,7 @@ const Form = () => {
   const [name, setName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [snYear, setSnYear] = useState("");
+  const [branch, setBranch] = useState("");
   const [yearSection, setYearSection] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedForm, setSelectedForm] = useState("");
@@ -61,7 +61,7 @@ const Form = () => {
   const navigate = useNavigate();
   const userCollection1 = collection(db, "acadQueuing");
   const userCollection2 = collection(db, "acadPriority");
-  let fullStudentNumber = snYear + "-" + studentNumber + "-" + "SM-0";
+  let fullStudentNumber = snYear + "-" + studentNumber + "-" + branch;
 
   const timezone = "Asia/Manila";
 
@@ -83,11 +83,11 @@ const Form = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(() => {
-    if (sessionStorage.getItem("Auth") === "false") {
-      navigate("/");
-    }
-  });
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("Auth") === "false") {
+  //     navigate("/");
+  //   }
+  // });
 
   const landing = () => {
     navigate("/");
@@ -126,7 +126,7 @@ const Form = () => {
   const letterOnly = (e) => {
     //const onlyLetters = e.target.value.replace(/[^a-zA-Z-]/g, "");
     const onlyLetters = e.target.value;
-    setName(onlyLetters);
+    setName(onlyLetters.toUpperCase()); //To convert Upper Case);
   };
 
   // Function for clear selected fields
@@ -203,10 +203,46 @@ const Form = () => {
     //Check student number if exist
     if (selectedUser === "Student") {
       let checkStudentNumber = query(
-        collection(db, "acadQueuing"),
+        collection(db, "regQueuing"),
         where("studentNumber", "==", fullStudentNumber)
       );
       let querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "regNowserving"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "regSkip"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "regPriority"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "acadQueuing"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
       querySnapshotNumber.forEach(() => {
         x++;
       });
@@ -240,10 +276,46 @@ const Form = () => {
     } else {
       // Check contact if exist
       let checkContact = query(
-        collection(db, "acadQueuing"),
+        collection(db, "regQueuing"),
         where("contact", "==", contact)
       );
       let querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "regNowserving"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "regSkip"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "regPriority"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "acadQueuing"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
       querySnapshotContact.forEach(() => {
         y++;
       });
@@ -620,12 +692,40 @@ const Form = () => {
                               color="pupMaroon"
                               inputProps={{ maxLength: 5 }}
                             />
-                            <TextField
-                              disabled
-                              type="text"
-                              id="outlined-textarea"
-                              value="SM-0"
-                            />
+
+                            <FormControl
+                              sx={{
+                                minWidth: {
+                                  lg: "200px",
+                                  sx: "180px",
+                                  xs: "100px",
+                                },
+                              }}
+                            >
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                color="pupMaroon"
+                              >
+                                Branch
+                              </InputLabel>
+                              <Select
+                                required
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={branch}
+                                label="Branch"
+                                onChange={(e) => {
+                                  setBranch(e.target.value);
+                                }}
+                                color="pupMaroon"
+                              >
+                                {sm.map((sm) => (
+                                  <MenuItem key={sm} value={sm}>
+                                    {sm}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
                           </Stack>
 
                           <FormControl fullWidth>

@@ -37,7 +37,10 @@ const MonitorSkipped = () => {
   };
   return (
     <>
-      <TableContainer component={Paper} sx={{ minHeight: "420px" }}>
+      <TableContainer
+        component={Paper}
+        sx={{ margin: "auto", minHeight: "55vh", maxHeight: "55vh" }}
+      >
         <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ bgcolor: "#880000" }}>

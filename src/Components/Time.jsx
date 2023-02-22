@@ -15,7 +15,7 @@ const Time = () => {
       <Box
         sx={{
           border: "2px solid burtlywood",
-          width: "185px",
+          width: "20vw",
           margin: "20px",
           borderRadius: "15px",
           padding: "10px 200px",

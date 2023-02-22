@@ -41,106 +41,12 @@ import {
   query,
   getDocs,
 } from "firebase/firestore";
+import { sm, yrSections, yrSN, transactionsReg } from "../Selectfunctions";
 
 // Function for generate random number
 function randomNumberInRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-const transactions = [
-  "ISSUANCE OF CERTIFIED TRUE COPY OF REGISTRATION CARD",
-  "ISSUANCE OF Duplicate Copy of Registration card",
-  "ISSUANCE OF CERTIFICATE OF ENROLLMENT",
-  "ISSUANCE OF PERMIT TO CROSS ENROLL COURSE",
-  "ISSUANCE OF CERTIFICATION, AUTHENTICATION AND VERIFICATION",
-  "ISSUANCE OF STUDENT VERIFICATION",
-  "ISSUANCE OF CERTIFIED TRUE COPY of TOR, Diploma and General Weighted Average for Graduate Students",
-  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT ( for TOR Employment for Undergraduate)",
-  "ISSUANCE OF TRANSCRIPT OF RECORD FOR GRADUATE STUDENTS TOR Employment (for graduate/H.D/Further studies/ evaluation)",
-  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT (for TOR Evaluation / Re-Admission)",
-  "ISSUANCE OF TRANSCRIPT OF RECORD FOR UNDERGRADUATE STUDENT (for TOR Honorable Dismissal)",
-  "ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students (1st requeest)",
-  "ISSUANCE OF CERTIFICATE OF GRADES",
-  "ISSUANCE OF CERTIFICATE OF REGISTRATION",
-];
-
-const yrSections = [
-  "BSIT 1-1",
-  "BSIT 1-2",
-  "BSIT 2-1",
-  "BSIT 2-2",
-  "BSIT 3-1",
-  "BSIT 3-2",
-  "BSIT 4-1",
-  "BSIT 4-2",
-  "BSCpE 1-1",
-  "BSCpE 1-2",
-  "BSCpE 2-1",
-  "BSCpE 2-2",
-  "BSCpE 3-1",
-  "BSCpE 3-2",
-  "BSCpE 4-1",
-  "BSCpE 4-2",
-  "BSA 1-1",
-  "BSA 1-2",
-  "BSA 2-1",
-  "BSA 2-2",
-  "BSA 3-1",
-  "BSA 3-2",
-  "BSA 4-1",
-  "BSA 4-2",
-  "BSHM 1-2",
-  "BSHM 1-1",
-  "BSHM 2-1",
-  "BSHM 2-2",
-  "BSHM 3-1",
-  "BSHM 3-2",
-  "BSHM 4-1",
-  "BSHM 4-2",
-  "BSENTREP 1-1",
-  "BSENTREP 1-2",
-  "BSENTREP 2-1",
-  "BSENTREP 2-2",
-  "BSENTREP 3-1",
-  "BSENTREP 3-2",
-  "BSENTREP 4-1",
-  "BSENTREP 4-2",
-  "BSENTREP 1-1",
-  "BSEd Eng 1-2",
-  "BSEd Eng 2-1",
-  "BSEd Eng 2-2",
-  "BSEd Eng 3-1",
-  "BSEd Eng 3-2",
-  "BSEd Eng 4-1",
-  "BSEd Eng 4-2",
-  "BSEd Math 1-2",
-  "BSEd Math 2-1",
-  "BSEd Math 2-2",
-  "BSEd Math 3-1",
-  "BSEd Math 3-2",
-  "BSEd Math 4-1",
-  "BSEd Math 4-2",
-  "DOMT 1-2",
-  "DOMT 2-1",
-  "DOMT 2-2",
-  "DOMT 3-1",
-  "DOMT 3-2",
-];
-
-const yrSN = [
-  "2019",
-  "2020",
-  "2021",
-  "2022",
-  "2023",
-  "2024",
-  "2025",
-  "2026",
-  "2027",
-  "2028",
-  "2029",
-  "2030",
-];
 
 const Form = () => {
   const [address, setAddress] = useState("");
@@ -149,6 +55,7 @@ const Form = () => {
   const [name, setName] = useState("");
   const [studentNumber, setStudentNumber] = useState("");
   const [snYear, setSnYear] = useState("");
+  const [branch, setBranch] = useState("");
   const [yearSection, setYearSection] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedForm, setSelectedForm] = useState("");
@@ -156,7 +63,7 @@ const Form = () => {
   const navigate = useNavigate();
   const userCollection1 = collection(db, "regQueuing");
   const userCollection2 = collection(db, "regPriority");
-  let fullStudentNumber = snYear + "-" + studentNumber + "-" + "SM-0";
+  let fullStudentNumber = snYear + "-" + studentNumber + "-" + branch;
 
   const timezone = "Asia/Manila";
 
@@ -177,11 +84,11 @@ const Form = () => {
 
     return () => clearInterval(intervalId);
   }, []);
-  useEffect(() => {
-    if (sessionStorage.getItem("Auth") === "false") {
-      navigate("/");
-    }
-  });
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("Auth") === "false") {
+  //     navigate("/");
+  //   }
+  // });
 
   const landing = () => {
     navigate("/");
@@ -220,7 +127,7 @@ const Form = () => {
   const letterOnly = (e) => {
     //const onlyLetters = e.target.value.replace(/[^a-zA-Z-]/g, "");
     const onlyLetters = e.target.value;
-    setName(onlyLetters);
+    setName(onlyLetters.toUpperCase()); //To convert Upper Case);
   };
 
   // Function for clear selected fields
@@ -331,6 +238,42 @@ const Form = () => {
       querySnapshotNumber.forEach(() => {
         x++;
       });
+
+      checkStudentNumber = query(
+        collection(db, "acadQueuing"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "acadNowserving"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "acadSkip"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
+
+      checkStudentNumber = query(
+        collection(db, "acadPriority"),
+        where("studentNumber", "==", fullStudentNumber)
+      );
+      querySnapshotNumber = await getDocs(checkStudentNumber);
+      querySnapshotNumber.forEach(() => {
+        x++;
+      });
     } else {
       // Check contact if exist
       let checkContact = query(
@@ -362,6 +305,42 @@ const Form = () => {
 
       checkContact = query(
         collection(db, "regPriority"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "acadQueuing"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "acadNowserving"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "acadSkip"),
+        where("contact", "==", contact)
+      );
+      querySnapshotContact = await getDocs(checkContact);
+      querySnapshotContact.forEach(() => {
+        y++;
+      });
+
+      checkContact = query(
+        collection(db, "acadPriority"),
         where("contact", "==", contact)
       );
       querySnapshotContact = await getDocs(checkContact);
@@ -557,6 +536,7 @@ const Form = () => {
                         </InputAdornment>
                       ),
                     }}
+                    sx={{ textTransform: "capitalized" }}
                   />
 
                   <FormControl fullWidth required>
@@ -588,7 +568,7 @@ const Form = () => {
                         },
                       }}
                     >
-                      {transactions.map((transaction) => (
+                      {transactionsReg.map((transaction) => (
                         <MenuItem
                           key={transaction}
                           value={transaction}
@@ -714,12 +694,45 @@ const Form = () => {
                               color="pupMaroon"
                               inputProps={{ maxLength: 5 }}
                             />
-                            <TextField
+                            {/* <TextField
                               disabled
                               type="text"
                               id="outlined-textarea"
                               value="SM-0"
-                            />
+                            /> */}
+                            <FormControl
+                              sx={{
+                                minWidth: {
+                                  lg: "200px",
+                                  sx: "180px",
+                                  xs: "100px",
+                                },
+                              }}
+                            >
+                              <InputLabel
+                                id="demo-simple-select-label"
+                                color="pupMaroon"
+                              >
+                                Branch
+                              </InputLabel>
+                              <Select
+                                required
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={branch}
+                                label="Branch"
+                                onChange={(e) => {
+                                  setBranch(e.target.value);
+                                }}
+                                color="pupMaroon"
+                              >
+                                {sm.map((sm) => (
+                                  <MenuItem key={sm} value={sm}>
+                                    {sm}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
                           </Stack>
 
                           <FormControl fullWidth>

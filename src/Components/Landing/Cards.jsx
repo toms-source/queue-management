@@ -91,7 +91,7 @@ const Cards = () => {
                     variant="contained"
                     endIcon={<AddToQueue />}
                     onClick={generateAcad}
-                    disabled={isDisabled}
+                    // disabled={isDisabled}
                     component={motion.div}
                     whileHover={{
                       scale: 1.05,
@@ -105,7 +105,7 @@ const Cards = () => {
                     size="small"
                     color="pupMaroon"
                     variant="outlined"
-                    onClick={transactionAcad}
+                    // onClick={transactionAcad}
                     disabled={isDisabled}
                     endIcon={<PersonSearch />}
                     component={motion.div}
@@ -145,7 +145,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="contained"
                     onClick={generateReg}
-                    disabled={isDisabled}
+                    // disabled={isDisabled}
                     endIcon={<AddToQueue />}
                     component={motion.div}
                     whileHover={{
@@ -161,7 +161,7 @@ const Cards = () => {
                     color="pupMaroon"
                     variant="outlined"
                     onClick={transactionReg}
-                    disabled={isDisabled}
+                    // disabled={isDisabled}
                     endIcon={<PersonSearch />}
                     component={motion.div}
                     whileHover={{
