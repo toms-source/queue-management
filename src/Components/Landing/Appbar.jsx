@@ -9,6 +9,7 @@ import {
   useScrollTrigger,
   Slide,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Stack } from "@mui/system";
 import { motion } from "framer-motion";
@@ -32,6 +33,10 @@ HideOnScroll.propTypes = {
 };
 
 function Appbar(props) {
+  const navigate = useNavigate();
+  const landing = () => {
+    navigate("/");
+  };
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -57,6 +62,7 @@ function Appbar(props) {
                 }}
               >
                 <motion.img
+                  onClick={landing}
                   src={Logo}
                   alt=""
                   initial={{ rotate: 0 }}
@@ -72,51 +78,6 @@ function Appbar(props) {
         </HideOnScroll>
         <Toolbar />
       </ThemeProvider>
-      {/* <ThemeProvider theme={Theme}>
-        <Box>
-          <CssBaseline />
-          <HideOnScroll {...props}>
-            <AppBar
-              component="nav"
-              color="pupMaroon"
-              position="stick"
-              sx={{
-                color: "white",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "10vh",
-              }}
-            >
-              <Toolbar>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <motion.img
-                    src={Logo}
-                    alt=""
-                    initial={{ rotate: 0 }}
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 15 }}
-                    height="50px"
-                    width="50px"
-                  />
-                  <Typography variant="h5">Queue Line Mangement</Typography>
-                </Stack>
-              </Toolbar>
-            </AppBar>
-          </HideOnScroll>
-        </Box>
-        <Box
-          sx={{ height: "5px", width: "100%", backgroundColor: "#ffd700" }}
-        ></Box>
-      </ThemeProvider> */}
     </>
   );
 }

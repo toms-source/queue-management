@@ -16,8 +16,10 @@ import {
   createTheme,
   Tooltip,
   IconButton,
+  InputAdornment,
+  TextField,
 } from "@mui/material";
-import { Delete, Restore, Sync } from "@mui/icons-material";
+import { Delete, Restore, Sync, SearchOutlined } from "@mui/icons-material";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
@@ -88,7 +90,43 @@ const styleTableBody = createTheme({
 
 const Archive = () => {
   const [userdata, setUserData] = useState([]);
+  const [search, setSearch] = useState("");
+  const [tableMap, setTableMap] = useState(true);
   const userCollectionSummaryreport = collection(db, "acadSummaryreport");
+  const [searchData, setSearchData] = useState([]);
+  const [isDisable, setIsDisable] = useState(true);
+
+  const checkPoint = async () => {
+    let acadQueueCollection = collection(db, "acadSummaryreport");
+    let q = query(acadQueueCollection, where("name", "==", search));
+    let unsub = onSnapshot(q, (snapshot) =>
+      setSearchData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
+  const tableQuerySearch = async () => {
+    checkPoint();
+    let j = 0;
+    let q = query(collection(db, "acadArchieve"), where("name", "==", search));
+    let querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      j++;
+    });
+    if (search.length === 0) {
+      alert("Please fill required field");
+    } else {
+      if (j === 0) {
+        setTableMap(true);
+        alert("No data found");
+      } else {
+        setTableMap(false);
+      }
+    }
+  };
+
+  const viewAll = () => {
+    setTableMap(true);
+  };
 
   const deleteSingleData = async (id) => {
     const docRef = doc(db, "acadArchieve", id);
@@ -179,6 +217,46 @@ const Archive = () => {
             alignItems: "center",
           }}
         ></Box>
+
+        <Box
+          py={5}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            type="email"
+            id="Username"
+            label="Name"
+            required
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            value={search}
+            onClick={tableQuerySearch}
+            color="pupMaroon"
+            placeholder="Juan dela Cruz"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchOutlined />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              width: {
+                xs: "100%",
+                md: "100%",
+                lg: "95%",
+              },
+              bgcolor: "white",
+            }}
+          />
+        </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
           <Button
             onClick={deleteAllPermanentData}
@@ -186,6 +264,9 @@ const Archive = () => {
             color="pupMaroon"
           >
             Delete All
+          </Button>
+          <Button onClick={viewAll} variant="outlined" color="pupMaroon">
+            View All
           </Button>
         </Box>
         <Box px={5} py={2} mb={5}>
@@ -219,50 +300,104 @@ const Archive = () => {
                   </TableRow>
                 </TableHead>
               </ThemeProvider>
-              <ThemeProvider theme={styleTableBody}>
-                {/* Table Body */}
-                <TableBody>
-                  {userdata.map((queue, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => {
-                            deleteSingleData(queue.id);
-                          }}
-                          sx={{ color: "#00FF00" }}
-                        >
-                          <Restore />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => {
-                            deletePermanentSingleData(queue.id);
-                          }}
-                          sx={{ color: "#FF0000" }}
-                        >
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>{queue.status}</TableCell>
-                      <TableCell>{queue.date}</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: "bold" }}>
-                        {queue.ticket}
-                      </TableCell>
-                      <Tooltip title={queue.transaction} arrow>
-                        <TableCell>{queue.transaction}</TableCell>
-                      </Tooltip>
-                      <TableCell>{queue.name}</TableCell>
-                      <TableCell>{queue.studentNumber}</TableCell>
-                      <TableCell>{queue.email}</TableCell>
-                      <TableCell>{queue.userType}</TableCell>
-                      <TableCell>{queue.yearSection}</TableCell>
-                      <TableCell>{queue.contact}</TableCell>
-                      <TableCell>{queue.address}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </ThemeProvider>
+              {tableMap === true && (
+                <>
+                  <ThemeProvider theme={styleTableBody}>
+                    {/* Table Body */}
+
+                    <TableBody>
+                      {userdata.map((queue, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => {
+                                deleteSingleData(queue.id);
+                              }}
+                              sx={{ color: "#00FF00" }}
+                            >
+                              <Restore />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => {
+                                deletePermanentSingleData(queue.id);
+                              }}
+                              sx={{ color: "#FF0000" }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>{queue.status}</TableCell>
+                          <TableCell>{queue.date}</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                            {queue.ticket}
+                          </TableCell>
+                          <Tooltip title={queue.transaction} arrow>
+                            <TableCell>{queue.transaction}</TableCell>
+                          </Tooltip>
+                          <TableCell>{queue.name}</TableCell>
+                          <TableCell>{queue.studentNumber}</TableCell>
+                          <TableCell>{queue.email}</TableCell>
+                          <TableCell>{queue.userType}</TableCell>
+                          <TableCell>{queue.yearSection}</TableCell>
+                          <TableCell>{queue.contact}</TableCell>
+                          <TableCell>{queue.address}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </ThemeProvider>
+                </>
+              )}
+              {tableMap === false && (
+                <>
+                  <ThemeProvider theme={styleTableBody}>
+                    {/* Table Body */}
+
+                    <TableBody>
+                      {searchData.map((queue, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => {
+                                deleteSingleData(queue.id);
+                              }}
+                              sx={{ color: "#00FF00" }}
+                            >
+                              <Restore />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>
+                            <IconButton
+                              onClick={() => {
+                                deletePermanentSingleData(queue.id);
+                              }}
+                              sx={{ color: "#FF0000" }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </TableCell>
+                          <TableCell>{queue.status}</TableCell>
+                          <TableCell>{queue.date}</TableCell>
+                          <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                            {queue.ticket}
+                          </TableCell>
+                          <Tooltip title={queue.transaction} arrow>
+                            <TableCell>{queue.transaction}</TableCell>
+                          </Tooltip>
+                          <TableCell>{queue.name}</TableCell>
+                          <TableCell>{queue.studentNumber}</TableCell>
+                          <TableCell>{queue.email}</TableCell>
+                          <TableCell>{queue.userType}</TableCell>
+                          <TableCell>{queue.yearSection}</TableCell>
+                          <TableCell>{queue.contact}</TableCell>
+                          <TableCell>{queue.address}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </ThemeProvider>
+                </>
+              )}
             </Table>
           </TableContainer>
         </Box>

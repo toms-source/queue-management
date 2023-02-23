@@ -120,10 +120,6 @@ const TransactionAcad = () => {
     setTicket("");
   };
 
-  const navigate = useNavigate();
-  const transaction = () => {
-    navigate("/generateform-acad");
-  };
   return (
     <>
       <Box>

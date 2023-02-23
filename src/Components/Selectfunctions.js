@@ -119,6 +119,6 @@ const transactionsReg = [
   "ISSUANCE OF TRANSCRIPT OF RECORD FOR Graduate Students (1st requeest)",
   "ISSUANCE OF CERTIFICATE OF GRADES",
   "ISSUANCE OF CERTIFICATE OF REGISTRATION",
-  "Inquiry",
+  "Others...",
 ];
 export { sm, yrSections, yrSN, transactionsAcad, transactionsReg };

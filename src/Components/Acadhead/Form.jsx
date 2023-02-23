@@ -83,11 +83,11 @@ const Form = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // useEffect(() => {
-  //   if (sessionStorage.getItem("Auth") === "false") {
-  //     navigate("/");
-  //   }
-  // });
+  useEffect(() => {
+    if (sessionStorage.getItem("Auth") === "false") {
+      navigate("/");
+    }
+  });
 
   const landing = () => {
     navigate("/");
@@ -133,6 +133,7 @@ const Form = () => {
   const clearForm = () => {
     setStudentNumber("");
     setSnYear("");
+    setBranch("");
     setAddress("");
     setContact("");
     setYearSection("");
@@ -465,7 +466,8 @@ const Form = () => {
         selectedForm.length > 0 &&
         transaction.length > 0 &&
         email.length > 0 &&
-        studentNumber.length > 0
+        studentNumber.length > 0 &&
+        branch.length > 0
       ) {
         checkExisting();
       } else {
