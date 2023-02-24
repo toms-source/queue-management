@@ -55,8 +55,8 @@ const MonitorQueueLine = () => {
         component={Paper}
         sx={{
           margin: "auto",
-          minHeight: "55vh",
-          maxHeight: "55vh",
+          minHeight: "420px",
+          maxHeight: "420px",
           "&::-webkit-scrollbar": {
             width: "2px",
           },

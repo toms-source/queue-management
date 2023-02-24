@@ -40,6 +40,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { async } from "@firebase/util";
 import { useReactToPrint } from "react-to-print";
+import { Stack } from "@mui/system";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -282,20 +283,22 @@ const Report = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
-          <Button
-            disable={isDisable}
-            onClick={deleteAll}
-            variant="outlined"
-            color="pupMaroon"
-          >
-            Delete All
-          </Button>
-          <Button onClick={viewAll} variant="outlined" color="pupMaroon">
-            Refresh
-          </Button>
-          <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
-            Print
-          </Button>
+          <Stack spacing={1.5} direction="row">
+            <Button
+              disable={isDisable}
+              onClick={deleteAll}
+              variant="outlined"
+              color="pupMaroon"
+            >
+              Delete All
+            </Button>
+            <Button onClick={viewAll} variant="outlined" color="pupMaroon">
+              Refresh
+            </Button>
+            <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
+              Print
+            </Button>
+          </Stack>
         </Box>
         <Box px={5} py={2} mb={5}>
           <TableContainer
@@ -345,15 +348,6 @@ const Report = () => {
                                 }}
                               />
                             </IconButton>
-                            {/* <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() => {
-                                deleteSingleData(queue.id);
-                              }}
-                            >
-                              Delete
-                            </Button> */}
                           </TableCell>
                           <TableCell>{queue.status}</TableCell>
                           <TableCell>{queue.date}</TableCell>

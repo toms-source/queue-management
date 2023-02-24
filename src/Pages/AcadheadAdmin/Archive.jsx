@@ -38,6 +38,7 @@ import {
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import { Stack } from "@mui/system";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -97,7 +98,7 @@ const Archive = () => {
   const [isDisable, setIsDisable] = useState(true);
 
   const checkPoint = async () => {
-    let acadQueueCollection = collection(db, "acadSummaryreport");
+    let acadQueueCollection = collection(db, "acadArchieve");
     let q = query(acadQueueCollection, where("name", "==", search));
     let unsub = onSnapshot(q, (snapshot) =>
       setSearchData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -235,13 +236,12 @@ const Archive = () => {
               setSearch(e.target.value);
             }}
             value={search}
-            onClick={tableQuerySearch}
             color="pupMaroon"
             placeholder="Juan dela Cruz"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton>
+                  <IconButton onClick={tableQuerySearch}>
                     <SearchOutlined />
                   </IconButton>
                 </InputAdornment>
@@ -258,16 +258,18 @@ const Archive = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
-          <Button
-            onClick={deleteAllPermanentData}
-            variant="outlined"
-            color="pupMaroon"
-          >
-            Delete All
-          </Button>
-          <Button onClick={viewAll} variant="outlined" color="pupMaroon">
-            View All
-          </Button>
+          <Stack spacing={1.5} direction="row">
+            <Button
+              onClick={deleteAllPermanentData}
+              variant="outlined"
+              color="pupMaroon"
+            >
+              Delete All
+            </Button>
+            <Button onClick={viewAll} variant="outlined" color="pupMaroon">
+              Refresh
+            </Button>
+          </Stack>
         </Box>
         <Box px={5} py={2} mb={5}>
           <TableContainer
@@ -304,7 +306,6 @@ const Archive = () => {
                 <>
                   <ThemeProvider theme={styleTableBody}>
                     {/* Table Body */}
-
                     <TableBody>
                       {userdata.map((queue, index) => (
                         <TableRow key={index}>
@@ -359,9 +360,7 @@ const Archive = () => {
                         <TableRow key={index}>
                           <TableCell>
                             <IconButton
-                              onClick={() => {
-                                deleteSingleData(queue.id);
-                              }}
+                              onClick={tableQuerySearch}
                               sx={{ color: "#00FF00" }}
                             >
                               <Restore />
