@@ -846,7 +846,7 @@ const Form = () => {
                           ) : (
                             ""
                           )}
-                          {error && email.length > 0 && !emailError ? (
+                          {error && email.length > 0 && emailError ? (
                             <label className="red-text">Invalid Email</label>
                           ) : (
                             ""

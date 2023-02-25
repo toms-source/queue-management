@@ -40,7 +40,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { async } from "@firebase/util";
 import { useReactToPrint } from "react-to-print";
-import { Stack } from "@mui/system";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -100,7 +99,9 @@ const Report = () => {
   const [isDisable, setIsDisable] = useState(true);
   const current = new Date();
   const [date, setDate] = useState(
-    `${current.getDate()}/${current.getMonth() + 1}/${current.getFullYear()}`
+    `${current.getDate()}/${
+      current.getMonth() + 1
+    }/${current.getFullYear()}-${current.toLocaleTimeString("en-US")}`
   );
   const userCollectionArchieve = collection(db, "acadArchieve");
 
@@ -190,8 +191,12 @@ const Report = () => {
   };
 
   const deleteAll = () => {
-    if (window.confirm("Are you sure you want to delete ?")) {
-      moveAllData();
+    if (qlUserData.length > 0) {
+      if (window.confirm("Are you sure you want to delete ?")) {
+        moveAllData();
+      }
+    } else {
+      alert("Delete failed: No data filtered");
     }
   };
 
@@ -199,27 +204,51 @@ const Report = () => {
     let docRef = doc(db, "acadSummaryreport", "ddwd");
     let snapshot = await getDoc(docRef);
 
-    qlUserData.map(
-      async (queue) => (
-        (docRef = doc(db, "acadSummaryreport", queue.id)),
-        (snapshot = await getDoc(docRef)),
-        await addDoc(userCollectionArchieve, {
-          status: snapshot.data().status,
-          name: snapshot.data().name,
-          transaction: snapshot.data().transaction,
-          email: snapshot.data().email,
-          studentNumber: snapshot.data().studentNumber,
-          address: snapshot.data().address,
-          contact: snapshot.data().contact,
-          userType: snapshot.data().userType,
-          yearSection: snapshot.data().yearSection,
-          ticket: snapshot.data().ticket,
-          timestamp: snapshot.data().timestamp,
-          date: snapshot.data().date,
-        }),
-        await deleteDoc(doc(db, "acadSummaryreport", queue.id))
-      )
-    );
+    if (searchData.length === 0) {
+      qlUserData.map(
+        async (queue) => (
+          (docRef = doc(db, "acadSummaryreport", queue.id)),
+          (snapshot = await getDoc(docRef)),
+          await addDoc(userCollectionArchieve, {
+            status: snapshot.data().status,
+            name: snapshot.data().name,
+            transaction: snapshot.data().transaction,
+            email: snapshot.data().email,
+            studentNumber: snapshot.data().studentNumber,
+            address: snapshot.data().address,
+            contact: snapshot.data().contact,
+            userType: snapshot.data().userType,
+            yearSection: snapshot.data().yearSection,
+            ticket: snapshot.data().ticket,
+            timestamp: snapshot.data().timestamp,
+            date: snapshot.data().date,
+          }),
+          await deleteDoc(doc(db, "acadSummaryreport", queue.id))
+        )
+      );
+    } else {
+      searchData.map(
+        async (queue) => (
+          (docRef = doc(db, "acadSummaryreport", queue.id)),
+          (snapshot = await getDoc(docRef)),
+          await addDoc(userCollectionArchieve, {
+            status: snapshot.data().status,
+            name: snapshot.data().name,
+            transaction: snapshot.data().transaction,
+            email: snapshot.data().email,
+            studentNumber: snapshot.data().studentNumber,
+            address: snapshot.data().address,
+            contact: snapshot.data().contact,
+            userType: snapshot.data().userType,
+            yearSection: snapshot.data().yearSection,
+            ticket: snapshot.data().ticket,
+            timestamp: snapshot.data().timestamp,
+            date: snapshot.data().date,
+          }),
+          await deleteDoc(doc(db, "acadSummaryreport", queue.id))
+        )
+      );
+    }
   };
 
   return (
@@ -255,14 +284,14 @@ const Report = () => {
           <TextField
             type="email"
             id="Username"
-            label="Name"
+            label="StudentNo/Contact"
             required
             onChange={(e) => {
               setSearch(e.target.value);
             }}
             value={search}
             color="pupMaroon"
-            placeholder="Juan Dela Cruz"
+            placeholder="Ex. 2020-23129-SM-0/09458744562"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -283,22 +312,20 @@ const Report = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
-          <Stack spacing={1.5} direction="row">
-            <Button
-              disable={isDisable}
-              onClick={deleteAll}
-              variant="outlined"
-              color="pupMaroon"
-            >
-              Delete All
-            </Button>
-            <Button onClick={viewAll} variant="outlined" color="pupMaroon">
-              Refresh
-            </Button>
-            <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
-              Print
-            </Button>
-          </Stack>
+          <Button
+            disable={isDisable}
+            onClick={deleteAll}
+            variant="outlined"
+            color="pupMaroon"
+          >
+            Delete All
+          </Button>
+          <Button onClick={viewAll} variant="outlined" color="pupMaroon">
+            Refresh
+          </Button>
+          <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
+            Print
+          </Button>
         </Box>
         <Box px={5} py={2} mb={5}>
           <TableContainer
@@ -340,18 +367,15 @@ const Report = () => {
                     <TableBody>
                       {qlUserData.map((queue, index) => (
                         <TableRow key={index}>
-                          <Tooltip title="Delete" arrow>
-                            <TableCell>
-                              <IconButton>
-                                <Delete
-                                  onClick={() => {
-                                    deleteSingleData(queue.id);
-                                  }}
-                                  sx={{ color: "#FF0000" }}
-                                />
-                              </IconButton>
-                            </TableCell>
-                          </Tooltip>
+                          <TableCell>
+                            <IconButton>
+                              <Delete
+                                onClick={() => {
+                                  deleteSingleData(queue.id);
+                                }}
+                              />
+                            </IconButton>
+                          </TableCell>
                           <TableCell>{queue.status}</TableCell>
                           <TableCell>{queue.date}</TableCell>
                           <TableCell align="right" sx={{ fontWeight: "bold" }}>

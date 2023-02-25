@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from "react";
+import { React, useState, useEffect, useRef } from "react";
 import {
   AppBar,
   ThemeProvider,
@@ -15,16 +15,15 @@ import {
   TableRow,
   createTheme,
   Tooltip,
-  IconButton,
-  InputAdornment,
   TextField,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
-import { Delete, Restore, Sync, SearchOutlined } from "@mui/icons-material";
+import { SearchOutlined, Delete } from "@mui/icons-material";
 import img from "../../Img/seal.png";
 import Sidebar from "../../Components/Acadhead/Sidebar";
 import Theme from "../../CustomTheme";
 import { db } from "../../firebase-config";
-import { useNavigate } from "react-router-dom";
 import {
   collection,
   onSnapshot,
@@ -38,7 +37,9 @@ import {
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { Stack } from "@mui/system";
+import { useNavigate } from "react-router-dom";
+import { async } from "@firebase/util";
+import { useReactToPrint } from "react-to-print";
 
 // table header syle
 const styleTableHead = createTheme({
@@ -89,16 +90,50 @@ const styleTableBody = createTheme({
   },
 });
 
-const Archive = () => {
-  const [userdata, setUserData] = useState([]);
-  const [search, setSearch] = useState("");
-  const [tableMap, setTableMap] = useState(true);
-  const userCollectionSummaryreport = collection(db, "acadSummaryreport");
+const Report = () => {
+  const [qlUserData, setQluserData] = useState([]);
   const [searchData, setSearchData] = useState([]);
+  const [tableMap, setTableMap] = useState(true);
+  const [search, setSearch] = useState("");
+  const [checked, setChecked] = useState(true);
   const [isDisable, setIsDisable] = useState(true);
+  const current = new Date();
+  const [date, setDate] = useState(
+    `${current.getDate()}/${
+      current.getMonth() + 1
+    }/${current.getFullYear()}-${current.toLocaleTimeString("en-US")}`
+  );
+  const userCollectionArchieve = collection(db, "acadArchieve");
 
+  const navigate = useNavigate();
+  const printRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: "Summary Report PDF",
+  });
+  useEffect(() => {
+    if (
+      localStorage.getItem("Password") !== "admin" &&
+      localStorage.getItem("Username") !== "adminacad"
+    ) {
+      navigate("/admin");
+    }
+  });
+
+  useEffect(() => {
+    tableQueryHistory();
+  }, []);
+
+  const tableQueryHistory = async () => {
+    const acadQueueCollection = collection(db, "acadSummaryreport");
+    const q = query(acadQueueCollection, orderBy("timestamp", "asc"));
+    const unsub = onSnapshot(q, (snapshot) =>
+      setQluserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+    );
+    return unsub;
+  };
   const checkPoint = async () => {
-    let acadQueueCollection = collection(db, "acadArchieve");
+    let acadQueueCollection = collection(db, "acadSummaryreport");
     let q = query(acadQueueCollection, where("name", "==", search));
     let unsub = onSnapshot(q, (snapshot) =>
       setSearchData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -108,7 +143,10 @@ const Archive = () => {
   const tableQuerySearch = async () => {
     checkPoint();
     let j = 0;
-    let q = query(collection(db, "acadArchieve"), where("name", "==", search));
+    let q = query(
+      collection(db, "acadSummaryreport"),
+      where("name", "==", search)
+    );
     let querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       j++;
@@ -118,9 +156,11 @@ const Archive = () => {
     } else {
       if (j === 0) {
         setTableMap(true);
+        setIsDisable(true);
         alert("No data found");
       } else {
         setTableMap(false);
+        setIsDisable(false);
       }
     }
   };
@@ -128,11 +168,10 @@ const Archive = () => {
   const viewAll = () => {
     setTableMap(true);
   };
-
   const deleteSingleData = async (id) => {
-    const docRef = doc(db, "acadArchieve", id);
+    const docRef = doc(db, "acadSummaryreport", id);
     const snapshot = await getDoc(docRef);
-    await addDoc(userCollectionSummaryreport, {
+    await addDoc(userCollectionArchieve, {
       status: snapshot.data().status,
       name: snapshot.data().name,
       transaction: snapshot.data().transaction,
@@ -146,49 +185,72 @@ const Archive = () => {
       timestamp: snapshot.data().timestamp,
       date: snapshot.data().date,
     });
-    const userDoc = doc(db, "acadArchieve", id);
+
+    const userDoc = doc(db, "acadSummaryreport", id);
     await deleteDoc(userDoc);
   };
 
-  const deletePermanentSingleData = async (id) => {
-    if (
-      window.confirm("Are you sure want to permanent delete this transaction?")
-    ) {
-      const userDoc = doc(db, "acadArchieve", id);
-      await deleteDoc(userDoc);
+  const deleteAll = () => {
+    if (qlUserData.length > 0) {
+      if (window.confirm("Are you sure you want to delete ?")) {
+        moveAllData();
+      }
+    } else {
+      alert("Delete failed: No data filtered");
     }
   };
 
-  const deleteAllPermanentData = async () => {
-    if (window.confirm("Are you sure you want to permanent delete all")) {
-      userdata.map(
-        async (queue) => await deleteDoc(doc(db, "acadArchieve", queue.id))
+  const moveAllData = async () => {
+    let docRef = doc(db, "acadSummaryreport", "ddwd");
+    let snapshot = await getDoc(docRef);
+
+    if (searchData.length === 0) {
+      qlUserData.map(
+        async (queue) => (
+          (docRef = doc(db, "acadSummaryreport", queue.id)),
+          (snapshot = await getDoc(docRef)),
+          await addDoc(userCollectionArchieve, {
+            status: snapshot.data().status,
+            name: snapshot.data().name,
+            transaction: snapshot.data().transaction,
+            email: snapshot.data().email,
+            studentNumber: snapshot.data().studentNumber,
+            address: snapshot.data().address,
+            contact: snapshot.data().contact,
+            userType: snapshot.data().userType,
+            yearSection: snapshot.data().yearSection,
+            ticket: snapshot.data().ticket,
+            timestamp: snapshot.data().timestamp,
+            date: snapshot.data().date,
+          }),
+          await deleteDoc(doc(db, "acadSummaryreport", queue.id))
+        )
+      );
+    } else {
+      searchData.map(
+        async (queue) => (
+          (docRef = doc(db, "acadSummaryreport", queue.id)),
+          (snapshot = await getDoc(docRef)),
+          await addDoc(userCollectionArchieve, {
+            status: snapshot.data().status,
+            name: snapshot.data().name,
+            transaction: snapshot.data().transaction,
+            email: snapshot.data().email,
+            studentNumber: snapshot.data().studentNumber,
+            address: snapshot.data().address,
+            contact: snapshot.data().contact,
+            userType: snapshot.data().userType,
+            yearSection: snapshot.data().yearSection,
+            ticket: snapshot.data().ticket,
+            timestamp: snapshot.data().timestamp,
+            date: snapshot.data().date,
+          }),
+          await deleteDoc(doc(db, "acadSummaryreport", queue.id))
+        )
       );
     }
   };
 
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (
-      localStorage.getItem("Password") !== "admin" &&
-      localStorage.getItem("Username") !== "adminacad"
-    ) {
-      navigate("/admin");
-    }
-  });
-
-  useEffect(() => {
-    tableQueryArchive();
-  }, []);
-
-  const tableQueryArchive = async () => {
-    const acadArchiveCollection = collection(db, "acadArchieve");
-    const q = query(acadArchiveCollection, orderBy("timestamp", "asc"));
-    const unsub = onSnapshot(q, (snapshot) =>
-      setUserData(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-    );
-    return unsub;
-  };
   return (
     <>
       <ThemeProvider theme={Theme}>
@@ -205,22 +267,14 @@ const Archive = () => {
                 sx={{ flexGrow: 1 }}
                 color="white"
               >
-                Archives
+                Summary Report
               </Typography>
             </Toolbar>
           </AppBar>
         </Box>
         <Box
           py={5}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        ></Box>
-
-        <Box
-          py={5}
+          mt={10}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -230,19 +284,19 @@ const Archive = () => {
           <TextField
             type="email"
             id="Username"
-            label="Name"
+            label="StudentNo/Contact"
             required
             onChange={(e) => {
               setSearch(e.target.value);
             }}
             value={search}
             color="pupMaroon"
-            placeholder="Juan dela Cruz"
+            placeholder="Ex. 2020-23129-SM-0/09458744562"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={tableQuerySearch}>
-                    <SearchOutlined />
+                  <IconButton>
+                    <SearchOutlined onClick={tableQuerySearch} />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -258,18 +312,20 @@ const Archive = () => {
           />
         </Box>
         <Box mx={5} sx={{ display: "flex", justifyContent: "end" }}>
-          <Stack spacing={1.5} direction="row">
-            <Button
-              onClick={deleteAllPermanentData}
-              variant="outlined"
-              color="pupMaroon"
-            >
-              Delete All
-            </Button>
-            <Button onClick={viewAll} variant="outlined" color="pupMaroon">
-              Refresh
-            </Button>
-          </Stack>
+          <Button
+            disable={isDisable}
+            onClick={deleteAll}
+            variant="outlined"
+            color="pupMaroon"
+          >
+            Delete All
+          </Button>
+          <Button onClick={viewAll} variant="outlined" color="pupMaroon">
+            Refresh
+          </Button>
+          <Button variant="outlined" color="pupMaroon" onClick={handlePrint}>
+            Print
+          </Button>
         </Box>
         <Box px={5} py={2} mb={5}>
           <TableContainer
@@ -282,12 +338,14 @@ const Archive = () => {
               },
             }}
           >
-            <Table sx={{ tableLayout: "auto", height: "maxContent" }}>
+            <Table
+              sx={{ tableLayout: "auto", height: "maxContent" }}
+              ref={printRef}
+            >
               <ThemeProvider theme={styleTableHead}>
-                <TableHead sx={{ position: "sticky", top: 0, zIndex: 1 }}>
+                <TableHead>
                   <TableRow>
-                    <TableCell>Restore</TableCell>
-                    <TableCell>Delete</TableCell>
+                    <TableCell>Action</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>
                     <TableCell>Ticket</TableCell>
@@ -307,27 +365,25 @@ const Archive = () => {
                   <ThemeProvider theme={styleTableBody}>
                     {/* Table Body */}
                     <TableBody>
-                      {userdata.map((queue, index) => (
+                      {qlUserData.map((queue, index) => (
                         <TableRow key={index}>
                           <TableCell>
-                            <IconButton
+                            <IconButton>
+                              <Delete
+                                onClick={() => {
+                                  deleteSingleData(queue.id);
+                                }}
+                              />
+                            </IconButton>
+                            {/* <Button
+                              variant="contained"
+                              color="success"
                               onClick={() => {
                                 deleteSingleData(queue.id);
                               }}
-                              sx={{ color: "#00FF00" }}
                             >
-                              <Restore />
-                            </IconButton>
-                          </TableCell>
-                          <TableCell>
-                            <IconButton
-                              onClick={() => {
-                                deletePermanentSingleData(queue.id);
-                              }}
-                              sx={{ color: "#FF0000" }}
-                            >
-                              <Delete />
-                            </IconButton>
+                              Delete
+                            </Button> */}
                           </TableCell>
                           <TableCell>{queue.status}</TableCell>
                           <TableCell>{queue.date}</TableCell>
@@ -335,8 +391,18 @@ const Archive = () => {
                             {queue.ticket}
                           </TableCell>
                           <Tooltip title={queue.transaction} arrow>
-                            <TableCell>{queue.transaction}</TableCell>
+                            <TableCell
+                              sx={{
+                                maxWidth: "200px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {queue.transaction}
+                            </TableCell>
                           </Tooltip>
+
                           <TableCell>{queue.name}</TableCell>
                           <TableCell>{queue.studentNumber}</TableCell>
                           <TableCell>{queue.email}</TableCell>
@@ -354,26 +420,16 @@ const Archive = () => {
                 <>
                   <ThemeProvider theme={styleTableBody}>
                     {/* Table Body */}
-
                     <TableBody>
                       {searchData.map((queue, index) => (
                         <TableRow key={index}>
                           <TableCell>
-                            <IconButton
-                              onClick={tableQuerySearch}
-                              sx={{ color: "#00FF00" }}
-                            >
-                              <Restore />
-                            </IconButton>
-                          </TableCell>
-                          <TableCell>
-                            <IconButton
-                              onClick={() => {
-                                deletePermanentSingleData(queue.id);
-                              }}
-                              sx={{ color: "#FF0000" }}
-                            >
-                              <Delete />
+                            <IconButton>
+                              <Delete
+                                onClick={() => {
+                                  deleteSingleData(queue.id);
+                                }}
+                              />
                             </IconButton>
                           </TableCell>
                           <TableCell>{queue.status}</TableCell>
@@ -382,7 +438,16 @@ const Archive = () => {
                             {queue.ticket}
                           </TableCell>
                           <Tooltip title={queue.transaction} arrow>
-                            <TableCell>{queue.transaction}</TableCell>
+                            <TableCell
+                              sx={{
+                                maxWidth: "200px",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {queue.transaction}
+                            </TableCell>
                           </Tooltip>
                           <TableCell>{queue.name}</TableCell>
                           <TableCell>{queue.studentNumber}</TableCell>
@@ -405,4 +470,4 @@ const Archive = () => {
   );
 };
 
-export default Archive;
+export default Report;
