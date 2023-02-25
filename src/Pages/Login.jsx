@@ -26,6 +26,7 @@ import Theme from "../CustomTheme";
 import { auth } from "../firebase-config";
 //import { ThemeContext } from "@emotion/react";
 import { useEffect } from "react";
+import Photo from "../Img/228054283_354206726111456_7356025125773092805_n.jpg";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -86,7 +87,7 @@ const Login = () => {
             sm={4}
             md={7}
             sx={{
-              backgroundImage: "url(https://i.imgur.com/6FSp1eg.jpg)",
+              backgroundImage: `url(${Photo})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",
               backgroundPosition: "center",
