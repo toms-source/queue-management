@@ -8,7 +8,11 @@ import {
   AppBar,
   useScrollTrigger,
   Slide,
+  Box,
+  Button,
+  IconButton,
 } from "@mui/material";
+import { AdminPanelSettings, Menu } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Stack } from "@mui/system";
@@ -37,11 +41,57 @@ function Appbar(props) {
   const landing = () => {
     navigate("/");
   };
+  const admin = () => {
+    navigate("/admin");
+  };
   return (
     <>
       <ThemeProvider theme={Theme}>
         <HideOnScroll {...props}>
-          <AppBar
+          <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1 }}>
+              <AppBar color="pupMaroon">
+                <Toolbar>
+                  <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="menu"
+                    sx={{ mr: 2 }}
+                  >
+                    <motion.img
+                      onClick={landing}
+                      src={Logo}
+                      alt="pup"
+                      initial={{ rotate: 0 }}
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 15 }}
+                      height="50px"
+                      width="50px"
+                    />
+                  </IconButton>
+                  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    Queue Line Management
+                  </Typography>
+                  <Button
+                    color="inherit"
+                    onClick={admin}
+                    sx={{
+                      display: {
+                        lg: "block",
+                        md: "none",
+                        sm: "none",
+                        xs: "none",
+                      },
+                    }}
+                  >
+                    <AdminPanelSettings />
+                  </Button>
+                </Toolbar>
+              </AppBar>
+            </Box>
+          </Box>
+          {/* <AppBar
             color="pupMaroon"
             sx={{
               color: "white",
@@ -73,8 +123,9 @@ function Appbar(props) {
                 />
                 <Typography variant="h5">Queue Line Mangement</Typography>
               </Stack>
+              <AdminPanelSettingsIcon />
             </Toolbar>
-          </AppBar>
+          </AppBar> */}
         </HideOnScroll>
         <Toolbar />
       </ThemeProvider>

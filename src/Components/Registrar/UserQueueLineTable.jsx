@@ -68,7 +68,7 @@ const UserQueueLineTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentPost1.map((queue, index) => (
+            {userData1.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell
                   align="center"
@@ -78,7 +78,7 @@ const UserQueueLineTable = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {currentPost.map((queue, index) => (
+            {userData.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell
                   align="center"

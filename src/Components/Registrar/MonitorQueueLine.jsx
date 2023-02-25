@@ -75,7 +75,7 @@ const MonitorQueueLine = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentPost1.map((queue, index) => (
+            {userData1.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell
                   align="center"
@@ -89,7 +89,7 @@ const MonitorQueueLine = () => {
                 </TableCell>
               </TableRow>
             ))}
-            {currentPost.map((queue, index) => (
+            {userData.map((queue, index) => (
               <TableRow key={index}>
                 <TableCell
                   align="center"

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import validator from "validator";
 import {
   ThemeProvider,
   TextField,
@@ -17,7 +18,6 @@ import {
   FormControlLabel,
   Radio,
   FormLabel,
-  Checkbox,
   RadioGroup,
 } from "@mui/material";
 import {
@@ -32,16 +32,18 @@ import Theme from "../../CustomTheme";
 import moment from "moment-timezone";
 import { db } from "../../firebase-config";
 import { useNavigate } from "react-router-dom";
+import "../../App.css";
 import {
   collection,
   addDoc,
   serverTimestamp,
-  timestamp,
   where,
   query,
   getDocs,
 } from "firebase/firestore";
-import { sm, yrSections, yrSN, transactionsReg } from "../Selectfunctions";
+import { sm, transactionsReg, yrSN, yrSections } from "../Selectfunctions";
+import { async } from "@firebase/util";
+import { red } from "@mui/material/colors";
 
 // Function for generate random number
 function randomNumberInRange(min, max) {
@@ -63,6 +65,8 @@ const Form = () => {
   const navigate = useNavigate();
   const userCollection1 = collection(db, "regQueuing");
   const userCollection2 = collection(db, "regPriority");
+  const [error, setError] = useState(false);
+  const [emailError, setEmailError] = useState("");
   let fullStudentNumber = snYear + "-" + studentNumber + "-" + branch;
 
   const timezone = "Asia/Manila";
@@ -71,8 +75,8 @@ const Form = () => {
   useEffect(() => {
     const checkTime = () => {
       let currentTime = moment().tz(timezone);
-      let startTime = moment.tz("08:00", "HH:mm a", timezone);
-      let endTime = moment.tz("20:00", "HH:mm a", timezone);
+      let startTime = moment.tz("24:00", "HH:mm a", timezone);
+      let endTime = moment.tz("17:00", "HH:mm a", timezone);
 
       if (currentTime.isBetween(startTime, endTime)) {
         sessionStorage.setItem("Auth", "true");
@@ -84,9 +88,10 @@ const Form = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
   useEffect(() => {
     if (sessionStorage.getItem("Auth") === "false") {
-      navigate("/");
+      //navigate("/");
     }
   });
 
@@ -116,6 +121,16 @@ const Form = () => {
     }
   };
 
+  const validateEmail = (e) => {
+    setEmail(e.target.value);
+
+    if (validator.isEmail(email)) {
+      setEmailError(true);
+    } else {
+      setEmailError(false);
+    }
+  };
+
   const numOnlyContact = (e) => {
     const re = /^[0-9\b]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
@@ -139,6 +154,51 @@ const Form = () => {
     setContact("");
     setYearSection("");
     setEmail("");
+  };
+
+  const handleErr = () => {
+    console.log(emailError);
+    if (
+      name.length > 0 &&
+      transaction.length > 0 &&
+      selectedForm.length > 0 &&
+      selectedUser.length > 0
+    ) {
+      if (selectedUser === "Student") {
+        if (
+          email.length > 0 &&
+          studentNumber.length > 0 &&
+          branch.length > 0 &&
+          snYear.length > 0
+        ) {
+          if (name.length > 3) {
+            setError(false);
+            creatingUser();
+          } else {
+            setError(true);
+            alert("Please check your name");
+          }
+        } else {
+          setError(true);
+          alert("Please fill the required field/s");
+        }
+      } else if (selectedUser === "Guest/Parent/Alumni") {
+        if (contact.length > 0 && contact.length === 11) {
+          setError(false);
+          creatingUser();
+        } else {
+          setError(true);
+          if (contact.length === 0) {
+            alert("Please fill the required field/s");
+          } else if (contact.length < 11) {
+            alert("Please check your contact number");
+          }
+        }
+      }
+    } else {
+      alert("Fill required field/s");
+      setError(true);
+    }
   };
 
   const insert = async () => {
@@ -197,8 +257,7 @@ const Form = () => {
   };
 
   // Function for inserting user between (priorty or regular)
-
-  const checkExisting = async () => {
+  const checkExistingOnQue = async () => {
     let x = 0;
     let y = 0;
 
@@ -241,7 +300,7 @@ const Form = () => {
       });
 
       checkStudentNumber = query(
-        collection(db, "acadQueuing"),
+        collection(db, "regQueuing"),
         where("studentNumber", "==", fullStudentNumber)
       );
       querySnapshotNumber = await getDocs(checkStudentNumber);
@@ -250,7 +309,7 @@ const Form = () => {
       });
 
       checkStudentNumber = query(
-        collection(db, "acadNowserving"),
+        collection(db, "regNowserving"),
         where("studentNumber", "==", fullStudentNumber)
       );
       querySnapshotNumber = await getDocs(checkStudentNumber);
@@ -259,7 +318,7 @@ const Form = () => {
       });
 
       checkStudentNumber = query(
-        collection(db, "acadSkip"),
+        collection(db, "regSkip"),
         where("studentNumber", "==", fullStudentNumber)
       );
       querySnapshotNumber = await getDocs(checkStudentNumber);
@@ -268,7 +327,7 @@ const Form = () => {
       });
 
       checkStudentNumber = query(
-        collection(db, "acadPriority"),
+        collection(db, "regPriority"),
         where("studentNumber", "==", fullStudentNumber)
       );
       querySnapshotNumber = await getDocs(checkStudentNumber);
@@ -314,7 +373,7 @@ const Form = () => {
       });
 
       checkContact = query(
-        collection(db, "acadQueuing"),
+        collection(db, "regQueuing"),
         where("contact", "==", contact)
       );
       querySnapshotContact = await getDocs(checkContact);
@@ -323,7 +382,7 @@ const Form = () => {
       });
 
       checkContact = query(
-        collection(db, "acadNowserving"),
+        collection(db, "regNowserving"),
         where("contact", "==", contact)
       );
       querySnapshotContact = await getDocs(checkContact);
@@ -332,7 +391,7 @@ const Form = () => {
       });
 
       checkContact = query(
-        collection(db, "acadSkip"),
+        collection(db, "regSkip"),
         where("contact", "==", contact)
       );
       querySnapshotContact = await getDocs(checkContact);
@@ -341,7 +400,7 @@ const Form = () => {
       });
 
       checkContact = query(
-        collection(db, "acadPriority"),
+        collection(db, "regPriority"),
         where("contact", "==", contact)
       );
       querySnapshotContact = await getDocs(checkContact);
@@ -361,8 +420,7 @@ const Form = () => {
     }
   };
 
-  // Validating for creating user
-  const creatingUser = async () => {
+  const generateTicket = async () => {
     if (selectedForm === "Priority") {
       window.ticket = "P" + randomNumberInRange(99, 499);
     } else if (selectedForm === "Normal") {
@@ -370,7 +428,7 @@ const Form = () => {
     }
 
     let z = 0;
-    // Check if Ticket exist on Acad Que Table
+    // Check if Ticket exist on reg Que Table
     let checkTicket = query(
       collection(db, "regQueuing"),
       where("ticket", "==", window.ticket)
@@ -380,7 +438,7 @@ const Form = () => {
       z++;
     });
 
-    // Check if Ticket exist on Acad Now Serving Table
+    // Check if Ticket exist on reg Now Serving Table
     checkTicket = query(
       collection(db, "regNowserving"),
       where("ticket", "==", window.ticket)
@@ -390,7 +448,7 @@ const Form = () => {
       z++;
     });
 
-    // Check if Ticket exist on Acad Skip Table
+    // Check if Ticket exist on reg Skip Table
     checkTicket = query(
       collection(db, "regSkip"),
       where("ticket", "==", window.ticket)
@@ -458,37 +516,12 @@ const Form = () => {
         });
       } while (ctr > 0);
     }
-    // Chkeck if student number or email are exist/s in queline
+  };
 
-    // form requied fields validation
-    if (selectedUser === "Student") {
-      if (
-        name.length > 0 &&
-        selectedForm.length > 0 &&
-        transaction.length > 0 &&
-        email.length > 0 &&
-        studentNumber.length > 0 &&
-        branch.length > 0
-      ) {
-        checkExisting();
-      } else {
-        alert("Please fill all the reqiured fields!");
-      }
-    } else if (selectedUser === "Guest/Parent/Alumni") {
-      if (
-        name.length > 0 &&
-        selectedForm.length > 0 &&
-        transaction.length > 0 &&
-        contact.length > 0 &&
-        branch.length > 0
-      ) {
-        checkExisting();
-      } else {
-        alert("Please fill all the reqiured fields!");
-      }
-    } else {
-      alert("Please fill all the reqiured fields!");
-    }
+  // Validating for creating user
+  const creatingUser = async () => {
+    checkExistingOnQue();
+    generateTicket();
   };
 
   return (
@@ -499,7 +532,7 @@ const Form = () => {
           pt: { lg: 5, md: 20, sx: 0 },
         }}
       >
-        <form className="acadForm">
+        <form className="regForm" onSubmit={handleErr}>
           <ThemeProvider theme={Theme}>
             <Box
               sx={{
@@ -539,9 +572,17 @@ const Form = () => {
                         </InputAdornment>
                       ),
                     }}
-                    sx={{ textTransform: "capitalized" }}
                   />
-
+                  {error && name.length === 0 ? (
+                    <label className="red-text">Name can't be empty</label>
+                  ) : (
+                    ""
+                  )}
+                  {error && name.length > 0 && name.length <= 3 ? (
+                    <label className="red-text">Please enter valid name</label>
+                  ) : (
+                    ""
+                  )}
                   <FormControl fullWidth required>
                     <InputLabel
                       id="demo-multiple-name-label"
@@ -586,25 +627,19 @@ const Form = () => {
                       ))}
                     </Select>
                   </FormControl>
-                  {transaction[0] === "Others..." && (
-                    <>
-                      <TextField
-                        id="outlined-textarea"
-                        color="pupMaroon"
-                        required
-                        type="text"
-                        placeholder="Please Specify..."
-                        label="Others"
-                      />
-                    </>
+                  {error && transaction.length === 0 ? (
+                    <label className="red-text">Select transaction</label>
+                  ) : (
+                    ""
                   )}
+
                   <FormControl>
                     <FormLabel
                       id="demo-row-radio-buttons-group-label"
                       color="pupMaroon"
                       required
                     >
-                      Type of Transaction
+                      Type of Transaction Lane
                     </FormLabel>
                     <RadioGroup
                       row
@@ -625,8 +660,12 @@ const Form = () => {
                         label="PWD/Pregnant/Senior"
                       />
                     </RadioGroup>
+                    {error && selectedForm.length === 0 ? (
+                      <label className="red-text">Choose Lane</label>
+                    ) : (
+                      ""
+                    )}
                   </FormControl>
-
                   <FormControl>
                     <FormLabel
                       id="demo-row-radio-buttons-group-label"
@@ -659,6 +698,11 @@ const Form = () => {
                         label="Guest/Parent/Alumni"
                       />
                     </RadioGroup>
+                    {error && selectedUser.length === 0 ? (
+                      <label className="red-text">Choose User</label>
+                    ) : (
+                      ""
+                    )}
                     {selectedUser === "Student" && (
                       <>
                         <Stack spacing={2} direction="column">
@@ -696,7 +740,6 @@ const Form = () => {
                                 ))}
                               </Select>
                             </FormControl>
-
                             <TextField
                               required
                               type="text"
@@ -708,12 +751,7 @@ const Form = () => {
                               color="pupMaroon"
                               inputProps={{ maxLength: 5 }}
                             />
-                            {/* <TextField
-                              disabled
-                              type="text"
-                              id="outlined-textarea"
-                              value="SM-0"
-                            /> */}
+
                             <FormControl
                               sx={{
                                 minWidth: {
@@ -748,6 +786,15 @@ const Form = () => {
                               </Select>
                             </FormControl>
                           </Stack>
+                          {(error && snYear.length === 0) ||
+                          studentNumber.length === 0 ||
+                          branch.length === 0 ? (
+                            <label className="red-text">
+                              Student Number can't be empty
+                            </label>
+                          ) : (
+                            ""
+                          )}
 
                           <FormControl fullWidth>
                             <InputLabel
@@ -782,9 +829,7 @@ const Form = () => {
                             label="Email"
                             value={email}
                             placeholder="Ex. JuanDelacruz@yahoo.com"
-                            onChange={(e) => {
-                              setEmail(e.target.value);
-                            }}
+                            onChange={(e) => validateEmail(e)}
                             color="pupMaroon"
                             InputProps={{
                               endAdornment: (
@@ -794,6 +839,18 @@ const Form = () => {
                               ),
                             }}
                           />
+                          {error && email.length === 0 ? (
+                            <label className="red-text">
+                              Email can't be empty
+                            </label>
+                          ) : (
+                            ""
+                          )}
+                          {error && email.length > 0 && !emailError ? (
+                            <label className="red-text">Invalid Email</label>
+                          ) : (
+                            ""
+                          )}
                         </Stack>
                       </>
                     )}
@@ -813,6 +870,22 @@ const Form = () => {
                             color="pupMaroon"
                             maxlength="10"
                           />
+                          {error && contact.length === 0 ? (
+                            <label className="red-text">
+                              Contact can't be empty
+                            </label>
+                          ) : (
+                            ""
+                          )}
+                          {error &&
+                          contact.length > 0 &&
+                          contact.length < 11 ? (
+                            <label className="red-text">
+                              Contact must 11 digit
+                            </label>
+                          ) : (
+                            ""
+                          )}
                           <TextField
                             type="email"
                             id="outlined-textarea"
@@ -846,7 +919,6 @@ const Form = () => {
                       </>
                     )}
                   </FormControl>
-
                   <Box>
                     By using this service, you understood and agree to the PUP
                     Online Services{" "}
@@ -874,7 +946,7 @@ const Form = () => {
                         type="submit"
                         variant="contained"
                         color="pupMaroon"
-                        onClick={creatingUser}
+                        onClick={handleErr}
                         endIcon={<ChevronRight />}
                         component={motion.div}
                         whileHover={{
