@@ -255,14 +255,14 @@ const Report = () => {
           <TextField
             type="email"
             id="Username"
-            label="StudentNo/Contact"
+            label="Name"
             required
             onChange={(e) => {
               setSearch(e.target.value);
             }}
             value={search}
             color="pupMaroon"
-            placeholder="Ex. 2020-23129-SM-0/09458744562"
+            placeholder="Juan Dela Cruz"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -301,7 +301,16 @@ const Report = () => {
           </Stack>
         </Box>
         <Box px={5} py={2} mb={5}>
-          <TableContainer component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              height: "425px",
+              margin: "auto",
+              "&::-webkit-scrollbar": {
+                width: "2px",
+              },
+            }}
+          >
             <Table
               sx={{ tableLayout: "auto", height: "maxContent" }}
               ref={printRef}
@@ -337,6 +346,7 @@ const Report = () => {
                                 onClick={() => {
                                   deleteSingleData(queue.id);
                                 }}
+                                sx={{ color: "#FF0000" }}
                               />
                             </IconButton>
                           </TableCell>

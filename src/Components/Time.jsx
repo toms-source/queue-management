@@ -9,6 +9,16 @@ const Time = () => {
     setCurrentTime(time);
   };
 
+  var showdate = new Date();
+  var dispDate =
+    showdate.getMonth() +
+    1 +
+    "/" +
+    showdate.getDate() +
+    "/" +
+    showdate.getFullYear();
+  var dt = showdate.toDateString();
+
   setInterval(updateTime, 1000);
   return (
     <>
@@ -18,15 +28,15 @@ const Time = () => {
           width: "20vw",
           margin: "20px",
           borderRadius: "15px",
-          padding: "10px 200px",
+          padding: "10px 180px",
           backgroundColor: "cornsilk",
           boxShadow: "rgba(0, 0, 0, 0.35) 0 5px 15px",
         }}
       >
         <Typography
-          sx={{ fontSize: "2em", color: "#880000", textAlign: "center" }}
+          sx={{ fontSize: "1.8em", color: "#880000", textAlign: "center" }}
         >
-          {currentTime}
+          {dispDate} {currentTime}
         </Typography>
       </Box>
     </>

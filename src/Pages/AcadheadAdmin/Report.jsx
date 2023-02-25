@@ -255,14 +255,14 @@ const Report = () => {
           <TextField
             type="email"
             id="Username"
-            label="StudentNo/Contact"
+            label="Name"
             required
             onChange={(e) => {
               setSearch(e.target.value);
             }}
             value={search}
             color="pupMaroon"
-            placeholder="Ex. 2020-23129-SM-0/09458744562"
+            placeholder="Juan Dela Cruz"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -340,15 +340,18 @@ const Report = () => {
                     <TableBody>
                       {qlUserData.map((queue, index) => (
                         <TableRow key={index}>
-                          <TableCell>
-                            <IconButton>
-                              <Delete
-                                onClick={() => {
-                                  deleteSingleData(queue.id);
-                                }}
-                              />
-                            </IconButton>
-                          </TableCell>
+                          <Tooltip title="Delete" arrow>
+                            <TableCell>
+                              <IconButton>
+                                <Delete
+                                  onClick={() => {
+                                    deleteSingleData(queue.id);
+                                  }}
+                                  sx={{ color: "#FF0000" }}
+                                />
+                              </IconButton>
+                            </TableCell>
+                          </Tooltip>
                           <TableCell>{queue.status}</TableCell>
                           <TableCell>{queue.date}</TableCell>
                           <TableCell align="right" sx={{ fontWeight: "bold" }}>
