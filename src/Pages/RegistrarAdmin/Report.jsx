@@ -113,8 +113,8 @@ const Report = () => {
   });
   useEffect(() => {
     if (
-      localStorage.getItem("Password") !== "admin" &&
-      localStorage.getItem("Username") !== "adminacad"
+      localStorage.getItem("Password1") !== "admin" &&
+      localStorage.getItem("Username1") !== "adminacad"
     ) {
       navigate("/admin");
     }
@@ -375,15 +375,6 @@ const Report = () => {
                                 }}
                               />
                             </IconButton>
-                            {/* <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() => {
-                                deleteSingleData(queue.id);
-                              }}
-                            >
-                              Delete
-                            </Button> */}
                           </TableCell>
                           <TableCell>{queue.status}</TableCell>
                           <TableCell>{queue.date}</TableCell>

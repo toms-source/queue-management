@@ -267,7 +267,7 @@ const Report = () => {
                 sx={{ flexGrow: 1 }}
                 color="white"
               >
-                Summary Report
+                Archive
               </Typography>
             </Toolbar>
           </AppBar>
@@ -375,15 +375,6 @@ const Report = () => {
                                 }}
                               />
                             </IconButton>
-                            {/* <Button
-                              variant="contained"
-                              color="success"
-                              onClick={() => {
-                                deleteSingleData(queue.id);
-                              }}
-                            >
-                              Delete
-                            </Button> */}
                           </TableCell>
                           <TableCell>{queue.status}</TableCell>
                           <TableCell>{queue.date}</TableCell>

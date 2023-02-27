@@ -12,10 +12,9 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import { AdminPanelSettings, Menu } from "@mui/icons-material";
+import { AdminPanelSettings } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Stack } from "@mui/system";
 import { motion } from "framer-motion";
 
 function HideOnScroll(props) {
@@ -71,7 +70,7 @@ function Appbar(props) {
                     />
                   </IconButton>
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                    Queue Line Management
+                    PUPSMB E-WAIT
                   </Typography>
                   <Button
                     color="inherit"
@@ -91,41 +90,6 @@ function Appbar(props) {
               </AppBar>
             </Box>
           </Box>
-          {/* <AppBar
-            color="pupMaroon"
-            sx={{
-              color: "white",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "10vh",
-            }}
-          >
-            <Toolbar>
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <motion.img
-                  onClick={landing}
-                  src={Logo}
-                  alt=""
-                  initial={{ rotate: 0 }}
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 15 }}
-                  height="50px"
-                  width="50px"
-                />
-                <Typography variant="h5">Queue Line Mangement</Typography>
-              </Stack>
-              <AdminPanelSettingsIcon />
-            </Toolbar>
-          </AppBar> */}
         </HideOnScroll>
         <Toolbar />
       </ThemeProvider>

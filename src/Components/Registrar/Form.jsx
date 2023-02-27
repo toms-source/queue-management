@@ -19,6 +19,7 @@ import {
   Radio,
   FormLabel,
   RadioGroup,
+  IconButton,
 } from "@mui/material";
 import {
   School,
@@ -26,6 +27,7 @@ import {
   AlternateEmail,
   ChevronRight,
   HighlightOff,
+  Close,
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import Theme from "../../CustomTheme";
@@ -62,6 +64,7 @@ const Form = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedForm, setSelectedForm] = useState("");
   const [transaction, setTransaction] = useState([]);
+  const [showSelect, setShowSelect] = useState([]);
   const navigate = useNavigate();
   const userCollection1 = collection(db, "regQueuing");
   const userCollection2 = collection(db, "regPriority");
@@ -221,7 +224,7 @@ const Form = () => {
     if (address.length === 0) {
       subaddress = "N/A";
     }
-    if (selectedForm === "Normal") {
+    if (selectedForm === "Regular") {
       if (window.confirm("Are you sure you wish to add this transaction ?")) {
         await addDoc(userCollection1, {
           name: name,
@@ -423,7 +426,7 @@ const Form = () => {
   const generateTicket = async () => {
     if (selectedForm === "Priority") {
       window.ticket = "P" + randomNumberInRange(99, 499);
-    } else if (selectedForm === "Normal") {
+    } else if (selectedForm === "Regular") {
       window.ticket = "N" + randomNumberInRange(99, 499);
     }
 
@@ -475,7 +478,7 @@ const Form = () => {
         ctr = 0;
         if (selectedForm === "Priority") {
           window.ticket = "P" + randomNumberInRange(99, 499);
-        } else if (selectedForm === "Normal") {
+        } else if (selectedForm === "Regular") {
           window.ticket = "N" + randomNumberInRange(99, 499);
         }
 
@@ -593,6 +596,9 @@ const Form = () => {
                     </InputLabel>
                     <Select
                       required
+                      open={showSelect}
+                      onOpen={() => setShowSelect(true)}
+                      onClose={() => setShowSelect(false)}
                       labelId="demo-multiple-name-label"
                       id="demo-multiple-name"
                       color="pupMaroon"
@@ -612,6 +618,32 @@ const Form = () => {
                         },
                       }}
                     >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          paddingX: "20px",
+                          position: "sticky",
+                          top: "0",
+                          backgroundColor: "white",
+                          zIndex: "1",
+                        }}
+                      >
+                        <Typography
+                          fontWeight="bold"
+                          sx={{ textDecoration: "underline" }}
+                        >
+                          Transactions
+                        </Typography>
+                        <IconButton>
+                          <Close
+                            onClick={() => {
+                              setShowSelect(false);
+                            }}
+                          />
+                        </IconButton>
+                      </Box>
                       {transactionsReg.map((transaction) => (
                         <MenuItem
                           key={transaction}
@@ -650,9 +682,9 @@ const Form = () => {
                       onChange={(event) => setSelectedForm(event.target.value)}
                     >
                       <FormControlLabel
-                        value="Normal"
+                        value="Regular"
                         control={<Radio color="pupMaroon" />}
-                        label="Normal"
+                        label="Regular"
                       />
                       <FormControlLabel
                         value="Priority"
